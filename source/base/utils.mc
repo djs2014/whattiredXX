@@ -34,6 +34,24 @@ function drawPercentageLine(dc as Dc, x as Number, y as Number, maxwidth as Numb
     dc.drawPoint(x + maxwidth, y);
 }
 
+ function drawPercentageCircle(dc as Dc, x as Number, y as Number, radius as Number, perc as Numeric, penWidth as Number) as Void {
+      if (perc == null || perc == 0) {
+        return;
+      }
+
+      if (perc > 100) {
+        perc = 100;
+      }
+      var degrees = 3.6 * perc;
+
+      var degreeStart = 180;                  // 180deg == 9 o-clock
+      var degreeEnd = degreeStart - degrees;  // 90deg == 12 o-clock
+
+      dc.setPenWidth(penWidth);
+      dc.drawArc(x, y, radius, Graphics.ARC_CLOCKWISE, degreeStart, degreeEnd);
+      dc.setPenWidth(1.0);
+    }
+    
 function meterToFeet(meter as Numeric?) as Float {
     if (meter == null) {
       return 0.0f;

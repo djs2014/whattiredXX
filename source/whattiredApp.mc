@@ -4,6 +4,10 @@ import Toybox.WatchUi;
 
 var gShowColors as Boolean = true;
 var gShowValues as Boolean = true;
+var gShowColorsSmallField as Boolean = true;
+var gShowValuesSmallField as Boolean = false;
+var gShowCurrentProfile as Boolean = false;
+var gShowFocusSmallField as Types.EnumFocus = Types.FocusNothing;
 
 class whattiredApp extends Application.AppBase {
     var mTotals as Totals = new Totals();
@@ -36,7 +40,13 @@ class whattiredApp extends Application.AppBase {
         
         mTotals.load(true); 
         $.gShowColors = getApplicationProperty("showColors", true) as Boolean;   
-        $.gShowValues = getApplicationProperty("showValues", true) as Boolean;           
+        $.gShowValues = getApplicationProperty("showValues", true) as Boolean;  
+        $.gShowColorsSmallField = getApplicationProperty("showColorsSmallField", true) as Boolean;   
+        $.gShowValuesSmallField = getApplicationProperty("showValuesSmallField", false) as Boolean;  
+
+        $.gShowFocusSmallField = getApplicationProperty("showFocusSmallField", 0) as Types.EnumFocus;           
+
+        // $.gShowCurrentProfile = getApplicationProperty("showCurrentProfile", true) as Boolean;           
 
         System.println("loadUserSettings loaded");
       } catch (ex) {

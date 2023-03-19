@@ -8,6 +8,7 @@ import Toybox.System;
 import Toybox.Activity;
 import Toybox.Math;
 import Toybox.StringUtil;
+import Toybox.Attention;
 
 class Totals {
   private var elapsedDistanceActivity as Float = 0.0f;
@@ -31,7 +32,21 @@ class Totals {
   private var totalDistanceRide as Float = 0.0f;
 
   private var rideStarted as Boolean = false;
-  
+
+  private var currentProfile as String = "";
+  // private var currentProfileId as Long = 0l;
+  // private var totalDistanceProfile as Float = 0.0f; 
+
+  private const MAX_COUNTER = 10;
+  private var triggerFrontTyre as String = "";
+  private var totalDistanceFrontTyre as Float = 0.0f;
+  private var maxDistanceFrontTyre as Float = 0.0f;
+  private var counterFrontTyreReset as Number = MAX_COUNTER;
+  private var triggerBackTyre as String = "";
+  private var totalDistanceBackTyre as Float = 0.0f;
+  private var maxDistanceBackTyre as Float = 0.0f;
+  private var counterBackTyreReset as Number = MAX_COUNTER;
+
   public function GetTotalDistance() as Float { return totalDistance + elapsedDistanceActivity; }
   public function GetTotalDistanceYear() as Float { return totalDistanceYear + elapsedDistanceActivity; }
   public function GetTotalDistanceMonth() as Float { return totalDistanceMonth + elapsedDistanceActivity; }
@@ -41,6 +56,16 @@ class Totals {
   public function GetTotalDistanceLastMonth() as Float { return totalDistanceLastMonth; }
   public function GetTotalDistanceLastWeek() as Float { return totalDistanceLastWeek; }
   public function GetTotalDistanceLastRide() as Float { return totalDistanceLastRide; }
+
+  public function GetTotalDistanceFrontTyre() as Float { return totalDistanceFrontTyre + elapsedDistanceActivity; }
+  public function GetMaxDistanceFrontTyre() as Float { return maxDistanceFrontTyre; }
+  public function GetTotalDistanceBackTyre() as Float { return totalDistanceBackTyre + elapsedDistanceActivity; }
+  public function GetMaxDistanceBackTyre() as Float { return maxDistanceBackTyre; }
+  public function HasFrontTyreTrigger() as Boolean { return triggerFrontTyre.length()>0; }  
+  public function HasBackTyreTrigger() as Boolean { return triggerBackTyre.length()>0; }  
+  
+  // public function GetTotalDistanceProfile() as Float { return totalDistanceProfile; }
+  public function GetCurrentProfile() as String { return currentProfile; }
 
   function initialize() {}
 
@@ -63,7 +88,69 @@ class Totals {
           }
         } 
     }    
+
+    handleTyreReset(Activity.getProfileInfo());
+    // Only once at start of activity @@
+    // @@ monitor profile change -> save old, load new (onl)
+    // var profile = Activity.getProfileInfo();
+    // if (profile != null && profile.name != null && profile.uniqueIdentifier != null && profile.uniqueIdentifier != currentProfileId) {
+    //   //saveProfileData(); 
+    //   currentProfile = profile.name as String;
+    //   currentProfileId = profile.uniqueIdentifier as Long;    
+    //   //loadProfileData();  
+    // }
+
   }
+
+  function handleTyreReset(profile as Activity.ProfileInfo?) as Void {
+    if (profile == null || profile.name == null  ) { return; }
+    var profileName = (profile.name as String).toLower();
+    if (!currentProfile.equals(profileName)) {
+      currentProfile = profileName;
+      counterFrontTyreReset = MAX_COUNTER;
+      counterBackTyreReset = MAX_COUNTER;
+    }
+    if (triggerFrontTyre.length() > 0 && totalDistanceFrontTyre > 0.0f) {
+      if (profileName.find(triggerFrontTyre) != null) {
+        counterFrontTyreReset = counterFrontTyreReset - 1;
+        if (counterFrontTyreReset < 0) { 
+          totalDistanceFrontTyre = 0.0f; 
+          attentionReset();
+        } else {
+          attentionCountDown();
+        }
+      }
+    }
+
+    if (triggerBackTyre.length() > 0 && totalDistanceBackTyre > 0.0f) {
+      if (profileName.find(triggerBackTyre) != null) {
+        counterBackTyreReset = counterBackTyreReset - 1;
+        if (counterBackTyreReset < 0) { 
+          totalDistanceBackTyre = 0.0f;
+          attentionReset();
+        } else {
+          attentionCountDown();
+        }
+      }
+    }
+  }
+
+  function attentionCountDown() as Void {
+      if (Attention has :playTone) {
+        if (Attention has :ToneProfile) {
+          var toneProfileBeeps = [ new Attention.ToneProfile( 1500, 50) ] as Lang.Array<Attention.ToneProfile>;
+          Attention.playTone({:toneProfile=>toneProfileBeeps});
+        } else {
+          Attention.playTone(Attention.TONE_ALERT_LO);
+        }
+      }
+  } 
+
+  function attentionReset() as Void {
+    if (Attention has :playTone) {          
+      Attention.playTone(Attention.TONE_RESET);       
+    }
+  } 
 
   function save()  as Void {
     setDistanceAsMeters("totalDistance", (totalDistance + elapsedDistanceActivity));
@@ -85,8 +172,18 @@ class Totals {
     setDistanceAsMeters("totalDistanceLastRide", totalDistanceLastRide);    
     setDistanceAsMeters("totalDistanceRide", (totalDistanceRide + elapsedDistanceActivity));
 
+    setDistanceAsMeters("totalDistanceFrontTyre", (totalDistanceFrontTyre + elapsedDistanceActivity));
+    setDistanceAsMeters("totalDistanceBackTyre", (totalDistanceBackTyre + elapsedDistanceActivity));
+    // saveProfileData();
+
     load(false);
   }
+
+  // function saveProfileData() {
+  //   if (currentProfileId != null && currentProfileId > 0) {
+  //     setDistanceAsMeters("totalDistanceProfile" + currentProfileId.format("%d"), (totalDistanceProfile + elapsedDistanceActivity));
+  //   }
+  // }
 
   hidden function setDistanceAsMeters(key as String, distanceMeters as Float) as Void {
     Toybox.Application.Storage.setValue(key, distanceMeters);
@@ -113,7 +210,20 @@ class Totals {
     totalDistanceRide = getDistanceAsMeters("totalDistanceRide");  
 
     if (processDate) { handleDate(); }
+
+    triggerFrontTyre = (getApplicationProperty("triggerFrontTyre", "") as String).toLower();
+    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre");  
+    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre");  
+    triggerBackTyre = (getApplicationProperty("triggerBackTyre", "") as String).toLower(); 
+    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre");  
+    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre");  
   }
+
+  // function loadProfileData() as Void {
+  //   if (currentProfileId != null &&  currentProfileId > 0) {
+  //     totalDistanceProfile =  getDistanceAsMeters("totalDistanceProfile" + currentProfileId.format("%d"));
+  //   }
+  // }
 
   hidden function getDistanceAsMeters(key as String) as Float {
     var overrule = getApplicationProperty(key, 0) as Number;
@@ -210,4 +320,12 @@ class Totals {
     var seconds = time.compare(firstDayOfYear);
     return (Math.round(seconds / (86400 * 7)) + 1) as Number;    
   }
+  
+}
+
+class Total {
+  public var title as String = "";
+  public var abbreviated as String = "";
+  public var distance as Float = 0.0f;
+  public var distanceLast as Float = 0.0f;
 }
