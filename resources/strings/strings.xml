@@ -3,6 +3,7 @@
     <string id="AppNameBeta">What tired beta</string>
 
     <string id="TotalDistance">Set odo (km)</string>
+    <string id="MaxDistance">Set max odo (km)</string>
     
     <string id="TotalDistanceLastYear">Set total distance last year (km)</string>
     <string id="TotalDistanceYear">Set total distance current year (km)</string>    
@@ -29,15 +30,13 @@
     <string id="TotalDistanceBackTyre">Set total back tyre (km)</string>
     <string id="MaxDistanceBackTyre">Set max back tyre (km)</string>
 
-    <!-- <string id="ShowFocusSmallField">Focus (small field)</string>
+    <string id="ShowFocusSmallField">Focus (small field)</string>
     <string id="ShowFocusNothing">Nope</string>
     <string id="ShowFocusOdo">Odo</string>
     <string id="ShowFocusYear">Year</string>
     <string id="ShowFocusMonth">Month</string>
     <string id="ShowFocusWeek">Week</string>
     <string id="ShowFocusRide">Ride</string>
-    <string id="ShowZen">Zen</string>
-
-
-    <string id="ShowCurrentProfile">Show current profile</string> -->
+    <string id="ShowFocusFront">Front</string>
+    <string id="ShowFocusBack">Back</string>    
 </strings>

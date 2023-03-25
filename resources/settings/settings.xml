@@ -2,7 +2,10 @@
  	<setting propertyKey="@Properties.totalDistance" title="@Strings.TotalDistance">
 		<settingConfig type="numeric" min="0"/>
 	</setting>	
-	
+	<setting propertyKey="@Properties.maxDistance" title="@Strings.MaxDistance">
+		<settingConfig type="numeric" min="0"/>
+	</setting>	
+
     <setting propertyKey="@Properties.totalDistanceYear" title="@Strings.TotalDistanceYear">
         <settingConfig type="numeric" min="0"/>
     </setting>	
@@ -72,11 +75,6 @@
         <settingConfig type="numeric" min="0"/>
     </setting>	
 
-
-    <!-- <setting propertyKey="@Properties.showCurrentProfile" title="@Strings.ShowCurrentProfile">
-        <settingConfig type="boolean" />
-    </setting>	
-
     <setting propertyKey="@Properties.showFocusSmallField" title="@Strings.ShowFocusSmallField" prompt="@Strings.ShowFocusSmallField">
         <settingConfig type="list">
             <listEntry value="0">@Strings.ShowFocusNothing</listEntry>
@@ -85,7 +83,8 @@
 			<listEntry value="3">@Strings.ShowFocusMonth</listEntry>
 			<listEntry value="4">@Strings.ShowFocusWeek</listEntry>
 			<listEntry value="5">@Strings.ShowFocusRide</listEntry>
-			<listEntry value="6">@Strings.ShowZen</listEntry>
+			<listEntry value="6">@Strings.ShowFocusFront</listEntry>
+			<listEntry value="7">@Strings.ShowFocusBack</listEntry>
         </settingConfig>
-    </setting>       -->
+    </setting>
 </settings>

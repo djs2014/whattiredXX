@@ -66,7 +66,22 @@ function kilometerToMile(km as Numeric?) as Float {
     return (km / MILE) as Float;
   }
 
- function percentageToColor(percentage as Numeric?) as ColorType {
+function getMatchingFont(dc as Dc, fontList as Array,
+                maxwidth as Number, text as String, startIndex as Number) as FontType {
+      var index = startIndex;
+      var font = fontList[index] as FontType;
+      var widthValue = dc.getTextWidthInPixels(text, font);
+
+      while (widthValue > maxwidth && index > 0) {
+        index = index - 1;
+        font = fontList[index] as FontType;
+        widthValue = dc.getTextWidthInPixels(text, font);
+      }
+      // System.println("font index: " + index);
+      return font;
+}
+
+function percentageToColor(percentage as Numeric?) as ColorType {
       if (percentage == null || percentage == 0) {
         return Graphics.COLOR_WHITE;
       }

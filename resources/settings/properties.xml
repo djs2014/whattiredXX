@@ -1,5 +1,6 @@
 <properties>
 	<property id="totalDistance" type="number">0</property>
+	<property id="maxDistance" type="number">0</property>
 
 	<property id="totalDistanceLastYear" type="number">0</property>
 	<property id="totalDistanceYear" type="number">0</property>
@@ -20,11 +21,10 @@
 
 	<property id="triggerFrontTyre" type="string">Front</property>		
 	<property id="totalDistanceFrontTyre" type="number">0</property>		
-	<property id="maxDistanceFrontTyre" type="number">3000</property>		
+	<property id="maxDistanceFrontTyre" type="number">9000</property>		
 	<property id="triggerBackTyre" type="string">Back</property>		
 	<property id="totalDistanceBackTyre" type="number">0</property>		
 	<property id="maxDistanceBackTyre" type="number">3000</property>		
-
 
 	<property id="showFocusSmallField" type="number">0</property>			
 </properties>

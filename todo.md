@@ -1,21 +1,24 @@
-small field: show color, values
-wide field: show color, values
-focus on one item with circel perc, rest are only bars/perc
-on pause, show details
+
+Layout show normal data combined with front/back tyre
++ compact if no values + odo/focus larger
+
 act name is front -> after 10 sec, reset front tire
 
-+ compact if no values + odo larger
+
+TODO layout: focus on one item with circel perc, rest are only bars/perc
+on pause, show details
+ - focus: font bigger, rest smaller
   
-- option show profile odo
+TODO Space -> Font number heeft geen spaties
+-> draw items afzonderlijk.
 
-show: y/n
-per tire front / back
-option reset front yes/no
-set max km front tyre 4000
-set max km back tyre 4000
--- quick button press to reset?
+reset front/back by change to actprofile front or back
+    - ciq field What Tired need to be active in that profile
+    - beeps for 10 seconds then reset front / back value
+    - switch back to normal profile.
 
-odo per activity profile
--> unique identifier + name
+menu to reset front / back
 
-Toybox.Activity.ProfileInfo
+
+if height > line * lineheight
+draw front/ back circles if applic instead of front lines edge 1040
