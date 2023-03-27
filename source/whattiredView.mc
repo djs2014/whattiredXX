@@ -25,6 +25,7 @@ class whattiredView extends WatchUi.DataField {
 
     var mNightMode as Boolean = false;
     var mColor as ColorType = Graphics.COLOR_BLACK;
+    var mColorTextNoFocus as ColorType = Graphics.COLOR_DK_GRAY;
     var mColorValues as ColorType = Graphics.COLOR_BLACK;
     var mColorValues20 as ColorType = Graphics.COLOR_BLACK;
     var mColorPerc100 as ColorType = Graphics.COLOR_WHITE;
@@ -61,14 +62,15 @@ class whattiredView extends WatchUi.DataField {
 
         mLabelWidth = dc.getTextWidthInPixels("Month", mFontText) + 2;
         mLabelWidthFocused = dc.getTextWidthInPixels("M", mFontText) + 2;
-        mLineHeight = dc.getFontHeight(mFontText);
+        mLineHeight = dc.getFontHeight(mFontText) - 1;
         
-        var nrOfFields = 5.0f;
+        var nrOfFields = $.gNrOfDefaultFields;
         // Minus line if small field and focus 1 item
-        if (mSmallField && mFocus == Types.FocusNothing) { nrOfFields = nrOfFields - 1.0f;}
+        if (mSmallField && mFocus != Types.FocusNothing) { nrOfFields = nrOfFields - 1;}
+
         // Add extra line if front/back enabled
         if (mTotals.HasFrontTyreTrigger() || mTotals.HasBackTyreTrigger())  { 
-          nrOfFields = nrOfFields + 1.0f; 
+          nrOfFields = nrOfFields + 1; 
           if (!mSmallField) {
             // Room for F B Circles?
             var h = mLineHeight * (nrOfFields - 1);
@@ -78,7 +80,7 @@ class whattiredView extends WatchUi.DataField {
           }
         }
 
-        var totalHeight = nrOfFields * mLineHeight;
+        var totalHeight = nrOfFields * (mLineHeight + 1);
         if (totalHeight > mHeight) {
           var corr = Math.round((totalHeight - mHeight) / nrOfFields).toNumber() + 1;
           mLineHeight = mLineHeight - corr;
@@ -104,10 +106,12 @@ class whattiredView extends WatchUi.DataField {
             mColor = Graphics.COLOR_WHITE;
             mColorValues = Graphics.COLOR_WHITE;      
             mColorValues20 = Graphics.COLOR_LT_GRAY;      
+            mColorTextNoFocus = Graphics.COLOR_LT_GRAY;      
         } else {
             mColor = Graphics.COLOR_BLACK;
             mColorValues = Graphics.COLOR_BLACK;
             mColorValues20 = Graphics.COLOR_BLACK;
+            mColorTextNoFocus = Graphics.COLOR_DK_GRAY;      
         }
                   
         drawData(dc, mFocus);              
@@ -117,23 +121,23 @@ class whattiredView extends WatchUi.DataField {
       var line = 0;      
       var nothingHasFocus = focus == Types.FocusNothing;
 
-      if (focus != Types.FocusOdo) {
+      if (mTotals.HasOdo() && focus != Types.FocusOdo) {
         DrawDistanceLine(dc, line, "Odo", "O", mTotals.GetTotalDistance(), mTotals.GetMaxDistance(), mShowValues, mShowColors, nothingHasFocus);
         line = line + 1;
       }
-      if (focus != Types.FocusRide) {
+      if (mTotals.HasRide() && focus != Types.FocusRide) {
         DrawDistanceLine(dc, line, "Ride", "R", mTotals.GetTotalDistanceRide(), mTotals.GetTotalDistanceLastRide(), mShowValues, mShowColors, nothingHasFocus);
         line = line + 1;
       }
-      if (focus != Types.FocusWeek) {
+      if (mTotals.HasWeek() && focus != Types.FocusWeek) {
         DrawDistanceLine(dc, line, "Week", "W", mTotals.GetTotalDistanceWeek(), mTotals.GetTotalDistanceLastWeek(), mShowValues, mShowColors, nothingHasFocus);
         line = line + 1;
       }
-      if (focus != Types.FocusMonth) {
+      if (mTotals.HasMonth() && focus != Types.FocusMonth) {
         DrawDistanceLine(dc, line, "Month", "M", mTotals.GetTotalDistanceMonth(), mTotals.GetTotalDistanceLastMonth(), mShowValues, mShowColors, nothingHasFocus);
         line = line + 1;
       }
-      if (focus != Types.FocusYear) {
+      if (mTotals.HasYear() && focus != Types.FocusYear) {
         DrawDistanceLine(dc, line, "Year", "Y", mTotals.GetTotalDistanceYear(), mTotals.GetTotalDistanceLastYear(), mShowValues, mShowColors, nothingHasFocus);  
         line = line + 1;
       }
@@ -180,13 +184,14 @@ class whattiredView extends WatchUi.DataField {
     function DrawDistanceLine(dc as Dc, line as Number, label as String, abbreviated as String,  distanceInMeters as Float, 
       lastDistanceInMeters as Float, showValues as Boolean, showColors as Boolean, nothingHasFocus as Boolean ) as Void {
         var x = 1;
-        var y = 1 + (mLineHeight * line);
+        var y = (mLineHeight * line);
         
-        dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);        
         if (nothingHasFocus) {
+          dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);        
           dc.drawText(x, y, mFontText, label, Graphics.TEXT_JUSTIFY_LEFT);
           x = x + mLabelWidth;
         } else {
+          dc.setColor(mColorTextNoFocus, Graphics.COLOR_TRANSPARENT);        
           dc.drawText(x, y, mFontText, abbreviated, Graphics.TEXT_JUSTIFY_LEFT);
           x = x + mLabelWidthFocused;
           showValues = false;
@@ -201,7 +206,7 @@ class whattiredView extends WatchUi.DataField {
         if (lastDistanceInMeters > 0) {
           perc = percentageOf(distanceInMeters, lastDistanceInMeters);
           if (showColors) {
-            drawPercentageLine(dc, x, y + 1, mWidth - x - 1, perc, mLineHeight - 2, percentageToColor(perc));
+            drawPercentageLine(dc, x, y + 1, mWidth - x - 1, perc, mLineHeight - 1, percentageToColor(perc));
           }
         }
         if (showValues) {
@@ -222,16 +227,17 @@ class whattiredView extends WatchUi.DataField {
 
     function DrawDistanceFrontBackTyre(dc as Dc, line as Number, showValues as Boolean, showColors as Boolean, nothingHasFocus as Boolean ) as Void {
         var x = 1;
-        var y = 1 + (mLineHeight * line);
+        var y = (mLineHeight * line);
         var x2 = x + mWidth / 2;
 
-        dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);        
         if (nothingHasFocus) {
+          dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);        
           dc.drawText(x, y, mFontText, "Front", Graphics.TEXT_JUSTIFY_LEFT);
           dc.drawText(x2, y, mFontText, "Back", Graphics.TEXT_JUSTIFY_LEFT);
           x = x + mLabelWidth;
           x2 = x2 + mLabelWidth;
         } else {
+          dc.setColor(mColorTextNoFocus, Graphics.COLOR_TRANSPARENT);       
           dc.drawText(x, y, mFontText, "F", Graphics.TEXT_JUSTIFY_LEFT);
           dc.drawText(x2, y, mFontText, "B", Graphics.TEXT_JUSTIFY_LEFT);
           x = x + mLabelWidthFocused;
@@ -248,7 +254,7 @@ class whattiredView extends WatchUi.DataField {
         if (maxMeters_front > 0) {
           perc_front = percentageOf(meters_front, maxMeters_front);
           if (showColors) {
-            drawPercentageLine(dc, x, y + 1, halfWidth - x - 1, perc_front, mLineHeight - 2, percentageToColor(perc_front));
+            drawPercentageLine(dc, x, y + 1, halfWidth - x - 1, perc_front, mLineHeight - 1, percentageToColor(perc_front));
           }
         }
         if (showValues) {
@@ -270,7 +276,7 @@ class whattiredView extends WatchUi.DataField {
         if (maxMeters_back > 0) {
           perc_back = percentageOf(meters_back, maxMeters_back);
           if (showColors) {
-            drawPercentageLine(dc, x2, y + 1, mWidth - x2 - 1, perc_back, mLineHeight - 2, percentageToColor(perc_back));
+            drawPercentageLine(dc, x2, y + 1, mWidth - x2 - 1, perc_back, mLineHeight - 1, percentageToColor(perc_back));
           }
         }
           
@@ -291,7 +297,7 @@ class whattiredView extends WatchUi.DataField {
     function DrawDistanceCirclesFrontBackTyre(dc as Dc, line as Number, showValues as Boolean, showColors as Boolean, nothingHasFocus as Boolean ) as Void {        
         var mr = mHeight;
         if (mHeight > mWidth) { mr = mWidth; }
-        var y = 1 + (mLineHeight * line);
+        var y = (mLineHeight * line);
         var radius = (mr - y) / 2;
         var circleWidth = 10;
         y = y + radius;
@@ -455,13 +461,3 @@ class whattiredView extends WatchUi.DataField {
       return "%.2f";
     }
 }
-// font / 
-// color / day/night
-// odo # 
-// ride perc
-// wk # + perc
-// month string # + perc
-// year  # + perc
-
-// display km / miles
-// colors perc

@@ -9,6 +9,15 @@ var gShowValuesSmallField as Boolean = false;
 var gShowCurrentProfile as Boolean = false;
 var gShowFocusSmallField as Types.EnumFocus = Types.FocusNothing;
 
+var gShowOdo as Boolean = true;
+var gShowYear as Boolean = true;
+var gShowMonth as Boolean = true;
+var gShowWeek as Boolean = true;
+var gShowRide as Boolean = true;
+var gShowFront as Boolean = true;
+var gShowBack as Boolean = true;
+var gNrOfDefaultFields as Number = 5;
+
 class whattiredApp extends Application.AppBase {
     var mTotals as Totals = new Totals();
 
@@ -31,6 +40,12 @@ class whattiredApp extends Application.AppBase {
         return [ new whattiredView() ] as Array<Views or InputDelegates>;
     }
 
+    //! Return the settings view and delegate for the app
+    //! @return Array Pair [View, Delegate]
+    public function getSettingsView() as Array<Views or InputDelegates>? {
+        return [new $.DataFieldSettingsView(), new $.DataFieldSettingsDelegate()] as Array<Views or InputDelegates>;
+    }
+
     function onSettingsChanged() { loadUserSettings(); }
 
     (:typecheck(disableBackgroundCheck))
@@ -46,7 +61,21 @@ class whattiredApp extends Application.AppBase {
 
         $.gShowFocusSmallField = getApplicationProperty("showFocusSmallField", 0) as Types.EnumFocus;           
 
-        // $.gShowCurrentProfile = getApplicationProperty("showCurrentProfile", true) as Boolean;           
+        var showFields = (getApplicationProperty("showFields", "ORMWYFB") as String).toUpper();           
+        $.gShowOdo = showFields.find("O") != null;
+        $.gShowYear = showFields.find("Y") != null;
+        $.gShowMonth = showFields.find("M") != null;
+        $.gShowWeek = showFields.find("W") != null;
+        $.gShowRide = showFields.find("R") != null;
+
+        $.gShowFront = showFields.find("F") != null;
+        $.gShowBack = showFields.find("B") != null;
+        $.gNrOfDefaultFields = 0;
+        if ($.gShowOdo) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
+        if ($.gShowYear) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
+        if ($.gShowMonth) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
+        if ($.gShowWeek) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
+        if ($.gShowRide) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
 
         System.println("loadUserSettings loaded");
       } catch (ex) {

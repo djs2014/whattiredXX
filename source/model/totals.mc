@@ -61,8 +61,14 @@ class Totals {
   public function GetMaxDistanceFrontTyre() as Float { return maxDistanceFrontTyre; }
   public function GetTotalDistanceBackTyre() as Float { return totalDistanceBackTyre + elapsedDistanceActivity; }
   public function GetMaxDistanceBackTyre() as Float { return maxDistanceBackTyre; }
-  public function HasFrontTyreTrigger() as Boolean { return triggerFrontTyre.length()>0 && maxDistanceFrontTyre > 1000; }  
-  public function HasBackTyreTrigger() as Boolean { return triggerBackTyre.length()>0 && maxDistanceBackTyre > 1000; }  
+
+  public function HasOdo() as Boolean { return $.gShowOdo; }
+  public function HasYear() as Boolean { return $.gShowYear; }
+  public function HasMonth() as Boolean { return $.gShowMonth; }
+  public function HasWeek() as Boolean { return $.gShowWeek; }
+  public function HasRide() as Boolean { return $.gShowRide; }
+  public function HasFrontTyreTrigger() as Boolean { return $.gShowFront && triggerFrontTyre.length()>0 && maxDistanceFrontTyre > 1000; }  
+  public function HasBackTyreTrigger() as Boolean { return $.gShowBack && triggerBackTyre.length()>0 && maxDistanceBackTyre > 1000; }  
   
   public function GetCurrentProfile() as String { return currentProfile; }
 
