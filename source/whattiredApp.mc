@@ -19,72 +19,90 @@ var gShowBack as Boolean = true;
 var gNrOfDefaultFields as Number = 5;
 
 class whattiredApp extends Application.AppBase {
-    var mTotals as Totals = new Totals();
+  var mTotals as Totals = new Totals();
 
-    function initialize() {
-        AppBase.initialize();
-    }
+  function initialize() {
+    AppBase.initialize();
+  }
 
-    // onStart() is called on application start up
-    function onStart(state as Dictionary?) as Void {
-    }
+  // onStart() is called on application start up
+  function onStart(state as Dictionary?) as Void {}
 
-    // onStop() is called when your application is exiting
-    function onStop(state as Dictionary?) as Void {
-        mTotals.save();
-    }
+  // onStop() is called when your application is exiting
+  function onStop(state as Dictionary?) as Void {
+    mTotals.save();
+  }
 
-    //! Return the initial view of your application here
-    function getInitialView() as Array<Views or InputDelegates>? {
-        loadUserSettings();
-        return [ new whattiredView() ] as Array<Views or InputDelegates>;
-    }
+  //! Return the initial view of your application here
+  function getInitialView() as Array<Views or InputDelegates>? {
+    loadUserSettings();
+    return [new whattiredView()] as Array<Views or InputDelegates>;
+  }
 
-    //! Return the settings view and delegate for the app
-    //! @return Array Pair [View, Delegate]
-    public function getSettingsView() as Array<Views or InputDelegates>? {
-        return [new $.DataFieldSettingsView(), new $.DataFieldSettingsDelegate()] as Array<Views or InputDelegates>;
-    }
+  //! Return the settings view and delegate for the app
+  //! @return Array Pair [View, Delegate]
+  public function getSettingsView() as Array<Views or InputDelegates>? {
+    return (
+      [new $.DataFieldSettingsView(), new $.DataFieldSettingsDelegate()] as
+      Array<Views or InputDelegates>
+    );
+  }
 
-    function onSettingsChanged() { loadUserSettings(); }
+  function onSettingsChanged() {
+    loadUserSettings();
+  }
 
-    (:typecheck(disableBackgroundCheck))
-    function loadUserSettings() as Void {
-      try {
-        System.println("Load usersettings");
-        
-        mTotals.load(true); 
-        $.gShowColors = getApplicationProperty("showColors", true) as Boolean;   
-        $.gShowValues = getApplicationProperty("showValues", true) as Boolean;  
-        $.gShowColorsSmallField = getApplicationProperty("showColorsSmallField", true) as Boolean;   
-        $.gShowValuesSmallField = getApplicationProperty("showValuesSmallField", false) as Boolean;  
+  (:typecheck(disableBackgroundCheck))
+  function loadUserSettings() as Void {
+    try {
+      System.println("Load usersettings");
 
-        $.gShowFocusSmallField = getApplicationProperty("showFocusSmallField", 0) as Types.EnumFocus;           
+      mTotals.load(true);
+      $.gShowColors = getApplicationProperty("showColors", true) as Boolean;
+      $.gShowValues = getApplicationProperty("showValues", true) as Boolean;
+      $.gShowColorsSmallField =
+        getApplicationProperty("showColorsSmallField", true) as Boolean;
+      $.gShowValuesSmallField =
+        getApplicationProperty("showValuesSmallField", false) as Boolean;
 
-        var showFields = (getApplicationProperty("showFields", "ORMWYFB") as String).toUpper();           
-        $.gShowOdo = showFields.find("O") != null;
-        $.gShowYear = showFields.find("Y") != null;
-        $.gShowMonth = showFields.find("M") != null;
-        $.gShowWeek = showFields.find("W") != null;
-        $.gShowRide = showFields.find("R") != null;
+      $.gShowFocusSmallField =
+        getApplicationProperty("showFocusSmallField", 0) as Types.EnumFocus;
 
-        $.gShowFront = showFields.find("F") != null;
-        $.gShowBack = showFields.find("B") != null;
-        $.gNrOfDefaultFields = 0;
-        if ($.gShowOdo) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
-        if ($.gShowYear) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
-        if ($.gShowMonth) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
-        if ($.gShowWeek) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
-        if ($.gShowRide) { $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;}
+      var showFields = (
+        getApplicationProperty("showFields", "ORMWYFB") as String
+      ).toUpper();
+      $.gShowOdo = showFields.find("O") != null;
+      $.gShowYear = showFields.find("Y") != null;
+      $.gShowMonth = showFields.find("M") != null;
+      $.gShowWeek = showFields.find("W") != null;
+      $.gShowRide = showFields.find("R") != null;
 
-        System.println("loadUserSettings loaded");
-      } catch (ex) {
-        ex.printStackTrace();
+      $.gShowFront = showFields.find("F") != null;
+      $.gShowBack = showFields.find("B") != null;
+      $.gNrOfDefaultFields = 0;
+      if ($.gShowOdo) {
+        $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;
       }
+      if ($.gShowYear) {
+        $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;
+      }
+      if ($.gShowMonth) {
+        $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;
+      }
+      if ($.gShowWeek) {
+        $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;
+      }
+      if ($.gShowRide) {
+        $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;
+      }
+
+      System.println("loadUserSettings loaded");
+    } catch (ex) {
+      ex.printStackTrace();
     }
+  }
 }
 
 function getApp() as whattiredApp {
-    return Application.getApp() as whattiredApp;
+  return Application.getApp() as whattiredApp;
 }
-

@@ -11,50 +11,69 @@ import Toybox.WatchUi;
 
 //! Initial view for the settings
 class DataFieldSettingsView extends WatchUi.View {
+  //! Constructor
+  public function initialize() {
+    View.initialize();
+  }
 
-    //! Constructor
-    public function initialize() {
-        View.initialize();
-    }
+  //! Update the view
+  //! @param dc Device context
+  public function onUpdate(dc as Dc) as Void {
+    dc.clearClip();
+    dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+    dc.clear();
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 
-    //! Update the view
-    //! @param dc Device context
-    public function onUpdate(dc as Dc) as Void {
-        dc.clearClip();
-        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
-        dc.clear();
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-
-        dc.drawText(dc.getWidth() / 2, dc.getHeight() / 2 - 30, Graphics.FONT_SMALL, "Press Menu \nfor settings", Graphics.TEXT_JUSTIFY_CENTER);
-    }
+    dc.drawText(
+      dc.getWidth() / 2,
+      dc.getHeight() / 2 - 30,
+      Graphics.FONT_SMALL,
+      "Press Menu \nfor settings",
+      Graphics.TEXT_JUSTIFY_CENTER
+    );
+  }
 }
 
 //! Handle opening the settings menu
 class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
+  //! Constructor
+  public function initialize() {
+    BehaviorDelegate.initialize();
+  }
 
-    //! Constructor
-    public function initialize() {
-        BehaviorDelegate.initialize();
-    }
+  //! Handle the menu event
+  //! @return true if handled, false otherwise
+  public function onMenu() as Boolean {
+    var menu = new $.DataFieldSettingsMenu();
+    var boolean = Storage.getValue("reset_front") ? true : false;
+    menu.addItem(
+      new WatchUi.ToggleMenuItem("Reset front", null, "reset_front", boolean, null)
+    );
 
-    //! Handle the menu event
-    //! @return true if handled, false otherwise
-    public function onMenu() as Boolean {
-        var menu = new $.DataFieldSettingsMenu();
-        var boolean = Storage.getValue(1) ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("Settings1", null, 1, boolean, null));
+    boolean = Storage.getValue("reset_back") ? true : false;
+    menu.addItem(
+      new WatchUi.ToggleMenuItem("Reset back", null, "reset_back", boolean, null)
+    );
 
-        boolean = Storage.getValue(2) ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("Settings2", null, 2, boolean, null));
+    // boolean = Storage.getValue(3) ? true : false;
+    // menu.addItem(
+    //   new WatchUi.ToggleMenuItem("Settings3", null, 3, boolean, null)
+    // );
 
-        boolean = Storage.getValue(3) ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("Settings3", null, 3, boolean, null));
+    // boolean = Storage.getValue(4) ? true : false;
+    // menu.addItem(
+    //   new WatchUi.ToggleMenuItem("Settings4", null, 4, boolean, null)
+    // );
 
-        boolean = Storage.getValue(4) ? true : false;
-        menu.addItem(new WatchUi.ToggleMenuItem("Settings4", null, 4, boolean, null));
+    WatchUi.pushView(
+      menu,
+      new $.DataFieldSettingsMenuDelegate(),
+      WatchUi.SLIDE_IMMEDIATE
+    );
+    return true;
+  }
 
-        WatchUi.pushView(menu, new $.DataFieldSettingsMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
-        return true;
-    }
+  public function onBack() as Boolean {
+    getApp().onSettingsChanged();
+  }
 }
-

@@ -10,27 +10,29 @@ import Toybox.WatchUi;
 
 //! The settings menu
 class DataFieldSettingsMenu extends WatchUi.Menu2 {
-
-    //! Constructor
-    public function initialize() {
-        Menu2.initialize({:title=>"Settings"});
-    }
+  //! Constructor
+  public function initialize() {
+    Menu2.initialize({ :title => "Settings" });
+  }
 }
 
 //! Handles menu input and stores the menu data
 class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
+  //! Constructor
+  public function initialize() {
+    Menu2InputDelegate.initialize();
+  }
 
-    //! Constructor
-    public function initialize() {
-        Menu2InputDelegate.initialize();
+  //! Handle a menu item selection
+  //! @param menuItem The selected menu item
+  public function onSelect(menuItem as MenuItem) as Void {
+    var id = menuItem.getId();
+    if (id instanceof Number && menuItem instanceof ToggleMenuItem) {
+      Storage.setValue(id as Number, menuItem.isEnabled());
     }
-
-    //! Handle a menu item selection
-    //! @param menuItem The selected menu item
-    public function onSelect(menuItem as MenuItem) as Void {
-        var id = menuItem.getId();
-        if ((id instanceof Number) && (menuItem instanceof ToggleMenuItem)) {
-            Storage.setValue(id as Number, menuItem.isEnabled());
-        }
+    // @@ check id starts with "reset_"
+    if (id instanceof String && menuItem instanceof ToggleMenuItem) {
+      Storage.setValue(id as String, menuItem.isEnabled());
     }
+  }
 }
