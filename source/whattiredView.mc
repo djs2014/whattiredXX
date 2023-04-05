@@ -260,7 +260,8 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistance(),
           mTotals.GetMaxDistance(),
           true,
-          true
+          true,
+          false
         );
         break;
       case Types.FocusYear:
@@ -270,7 +271,8 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceYear(),
           mTotals.GetTotalDistanceLastYear(),
           true,
-          true
+          true,
+          false
         );
         break;
       case Types.FocusMonth:
@@ -280,7 +282,8 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceMonth(),
           mTotals.GetTotalDistanceLastMonth(),
           true,
-          true
+          true,
+          false
         );
         break;
       case Types.FocusWeek:
@@ -290,7 +293,8 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceWeek(),
           mTotals.GetTotalDistanceLastWeek(),
           true,
-          true
+          true,
+          false
         );
         break;
       case Types.FocusRide:
@@ -300,8 +304,10 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceRide(),
           mTotals.GetTotalDistanceLastRide(),
           true,
-          true
+          true,
+          mTotals.IsCourseActive()
         );
+
         break;
       case Types.FocusFront:
         drawDistanceCircle(
@@ -310,7 +316,8 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceFrontTyre(),
           mTotals.GetMaxDistanceFrontTyre(),
           true,
-          true
+          true,
+          false
         );
         break;
       case Types.FocusBack:
@@ -320,7 +327,8 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceBackTyre(),
           mTotals.GetMaxDistanceBackTyre(),
           true,
-          true
+          true,
+          false
         );
         break;
     }
@@ -613,7 +621,8 @@ class whattiredView extends WatchUi.DataField {
     distanceInMeters as Float,
     lastDistanceInMeters as Float,
     showValues as Boolean,
-    showColors as Boolean
+    showColors as Boolean,
+    isMax100Percent as Boolean
   ) as Void {
     var units = getUnits(distanceInMeters);
     var value = getDistanceInMeterOrKm(distanceInMeters);
@@ -622,6 +631,7 @@ class whattiredView extends WatchUi.DataField {
     var y = mHeight / 2;
     var radius = x - 5;
     var circleWidth = 8;
+    var color = 0;
     if (x > y) {
       radius = y - 5;
     }
@@ -633,17 +643,34 @@ class whattiredView extends WatchUi.DataField {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(x, y, radius);
 
-        dc.setColor(percentageToColor(perc), Graphics.COLOR_TRANSPARENT);
+        var createColors = false;
+        if (isMax100Percent and (Graphics has :createColor)) {
+          createColors = true;
+          color = percentageToColorAlt(perc, 180);
+          dc.setFill(color);
+          dc.setStroke(color);
+        } else {
+          dc.setColor(percentageToColor(perc), Graphics.COLOR_TRANSPARENT);
+        }
         drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
-        
-        var percRemain = perc - 100;  
+
+        var percRemain = perc - 100;
         var radiusInner = radius - circleWidth - 3;
-        while (percRemain > 0 && (radiusInner > 0)) {
-          dc.setColor(percentageToColor(percRemain), Graphics.COLOR_TRANSPARENT);
+        while (percRemain > 0 && radiusInner > 0) {
+          if (createColors) {
+            color = percentageToColorAlt(percRemain, 180);
+            dc.setFill(color);
+            dc.setStroke(color);
+          } else {
+            dc.setColor(
+              percentageToColor(percRemain),
+              Graphics.COLOR_TRANSPARENT
+            );
+          }
           drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
           radiusInner = radiusInner - circleWidth - 3;
-          percRemain = percRemain - 100;  
-        }       
+          percRemain = percRemain - 100;
+        }
       }
     }
 
@@ -665,6 +692,8 @@ class whattiredView extends WatchUi.DataField {
         formattedValue,
         Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
       );
+
+      dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);
       dc.drawText(
         x,
         mHeight - mLineHeight - 2,

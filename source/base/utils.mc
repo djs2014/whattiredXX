@@ -143,6 +143,59 @@ function getMatchingFont(
   return font;
 }
 
+// [perc, R, G, B]
+const PERC_COLORS_WHITE_RED =
+  [
+    [0, 255, 255, 255],
+    [100, 255, 0, 0],
+  ] as Array<Array<Number> >;
+
+// alpha, 255 is solid, 0 is transparent
+function percentageToColorAlt(
+  percentage as Numeric?,
+  alpha as Number
+) as ColorType {
+  var pcolor = 0;
+  var pColors = PERC_COLORS_WHITE_RED;
+  if (percentage == null || percentage == 0) {
+    return Graphics.createColor(alpha, 255, 255, 255);
+  } else if (percentage >= 100) {
+    // final entry
+    pcolor = pColors[pColors.size() - 1] as Array<Number>;
+    return Graphics.createColor(alpha, pcolor[1], pcolor[2], pcolor[3]);
+  }
+
+  var i = 1;
+  while (i < pColors.size()) {
+    pcolor = pColors[i] as Array<Number>;
+    if (percentage <= pcolor[0]) {
+      break;
+    }
+    i++;
+  }
+   System.println(percentage);
+   System.println(i);
+
+  var lower = pColors[i - 1];
+  var upper = pColors[i];
+  var range = upper[0] - lower[0];
+  var rangePct = 1;
+  if (range != 0) {
+    rangePct = (percentage - lower[0]) / range;
+  }
+  var pctLower = 1 - rangePct;
+  var pctUpper = rangePct;
+
+  var red = Math.floor(lower[1] * pctLower + upper[1] * pctUpper);
+  var green = Math.floor(lower[2] * pctLower + upper[2] * pctUpper);
+  var blue = Math.floor(lower[3] * pctLower + upper[3] * pctUpper);
+  return Graphics.createColor(
+    alpha,
+    red.toNumber(),
+    green.toNumber(),
+    blue.toNumber()
+  );
+}
 /* TODO
 var percentColors = [
     { pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
@@ -228,7 +281,7 @@ function percentageToColor(percentage as Numeric?) as ColorType {
   return Colors.COLOR_WHITE_DK_PURPLE_4;
 }
 
-  // https://htmlcolorcodes.com/  -> use tint 3
+// https://htmlcolorcodes.com/  -> use tint 3
 module Colors {
   // color scale
   const COLOR_WHITE_1 = 0xfbeee6;

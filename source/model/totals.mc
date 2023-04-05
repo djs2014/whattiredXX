@@ -81,6 +81,10 @@ class Totals {
     return totalDistanceLastRide;
   }
 
+  public function IsCourseActive() as Boolean {
+    return (totalDistanceToDestination > 0);
+  }
+
   public function GetTotalDistanceFrontTyre() as Float {
     return totalDistanceFrontTyre + elapsedDistanceActivity;
   }
