@@ -31,6 +31,7 @@ class Totals {
 
   private var totalDistanceLastRide as Float = 0.0f;
   private var totalDistanceRide as Float = 0.0f;
+  private var startDistanceCourse as Float = 0.0f;
   private var totalDistanceToDestination as Float = 0.0f;
 
   private var rideStarted as Boolean = false;
@@ -63,7 +64,7 @@ class Totals {
     return totalDistanceWeek + elapsedDistanceActivity;
   }
   public function GetTotalDistanceRide() as Float {
-    return totalDistanceRide + elapsedDistanceActivity;
+    return elapsedDistanceActivity;
   }
   public function GetTotalDistanceLastYear() as Float {
     return totalDistanceLastYear;
@@ -74,15 +75,26 @@ class Totals {
   public function GetTotalDistanceLastWeek() as Float {
     return totalDistanceLastWeek;
   }
-  public function GetTotalDistanceLastRide() as Float {    
-    if (totalDistanceToDestination > 0) {
-      return totalDistanceToDestination;
-    }
+  public function GetTotalDistanceLastRide() as Float {
     return totalDistanceLastRide;
   }
-
+  public function GetElapsedDistanceToDestination() as Float {
+    return elapsedDistanceActivity - startDistanceCourse;
+  }
+  public function GetDistanceToDestination() as Float {
+    return totalDistanceToDestination;
+  }
   public function IsCourseActive() as Boolean {
-    return (totalDistanceToDestination > 0);
+    System.println("totalDistanceToDestination:");
+    System.println(totalDistanceToDestination / 1000.0);
+    System.println("GetElapsedDistanceToDestination()");
+    System.println(GetElapsedDistanceToDestination() / 1000.0);
+    System.println("startDistanceCourse()");
+    System.println(startDistanceCourse / 1000.0);
+    System.println("elapsedDistanceActivity");
+    System.println(elapsedDistanceActivity / 1000.0);
+
+    return totalDistanceToDestination > 0;
   }
 
   public function GetTotalDistanceFrontTyre() as Float {
@@ -158,7 +170,13 @@ class Totals {
         totalDistanceToDestination = info.distanceToDestination as Float;
       }
     }
-    
+    // Remeber the distance, when course is started
+    if (totalDistanceToDestination == 0.0f) {
+      startDistanceCourse = 0.0f;
+    } else if (startDistanceCourse == 0.0f) {
+      startDistanceCourse = elapsedDistanceActivity;
+    }
+
     handleTyreReset(Activity.getProfileInfo());
   }
 
@@ -247,10 +265,7 @@ class Totals {
       );
 
       setDistanceAsMeters("totalDistanceLastRide", totalDistanceLastRide);
-      setDistanceAsMeters(
-        "totalDistanceRide",
-        totalDistanceRide + elapsedDistanceActivity
-      );
+      setDistanceAsMeters("totalDistanceRide", elapsedDistanceActivity);
 
       setDistanceAsMeters(
         "totalDistanceFrontTyre",
@@ -330,7 +345,7 @@ class Totals {
     }
 
     if (switchFB) {
-       Storage.setValue("switch_front_back", false);
+      Storage.setValue("switch_front_back", false);
       var tmpBack = totalDistanceBackTyre;
       totalDistanceBackTyre = totalDistanceFrontTyre;
       totalDistanceFrontTyre = tmpBack;

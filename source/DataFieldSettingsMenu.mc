@@ -169,6 +169,9 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       focusMenu.addItem(
         new WatchUi.MenuItem("Back", null, Types.FocusBack, {})
       );
+      focusMenu.addItem(
+        new WatchUi.MenuItem("Course", null, Types.FocusCourse, {})
+      );
       focusMenu.setFocus(current); // 0-index
       WatchUi.pushView(
         focusMenu,

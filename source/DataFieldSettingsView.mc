@@ -184,6 +184,8 @@ function getFocusMenuSubLabel(key as Application.PropertyKeyType) as String {
       return "Front";
     case Types.FocusBack:
       return "Back";
+    case Types.FocusCourse:
+      return "Course";
     default:
       return "Nothing";
   }

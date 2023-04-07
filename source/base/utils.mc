@@ -150,20 +150,43 @@ const PERC_COLORS_WHITE_RED =
     [100, 255, 0, 0],
   ] as Array<Array<Number> >;
 
+const PERC_COLORS_SCHEME =
+  [
+    [0, 255, 255, 255],
+    [55, 244, 246, 247], // COLOR_WHITE_4
+    [65, 174, 214, 241], // COLOR_WHITE_BLUE_3
+    [70, 169, 204, 227], // COLOR_WHITE_DK_BLUE_3
+    [75, 163, 228, 215], // COLOR_WHITE_LT_GREEN_3
+    [80, 169, 223, 191], // COLOR_WHITE_GREEN_3
+    [85, 249, 231, 159], // COLOR_WHITE_YELLOW_3
+    [95, 250, 215, 160], // COLOR_WHITE_ORANGE_3
+    [100, 250, 229, 211], // COLOR_WHITE_ORANGERED_2
+    [105, 245, 203, 167], // COLOR_WHITE_ORANGERED_3
+    [115, 237, 187, 153], // COLOR_WHITE_ORANGERED2_3
+    [125, 245, 183, 177], // COLOR_WHITE_RED_3
+    [135, 230, 176, 170], // COLOR_WHITE_DK_RED_3
+    [145, 215, 189, 226], // COLOR_WHITE_PURPLE_3
+    [155, 210, 180, 222], // COLOR_WHITE_DK_PURPLE_3
+    [165, 187, 143, 206], // COLOR_WHITE_DK_PURPLE_4
+    [999, 0, 0, 0], // COLOR_WHITE_DK_PURPLE_4
+  ] as Array<Array<Number> >;
+
 // alpha, 255 is solid, 0 is transparent
 function percentageToColorAlt(
   percentage as Numeric?,
-  alpha as Number
+  alpha as Number,
+  colorScheme as Array<Array<Number> >
 ) as ColorType {
   var pcolor = 0;
-  var pColors = PERC_COLORS_WHITE_RED;
+  var pColors = colorScheme;
   if (percentage == null || percentage == 0) {
     return Graphics.createColor(alpha, 255, 255, 255);
-  } else if (percentage >= 100) {
-    // final entry
-    pcolor = pColors[pColors.size() - 1] as Array<Number>;
-    return Graphics.createColor(alpha, pcolor[1], pcolor[2], pcolor[3]);
   }
+  // else if (percentage >= 100) {
+  //   // final entry
+  //   pcolor = pColors[pColors.size() - 1] as Array<Number>;
+  //   return Graphics.createColor(alpha, pcolor[1], pcolor[2], pcolor[3]);
+  // }
 
   var i = 1;
   while (i < pColors.size()) {
@@ -173,8 +196,12 @@ function percentageToColorAlt(
     }
     i++;
   }
-   System.println(percentage);
-   System.println(i);
+  if (i >= pColors.size()) {
+    i = pColors.size() - 1;
+  }
+
+  System.println(percentage);
+  System.println(i);
 
   var lower = pColors[i - 1];
   var upper = pColors[i];

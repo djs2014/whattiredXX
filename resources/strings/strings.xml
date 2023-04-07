@@ -39,6 +39,7 @@
     <string id="ShowFocusRide">Ride</string>
     <string id="ShowFocusFront">Front</string>
     <string id="ShowFocusBack">Back</string>    
+    <string id="ShowFocusCourse">Course</string>    
 
     <string id="ShowFields">Set fields to display (ORMWYFB)</string>    
 </strings>

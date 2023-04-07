@@ -13,6 +13,7 @@ class whattiredView extends WatchUi.DataField {
   hidden var mLineHeight as Number = 10;
   hidden var mHeight as Number = 100;
   hidden var mWidth as Number = 100;
+  hidden var mCreateColors as Boolean = false;
 
   hidden var mTotals as Totals;
   hidden var mFontFitted as Graphics.FontDefinition = Graphics.FONT_SMALL;
@@ -43,6 +44,7 @@ class whattiredView extends WatchUi.DataField {
   function initialize() {
     DataField.initialize();
     mTotals = getApp().mTotals;
+    mCreateColors = Graphics has :createColor;
   }
 
   function onLayout(dc as Dc) as Void {
@@ -252,6 +254,21 @@ class whattiredView extends WatchUi.DataField {
       line = line + 1;
     }
 
+    if (mTotals.IsCourseActive() && focus != Types.FocusCourse) {
+      DrawDistanceLine(
+        dc,
+        line,
+        "Crse",
+        "C",
+        mTotals.GetDistanceToDestination(),
+        mTotals.GetElapsedDistanceToDestination(),
+        mShowValues,
+        mShowColors,
+        nothingHasFocus
+      );
+      line = line + 1;
+    }
+  
     switch (focus) {
       case Types.FocusOdo:
         drawDistanceCircle(
@@ -260,8 +277,7 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistance(),
           mTotals.GetMaxDistance(),
           true,
-          true,
-          false
+          true
         );
         break;
       case Types.FocusYear:
@@ -271,8 +287,7 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceYear(),
           mTotals.GetTotalDistanceLastYear(),
           true,
-          true,
-          false
+          true
         );
         break;
       case Types.FocusMonth:
@@ -282,8 +297,7 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceMonth(),
           mTotals.GetTotalDistanceLastMonth(),
           true,
-          true,
-          false
+          true
         );
         break;
       case Types.FocusWeek:
@@ -293,8 +307,7 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceWeek(),
           mTotals.GetTotalDistanceLastWeek(),
           true,
-          true,
-          false
+          true
         );
         break;
       case Types.FocusRide:
@@ -304,8 +317,7 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceRide(),
           mTotals.GetTotalDistanceLastRide(),
           true,
-          true,
-          mTotals.IsCourseActive()
+          true
         );
 
         break;
@@ -316,8 +328,7 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceFrontTyre(),
           mTotals.GetMaxDistanceFrontTyre(),
           true,
-          true,
-          false
+          true
         );
         break;
       case Types.FocusBack:
@@ -327,9 +338,29 @@ class whattiredView extends WatchUi.DataField {
           mTotals.GetTotalDistanceBackTyre(),
           mTotals.GetMaxDistanceBackTyre(),
           true,
-          true,
-          false
+          true
         );
+        break;
+      case Types.FocusCourse:
+        if (mTotals.IsCourseActive()) {
+          drawDistanceCircle(
+            dc,
+            "Course",
+            mTotals.GetDistanceToDestination(),
+            mTotals.GetElapsedDistanceToDestination(),
+            true,
+            true
+          );
+        } else {
+          drawDistanceCircle(
+            dc,
+            "Ride",
+            mTotals.GetTotalDistanceRide(),
+            mTotals.GetTotalDistanceLastRide(),
+            true,
+            true
+          );
+        }
         break;
     }
   }
@@ -621,8 +652,7 @@ class whattiredView extends WatchUi.DataField {
     distanceInMeters as Float,
     lastDistanceInMeters as Float,
     showValues as Boolean,
-    showColors as Boolean,
-    isMax100Percent as Boolean
+    showColors as Boolean
   ) as Void {
     var units = getUnits(distanceInMeters);
     var value = getDistanceInMeterOrKm(distanceInMeters);
@@ -643,10 +673,8 @@ class whattiredView extends WatchUi.DataField {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(x, y, radius);
 
-        var createColors = false;
-        if (isMax100Percent and (Graphics has :createColor)) {
-          createColors = true;
-          color = percentageToColorAlt(perc, 180);
+        if (mCreateColors) {
+          color = percentageToColorAlt(perc, 180, $.PERC_COLORS_SCHEME);
           dc.setFill(color);
           dc.setStroke(color);
         } else {
@@ -657,8 +685,8 @@ class whattiredView extends WatchUi.DataField {
         var percRemain = perc - 100;
         var radiusInner = radius - circleWidth - 3;
         while (percRemain > 0 && radiusInner > 0) {
-          if (createColors) {
-            color = percentageToColorAlt(percRemain, 180);
+          if (mCreateColors) {
+            color = percentageToColorAlt(percRemain, 180, $.PERC_COLORS_SCHEME);
             dc.setFill(color);
             dc.setStroke(color);
           } else {

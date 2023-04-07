@@ -85,6 +85,7 @@
 			<listEntry value="5">@Strings.ShowFocusRide</listEntry>
 			<listEntry value="6">@Strings.ShowFocusFront</listEntry>
 			<listEntry value="7">@Strings.ShowFocusBack</listEntry>
+			<listEntry value="8">@Strings.ShowFocusCourse</listEntry>
         </settingConfig>
     </setting>
 
