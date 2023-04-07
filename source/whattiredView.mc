@@ -254,20 +254,21 @@ class whattiredView extends WatchUi.DataField {
       line = line + 1;
     }
 
-    if (mTotals.IsCourseActive() && focus != Types.FocusCourse) {
-      DrawDistanceLine(
-        dc,
-        line,
-        "Crse",
-        "C",
-        mTotals.GetDistanceToDestination(),
-        mTotals.GetElapsedDistanceToDestination(),
-        mShowValues,
-        mShowColors,
-        nothingHasFocus
-      );
-      line = line + 1;
-    }
+    // @@ should be in background, alpha color
+    // if (mTotals.IsCourseActive() && focus != Types.FocusCourse) {
+    //   DrawDistanceLine(
+    //     dc,
+    //     line,
+    //     "Crse",
+    //     "C",
+    //     mTotals.GetDistanceToDestination(),
+    //     mTotals.GetElapsedDistanceToDestination(),
+    //     mShowValues,
+    //     mShowColors,
+    //     nothingHasFocus
+    //   );
+    //   line = line + 1;
+    // }
   
     switch (focus) {
       case Types.FocusOdo:
