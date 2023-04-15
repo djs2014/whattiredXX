@@ -13,7 +13,6 @@ class whattiredView extends WatchUi.DataField {
   hidden var mLineHeight as Number = 10;
   hidden var mHeight as Number = 100;
   hidden var mWidth as Number = 100;
-  hidden var mCreateColors as Boolean = false;
 
   hidden var mTotals as Totals;
   hidden var mFontFitted as Graphics.FontDefinition = Graphics.FONT_SMALL;
@@ -44,7 +43,19 @@ class whattiredView extends WatchUi.DataField {
   function initialize() {
     DataField.initialize();
     mTotals = getApp().mTotals;
-    mCreateColors = Graphics has :createColor;
+    checkFeatures();
+  }
+
+  function checkFeatures() as Void {
+    $.gCreateColors = Graphics has :createColor;
+    try {
+      $.gUseSetFillStroke = Graphics.Dc has :setStroke;
+      if ($.gUseSetFillStroke) {
+        $.gUseSetFillStroke = Graphics.Dc has :setFill;
+      }
+    } catch (ex) {
+      ex.printStackTrace();
+    }
   }
 
   function onLayout(dc as Dc) as Void {
@@ -269,7 +280,7 @@ class whattiredView extends WatchUi.DataField {
     //   );
     //   line = line + 1;
     // }
-  
+
     switch (focus) {
       case Types.FocusOdo:
         drawDistanceCircle(
@@ -577,14 +588,14 @@ class whattiredView extends WatchUi.DataField {
       if (maxMeters_front > 0) {
         perc_front = percentageOf(meters_front, maxMeters_front);
         if (showColors) {
-          dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-          dc.drawCircle(x, y, radius);
 
-          dc.setColor(
-            percentageToColor(perc_front),
-            Graphics.COLOR_TRANSPARENT
-          );
-          drawPercentageCircle(dc, x, y, radius, perc_front, circleWidth);
+          drawPercentageCircleTarget(dc, x, y, radius, perc_front, circleWidth);
+          // dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+          // dc.drawCircle(x, y, radius);
+
+          // setColorByPerc(dc, perc_front);
+          // drawPercentageCircle(dc, x, y, radius, perc_front, circleWidth);
+
 
           dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);
           dc.drawText(
@@ -617,11 +628,12 @@ class whattiredView extends WatchUi.DataField {
       if (maxMeters_back > 0) {
         perc_back = percentageOf(meters_back, maxMeters_back);
         if (showColors) {
-          dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-          dc.drawCircle(x2, y, radius);
+          drawPercentageCircleTarget(dc, x2, y, radius, perc_back, circleWidth);
+          // dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+          // dc.drawCircle(x2, y, radius);
 
-          dc.setColor(percentageToColor(perc_back), Graphics.COLOR_TRANSPARENT);
-          drawPercentageCircle(dc, x2, y, radius, perc_back, circleWidth);
+          // setColorByPerc(dc, perc_back);
+          // drawPercentageCircle(dc, x2, y, radius, perc_back, circleWidth);
 
           dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);
           dc.drawText(
@@ -647,6 +659,8 @@ class whattiredView extends WatchUi.DataField {
     }
   }
 
+
+
   function drawDistanceCircle(
     dc as Dc,
     label as String,
@@ -671,35 +685,23 @@ class whattiredView extends WatchUi.DataField {
     if (lastDistanceInMeters > 0) {
       perc = percentageOf(distanceInMeters, lastDistanceInMeters);
       if (showColors) {
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(x, y, radius);
+        drawPercentageCircleTarget(dc, x, y, radius, perc, circleWidth);
 
-        if (mCreateColors) {
-          color = percentageToColorAlt(perc, 180, $.PERC_COLORS_SCHEME);
-          dc.setFill(color);
-          dc.setStroke(color);
-        } else {
-          dc.setColor(percentageToColor(perc), Graphics.COLOR_TRANSPARENT);
-        }
-        drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
+        // dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        // dc.drawCircle(x, y, radius);
 
-        var percRemain = perc - 100;
-        var radiusInner = radius - circleWidth - 3;
-        while (percRemain > 0 && radiusInner > 0) {
-          if (mCreateColors) {
-            color = percentageToColorAlt(percRemain, 180, $.PERC_COLORS_SCHEME);
-            dc.setFill(color);
-            dc.setStroke(color);
-          } else {
-            dc.setColor(
-              percentageToColor(percRemain),
-              Graphics.COLOR_TRANSPARENT
-            );
-          }
-          drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
-          radiusInner = radiusInner - circleWidth - 3;
-          percRemain = percRemain - 100;
-        }
+        // setColorByPerc(dc, perc);
+        // drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
+
+        // var percRemain = perc - 100;
+        // var radiusInner = radius - circleWidth - 3;
+        // while (percRemain > 0 && radiusInner > 0) {
+        //   setColorByPerc(dc, percRemain);
+        //   drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
+
+        //   radiusInner = radiusInner - circleWidth - 3;
+        //   percRemain = percRemain - 100;
+        // }
       }
     }
 

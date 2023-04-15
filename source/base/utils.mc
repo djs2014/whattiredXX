@@ -7,6 +7,9 @@ import Toybox.Application;
 const MILE = 1.609344;
 const FEET = 3.281;
 
+var gCreateColors as Boolean = false;
+var gUseSetFillStroke as Boolean = false;
+
 function getStorageValue(
   key as Application.PropertyKeyType,
   dflt as Application.PropertyValueType
@@ -84,6 +87,31 @@ function drawPercentageLine(
   dc.drawPoint(x + maxwidth, y);
 }
 
+function drawPercentageCircleTarget(
+  dc as Dc,
+  x as Number,
+  y as Number,
+  radius as Number,
+  perc as Numeric,
+  circleWidth as Number
+) {
+  dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+  dc.drawCircle(x, y, radius);
+
+  setColorByPerc(dc, perc);
+  drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
+
+  var percRemain = perc - 100;
+  var radiusInner = radius - circleWidth - 3;
+  while (percRemain > 0 && radiusInner > 0) {
+    setColorByPerc(dc, percRemain);
+    drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
+
+    radiusInner = radiusInner - circleWidth - 3;
+    percRemain = percRemain - 100;
+  }
+}
+
 function drawPercentageCircle(
   dc as Dc,
   x as Number,
@@ -143,6 +171,22 @@ function getMatchingFont(
   return font;
 }
 
+function setColorByPerc(dc as Dc, perc as Numeric) as Void {
+  var color = 0;
+  if ($.gCreateColors) {
+    color = percentageToColorAlt(perc, 180, $.PERC_COLORS_SCHEME);
+  } else {
+    color = percentageToColor(perc);
+  }
+  if ($.gUseSetFillStroke) {
+    dc.setColor(Graphics.COLOR_TRANSPARENT, Graphics.COLOR_TRANSPARENT);
+    dc.setFill(color);
+    dc.setStroke(color);
+  } else {
+    dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+  }
+}
+
 // [perc, R, G, B]
 const PERC_COLORS_WHITE_RED =
   [
@@ -200,8 +244,8 @@ function percentageToColorAlt(
     i = pColors.size() - 1;
   }
 
-  System.println(percentage);
-  System.println(i);
+  // System.println(percentage);
+  // System.println(i);
 
   var lower = pColors[i - 1];
   var upper = pColors[i];

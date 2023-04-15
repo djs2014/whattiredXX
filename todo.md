@@ -17,3 +17,14 @@ perc greater than > 100 second circle
   - circle from 100% green to 0% red
 - course => show distance to end, remember start distance when course active./reset when inactive
   - then show ride bredere cirkel
+
+on device settings
+activity active -> no save values, keep i nmemory
+else save
+TEST it front / back example
+
+
+TODO to test
+docu:
+Editing the distance values on device settings
+The actual values are values on storage with the already elapsed activity distance.

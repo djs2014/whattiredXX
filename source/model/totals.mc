@@ -129,12 +129,12 @@ class Totals {
     return (
       $.gShowFront &&
       triggerFrontTyre.length() > 0 &&
-      maxDistanceFrontTyre > 1000
+      maxDistanceFrontTyre >= 1000
     );
   }
   public function HasBackTyreTrigger() as Boolean {
     return (
-      $.gShowBack && triggerBackTyre.length() > 0 && maxDistanceBackTyre > 1000
+      $.gShowBack && triggerBackTyre.length() > 0 && maxDistanceBackTyre >= 1000
     );
   }
 

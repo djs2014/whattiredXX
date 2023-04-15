@@ -32,6 +32,8 @@ Optional, track front / back tyre distance.
 
 On a small field, use focus to display only one value.
 
+Note, during an activity, changing a distance settings (Odo, Ride, Week, ..) will only changing the stored value. The already elapsed distance will not change. 
+
 ## Hide/show fields
 
 Set fields to display:
