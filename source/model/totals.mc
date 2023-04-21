@@ -35,6 +35,7 @@ class Totals {
   private var totalDistanceToDestination as Float = 0.0f;
 
   private var rideStarted as Boolean = false;
+  private var rideTimerState as Number = Activity.TIMER_STATE_OFF;
 
   private var currentProfile as String = "";
 
@@ -155,10 +156,11 @@ class Totals {
 
     if (info has :timerState) {
       if (info.timerState != null) {
-        if (info.timerState == Activity.TIMER_STATE_STOPPED) {
+        rideTimerState = info.timerState as Number;
+        if (rideTimerState == Activity.TIMER_STATE_STOPPED) {
           rideStarted = false;
         }
-        if (!rideStarted && info.timerState == Activity.TIMER_STATE_ON) {
+        if (!rideStarted && rideTimerState == Activity.TIMER_STATE_ON) {
           handleDate();
         }
       }
@@ -264,8 +266,16 @@ class Totals {
         totalDistanceWeek + elapsedDistanceActivity
       );
 
+      System.println(
+        Lang.format("save: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
+          rideStarted,
+          elapsedDistanceActivity,
+          totalDistanceLastRide,
+        ])
+      );
+
       setDistanceAsMeters("totalDistanceLastRide", totalDistanceLastRide);
-      setDistanceAsMeters("totalDistanceRide", elapsedDistanceActivity);
+      setDistanceAsMeters("totalDistanceRide", elapsedDistanceActivity);    
 
       setDistanceAsMeters(
         "totalDistanceFrontTyre",
@@ -310,6 +320,14 @@ class Totals {
 
     totalDistanceLastRide = getDistanceAsMeters("totalDistanceLastRide");
     totalDistanceRide = getDistanceAsMeters("totalDistanceRide");
+
+    System.println(
+      Lang.format("load: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
+        rideStarted,
+        totalDistanceRide,
+        totalDistanceLastRide,
+      ])
+    );
 
     if (processDate) {
       handleDate();
@@ -418,14 +436,20 @@ class Totals {
     }
 
     // ride started - via activity?
-    if (!rideStarted) {
+    if (!rideStarted && rideTimerState == Activity.TIMER_STATE_ON) {
       // Only valid rides..
-      if (totalDistanceRide > 5.0) {
+      if (totalDistanceRide > 500.0) {
         totalDistanceLastRide = totalDistanceRide;
         dateChange = true;
       }
-      totalDistanceRide = 0.0f;
+      totalDistanceRide = 0.0f; // same as elapseddistance
       rideStarted = true;
+      System.println(
+        Lang.format(
+          "handledate: rideStarted [$1$] ride [$2$] last ride [$3$] ",
+          [rideStarted, totalDistanceRide, totalDistanceLastRide]
+        )
+      );
     }
 
     if (dateChange) {

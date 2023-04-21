@@ -1,5 +1,4 @@
-set value with decimals
-reset front/back by change to actprofile front or back
+x reset front/back by change to actprofile front or back
     - ciq field What Tired need to be active in that profile
     - beeps for 10 seconds then reset front / back value
     - switch back to normal profile.
@@ -19,7 +18,8 @@ perc greater than > 100 second circle
   - then show ride bredere cirkel
 
 on device settings
-activity active -> no save values, keep i nmemory
+- hide/show fields 
+- activity active -> no save values, keep i nmemory
 else save
 TEST it front / back example
 

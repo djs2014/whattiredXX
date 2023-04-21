@@ -676,7 +676,6 @@ class whattiredView extends WatchUi.DataField {
     var y = mHeight / 2;
     var radius = x - 5;
     var circleWidth = 8;
-    var color = 0;
     if (x > y) {
       radius = y - 5;
     }
@@ -685,23 +684,7 @@ class whattiredView extends WatchUi.DataField {
     if (lastDistanceInMeters > 0) {
       perc = percentageOf(distanceInMeters, lastDistanceInMeters);
       if (showColors) {
-        drawPercentageCircleTarget(dc, x, y, radius, perc, circleWidth);
-
-        // dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        // dc.drawCircle(x, y, radius);
-
-        // setColorByPerc(dc, perc);
-        // drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
-
-        // var percRemain = perc - 100;
-        // var radiusInner = radius - circleWidth - 3;
-        // while (percRemain > 0 && radiusInner > 0) {
-        //   setColorByPerc(dc, percRemain);
-        //   drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
-
-        //   radiusInner = radiusInner - circleWidth - 3;
-        //   percRemain = percRemain - 100;
-        // }
+        drawPercentageCircleTarget(dc, x, y, radius, perc, circleWidth);        
       }
     }
 
