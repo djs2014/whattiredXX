@@ -94,7 +94,7 @@ function drawPercentageCircleTarget(
   radius as Number,
   perc as Numeric,
   circleWidth as Number
-) {
+) as Void {
   dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
   dc.drawCircle(x, y, radius);
 
@@ -260,12 +260,7 @@ function percentageToColorAlt(
   var red = Math.floor(lower[1] * pctLower + upper[1] * pctUpper);
   var green = Math.floor(lower[2] * pctLower + upper[2] * pctUpper);
   var blue = Math.floor(lower[3] * pctLower + upper[3] * pctUpper);
-  return Graphics.createColor(
-    alpha,
-    red.toNumber(),
-    green.toNumber(),
-    blue.toNumber()
-  );
+  return Graphics.createColor(alpha, red.toNumber(), green.toNumber(), blue.toNumber());
 }
 /* TODO
 var percentColors = [

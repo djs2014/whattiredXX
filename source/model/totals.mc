@@ -98,6 +98,10 @@ class Totals {
     return totalDistanceToDestination > 0;
   }
 
+  public function IsActivityStopped() as Boolean {
+    return rideTimerState == Activity.TIMER_STATE_STOPPED;
+  }
+
   public function GetTotalDistanceFrontTyre() as Float {
     return totalDistanceFrontTyre + elapsedDistanceActivity;
   }
@@ -127,16 +131,10 @@ class Totals {
     return $.gShowRide;
   }
   public function HasFrontTyreTrigger() as Boolean {
-    return (
-      $.gShowFront &&
-      triggerFrontTyre.length() > 0 &&
-      maxDistanceFrontTyre >= 1000
-    );
+    return $.gShowFront && triggerFrontTyre.length() > 0 && maxDistanceFrontTyre >= 1000;
   }
   public function HasBackTyreTrigger() as Boolean {
-    return (
-      $.gShowBack && triggerBackTyre.length() > 0 && maxDistanceBackTyre >= 1000
-    );
+    return $.gShowBack && triggerBackTyre.length() > 0 && maxDistanceBackTyre >= 1000;
   }
 
   public function GetCurrentProfile() as String {
@@ -220,9 +218,7 @@ class Totals {
   function attentionCountDown() as Void {
     if (Attention has :playTone) {
       if (Attention has :ToneProfile) {
-        var toneProfileBeeps =
-          [new Attention.ToneProfile(1500, 50)] as
-          Lang.Array<Attention.ToneProfile>;
+        var toneProfileBeeps = [new Attention.ToneProfile(1500, 50)] as Lang.Array<Attention.ToneProfile>;
         Attention.playTone({ :toneProfile => toneProfileBeeps });
       } else {
         Attention.playTone(Attention.TONE_ALERT_LO);
@@ -236,35 +232,23 @@ class Totals {
     }
   }
 
-  function save() as Void {
+  function save(loadValues as Boolean) as Void {
     try {
-      setDistanceAsMeters(
-        "totalDistance",
-        totalDistance + elapsedDistanceActivity
-      );
+      setDistanceAsMeters("totalDistance", totalDistance + elapsedDistanceActivity);
 
       Toybox.Application.Storage.setValue("lastYear", lastYear);
       setDistanceAsMeters("totalDistanceLastYear", totalDistanceLastYear);
 
       Toybox.Application.Storage.setValue("currentYear", currentYear);
-      setDistanceAsMeters(
-        "totalDistanceYear",
-        totalDistanceYear + elapsedDistanceActivity
-      );
+      setDistanceAsMeters("totalDistanceYear", totalDistanceYear + elapsedDistanceActivity);
 
       Toybox.Application.Storage.setValue("currentMonth", currentMonth);
       setDistanceAsMeters("totalDistanceLastMonth", totalDistanceLastMonth);
-      setDistanceAsMeters(
-        "totalDistanceMonth",
-        totalDistanceMonth + elapsedDistanceActivity
-      );
+      setDistanceAsMeters("totalDistanceMonth", totalDistanceMonth + elapsedDistanceActivity);
 
       Toybox.Application.Storage.setValue("currentWeek", currentWeek);
       setDistanceAsMeters("totalDistanceLastWeek", totalDistanceLastWeek);
-      setDistanceAsMeters(
-        "totalDistanceWeek",
-        totalDistanceWeek + elapsedDistanceActivity
-      );
+      setDistanceAsMeters("totalDistanceWeek", totalDistanceWeek + elapsedDistanceActivity);
 
       System.println(
         Lang.format("save: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
@@ -275,28 +259,21 @@ class Totals {
       );
 
       setDistanceAsMeters("totalDistanceLastRide", totalDistanceLastRide);
-      setDistanceAsMeters("totalDistanceRide", elapsedDistanceActivity);    
+      setDistanceAsMeters("totalDistanceRide", elapsedDistanceActivity);
 
-      setDistanceAsMeters(
-        "totalDistanceFrontTyre",
-        totalDistanceFrontTyre + elapsedDistanceActivity
-      );
-      setDistanceAsMeters(
-        "totalDistanceBackTyre",
-        totalDistanceBackTyre + elapsedDistanceActivity
-      );
+      setDistanceAsMeters("totalDistanceFrontTyre", totalDistanceFrontTyre + elapsedDistanceActivity);
+      setDistanceAsMeters("totalDistanceBackTyre", totalDistanceBackTyre + elapsedDistanceActivity);
 
       System.println("totals saved");
-      load(false);
+      if (loadValues) {
+        load(false);
+      }
     } catch (ex) {
       ex.printStackTrace();
     }
   }
 
-  hidden function setDistanceAsMeters(
-    key as String,
-    distanceMeters as Float
-  ) as Void {
+  hidden function setDistanceAsMeters(key as String, distanceMeters as Float) as Void {
     Toybox.Application.Storage.setValue(key, distanceMeters);
   }
 
@@ -335,9 +312,7 @@ class Totals {
 
     var switchFB = Storage.getValue("switch_front_back") ? true : false;
 
-    triggerFrontTyre = (
-      getApplicationProperty("triggerFrontTyre", "") as String
-    ).toLower();
+    triggerFrontTyre = (getApplicationProperty("triggerFrontTyre", "") as String).toLower();
     totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre");
     maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre");
     var reset = Storage.getValue("reset_front") ? true : false;
@@ -348,9 +323,7 @@ class Totals {
         setDistanceAsMeters("totalDistanceFrontTyre", totalDistanceFrontTyre);
       }
     }
-    triggerBackTyre = (
-      getApplicationProperty("triggerBackTyre", "") as String
-    ).toLower();
+    triggerBackTyre = (getApplicationProperty("triggerBackTyre", "") as String).toLower();
     totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre");
     maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre");
     reset = Storage.getValue("reset_back") ? true : false;
@@ -445,22 +418,20 @@ class Totals {
       totalDistanceRide = 0.0f; // same as elapseddistance
       rideStarted = true;
       System.println(
-        Lang.format(
-          "handledate: rideStarted [$1$] ride [$2$] last ride [$3$] ",
-          [rideStarted, totalDistanceRide, totalDistanceLastRide]
-        )
+        Lang.format("handledate: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
+          rideStarted,
+          totalDistanceRide,
+          totalDistanceLastRide,
+        ])
       );
     }
 
     if (dateChange) {
-      save();
+      save(true);
     }
   }
 
-  hidden function setProperty(
-    key as PropertyKeyType,
-    value as PropertyValueType
-  ) as Void {
+  hidden function setProperty(key as PropertyKeyType, value as PropertyValueType) as Void {
     Application.Properties.setValue(key, value);
   }
 

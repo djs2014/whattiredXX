@@ -30,7 +30,10 @@ class whattiredApp extends Application.AppBase {
 
   // onStop() is called when your application is exiting
   function onStop(state as Dictionary?) as Void {
-    mTotals.save();
+    // prevent accidental save when starting a connect iq widget
+    if (mTotals.IsActivityStopped()) {
+      mTotals.save(false);
+    }
   }
 
   //! Return the initial view of your application here
