@@ -60,10 +60,12 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       distanceMenu.addItem(mi);
       distanceItems.add(mi.getId() as String);
 
-      mi = new WatchUi.MenuItem("Ride", null, "totalDistanceRide", null);
-      mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
-      distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
+      // Not needed, is actual activity ride
+      // @@ make readonly item
+      // mi = new WatchUi.MenuItem("Ride", null, "totalDistanceRide", null);
+      // mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
+      // distanceMenu.addItem(mi);
+      // distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Front", null, "totalDistanceFrontTyre", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));

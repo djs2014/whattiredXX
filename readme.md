@@ -48,7 +48,5 @@ Default show all fields: OYMWRFB
 
 ## Reset Front/Back to 0
 
-Create an activity profile with name `Front` or `Back`, and add/enable this datafield.
-When switching to this activity, after 10 beeps the Front or Back counter will reset to 0.
-
+See toggle menu in device settings menu
 

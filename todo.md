@@ -1,4 +1,16 @@
-do not save when activity is active, activity stopped -> save
+remove settinsg.xml
+show fields on device
++ show which fields
++ larger font is less fields
+
+
+enter settings 
+ - activity paused - saved - load ok 
+ - activity running -> no save exit settings - load wrong correction 
+
+na exit settings is load zonder elapsed correction
+
+remove settings -> on device
 
 x reset front/back by change to actprofile front or back
     - ciq field What Tired need to be active in that profile

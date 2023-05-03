@@ -49,32 +49,7 @@
     <setting propertyKey="@Properties.showValuesSmallField" title="@Strings.ShowValuesSmallField">
         <settingConfig type="boolean" />
     </setting>	
-
-
-    <setting propertyKey="@Properties.triggerFrontTyre" title="@Strings.TriggerFrontTyre">
-        <settingConfig type="alphanumeric" />
-    </setting>
-
-    <setting propertyKey="@Properties.totalDistanceFrontTyre" title="@Strings.TotalDistanceFrontTyre">
-        <settingConfig type="numeric" min="0"/>
-    </setting>	
-
-    <setting propertyKey="@Properties.maxDistanceFrontTyre" title="@Strings.MaxDistanceFrontTyre">
-        <settingConfig type="numeric" min="0"/>
-    </setting>	
-
-    <setting propertyKey="@Properties.triggerBackTyre" title="@Strings.TriggerBackTyre">
-        <settingConfig type="alphanumeric" />
-    </setting>
-
-    <setting propertyKey="@Properties.totalDistanceBackTyre" title="@Strings.TotalDistanceBackTyre">
-        <settingConfig type="numeric" min="0"/>
-    </setting>	
-
-    <setting propertyKey="@Properties.maxDistanceBackTyre" title="@Strings.MaxDistanceBackTyre">
-        <settingConfig type="numeric" min="0"/>
-    </setting>	
-
+   
     <setting propertyKey="@Properties.showFocusSmallField" title="@Strings.ShowFocusSmallField" prompt="@Strings.ShowFocusSmallField">
         <settingConfig type="list">
             <listEntry value="0">@Strings.ShowFocusNothing</listEntry>

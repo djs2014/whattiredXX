@@ -106,6 +106,10 @@ class whattiredView extends WatchUi.DataField {
     }
   }
 
+  function onTimerPause() {
+    mTotals.save(false);
+  }
+  
   function onTimerReset() {
     mTotals.save(false);
   }
