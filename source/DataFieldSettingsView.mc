@@ -67,19 +67,19 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
     mi.setSubLabel("Manage distance settings");
     menu.addItem(mi);
 
-    boolean = $.getStorageElseApplicationProperty("showColors", true) as Boolean;
+    boolean = $.getStorageValue("showColors", true) as Boolean;
     menu.addItem(new WatchUi.ToggleMenuItem("Show colors", null, "showColors", boolean, null));
-    boolean = $.getStorageElseApplicationProperty("showValues", true) as Boolean;
+    boolean = $.getStorageValue("showValues", true) as Boolean;
     menu.addItem(new WatchUi.ToggleMenuItem("Show values", null, "showValues", boolean, null));
-    boolean = $.getStorageElseApplicationProperty("showColorsSmallField", true) as Boolean;
+    boolean = $.getStorageValue("showColorsSmallField", true) as Boolean;
     menu.addItem(new WatchUi.ToggleMenuItem("Show colors small field", null, "showColorsSmallField", boolean, null));
-    boolean = $.getStorageElseApplicationProperty("showValuesSmallField", false) as Boolean;
+    boolean = $.getStorageValue("showValuesSmallField", false) as Boolean;
     menu.addItem(new WatchUi.ToggleMenuItem("Show values small field", null, "showValuesSmallField", boolean, null));
 
-    mi = new WatchUi.MenuItem("Distance (debug)", null, "menuDistanceDebug", null);
-    mi.setSubLabel("Manage distance settings");
+    mi = new WatchUi.MenuItem("Show fields", null, "menuFields", null);
+    mi.setSubLabel("Display data");
     menu.addItem(mi);
-
+   
     var view = new $.DataFieldSettingsView();
     WatchUi.pushView(menu, new $.DataFieldSettingsMenuDelegate(view), WatchUi.SLIDE_IMMEDIATE);
     return true;
@@ -98,7 +98,7 @@ function getDistanceMenuSubLabel(key as Application.PropertyKeyType) as String {
 }
 
 function getFocusMenuSubLabel(key as Application.PropertyKeyType) as String {
-  var current = $.getStorageElseApplicationProperty(key, Types.FocusNothing) as Types.EnumFocus;
+  var current = $.getStorageValue(key, Types.FocusNothing) as Types.EnumFocus;
   switch (current) {
     case Types.FocusNothing:
       return "Nothing";

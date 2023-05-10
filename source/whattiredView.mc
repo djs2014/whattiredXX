@@ -87,8 +87,18 @@ class whattiredView extends WatchUi.DataField {
       nrOfFields = nrOfFields - 1;
     }
 
+    if (nrOfFields < 4) {
+      if (mHeight <= 100) {
+        mFontText = Graphics.FONT_SMALL;
+      } else {
+        mFontText = Graphics.FONT_MEDIUM;
+      }
+      mLabelWidth = dc.getTextWidthInPixels("Month", mFontText) + 2;
+    mLabelWidthFocused = dc.getTextWidthInPixels("M", mFontText) + 2;
+      mLineHeight = dc.getFontHeight(mFontText) - 1;
+    }
     // Add extra line if front/back enabled
-    if (mTotals.HasFrontTyreTrigger() || mTotals.HasBackTyreTrigger()) {
+    if (mTotals.HasFrontTyre() || mTotals.HasBackTyre()) {
       nrOfFields = nrOfFields + 1;
       if (!mSmallField) {
         // Room for F B Circles?
@@ -109,7 +119,7 @@ class whattiredView extends WatchUi.DataField {
   function onTimerPause() {
     mTotals.save(false);
   }
-  
+
   function onTimerReset() {
     mTotals.save(false);
   }
@@ -223,12 +233,12 @@ class whattiredView extends WatchUi.DataField {
     } else if (
       focus != Types.FocusFront &&
       focus != Types.FocusBack &&
-      mTotals.HasFrontTyreTrigger() &&
-      mTotals.HasBackTyreTrigger()
+      mTotals.HasFrontTyre() &&
+      mTotals.HasBackTyre()
     ) {
       DrawDistanceFrontBackTyre(dc, line, mShowValues, mShowColors, nothingHasFocus);
       line = line + 1;
-    } else if (focus != Types.FocusFront && mTotals.HasFrontTyreTrigger()) {
+    } else if (focus != Types.FocusFront && mTotals.HasFrontTyre()) {
       DrawDistanceLine(
         dc,
         line,
@@ -241,7 +251,7 @@ class whattiredView extends WatchUi.DataField {
         nothingHasFocus
       );
       line = line + 1;
-    } else if (focus != Types.FocusBack && mTotals.HasBackTyreTrigger()) {
+    } else if (focus != Types.FocusBack && mTotals.HasBackTyre()) {
       DrawDistanceLine(
         dc,
         line,
@@ -496,7 +506,7 @@ class whattiredView extends WatchUi.DataField {
     var yLabel = y - radius;
     var yValue = y;
 
-    if (mTotals.HasFrontTyreTrigger()) {
+    if (mTotals.HasFrontTyre()) {
       var meters_front = mTotals.GetTotalDistanceFrontTyre();
       var maxMeters_front = mTotals.GetMaxDistanceFrontTyre();
       var perc_front = -1;
@@ -521,7 +531,7 @@ class whattiredView extends WatchUi.DataField {
       }
     }
 
-    if (mTotals.HasBackTyreTrigger()) {
+    if (mTotals.HasBackTyre()) {
       var meters_back = mTotals.GetTotalDistanceBackTyre();
       var maxMeters_back = mTotals.GetMaxDistanceBackTyre();
 

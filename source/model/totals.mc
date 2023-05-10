@@ -124,11 +124,11 @@ class Totals {
   public function HasRide() as Boolean {
     return $.gShowRide;
   }
-  public function HasFrontTyreTrigger() as Boolean {
-    return $.gShowFront && maxDistanceFrontTyre >= 1000;
+  public function HasFrontTyre() as Boolean {
+    return $.gShowFront; // && maxDistanceFrontTyre >= 1000;
   }
-  public function HasBackTyreTrigger() as Boolean {
-    return $.gShowBack && maxDistanceBackTyre >= 1000;
+  public function HasBackTyre() as Boolean {
+    return $.gShowBack; // && maxDistanceBackTyre >= 1000;
   }
 
   function initialize() {}
@@ -165,63 +165,9 @@ class Totals {
       startDistanceCourse = 0.0f;
     } else if (startDistanceCourse == 0.0f) {
       startDistanceCourse = elapsedDistanceActivity;
-    }
-
-    // handleTyreReset(Activity.getProfileInfo());
+    }   
   }
-
-  // function handleTyreReset(profile as Activity.ProfileInfo?) as Void {
-  //   if (profile == null || profile.name == null) {
-  //     return;
-  //   }
-  //   var profileName = (profile.name as String).toLower();
-  //   if (!currentProfile.equals(profileName)) {
-  //     currentProfile = profileName;
-  //     counterFrontTyreReset = MAX_COUNTER;
-  //     counterBackTyreReset = MAX_COUNTER;
-  //   }
-  //   if (triggerFrontTyre.length() > 0 && totalDistanceFrontTyre > 0.0f) {
-  //     if (profileName.find(triggerFrontTyre) != null) {
-  //       counterFrontTyreReset = counterFrontTyreReset - 1;
-  //       if (counterFrontTyreReset < 0) {
-  //         totalDistanceFrontTyre = 0.0f;
-  //         attentionReset();
-  //       } else {
-  //         attentionCountDown();
-  //       }
-  //     }
-  //   }
-
-  //   if (triggerBackTyre.length() > 0 && totalDistanceBackTyre > 0.0f) {
-  //     if (profileName.find(triggerBackTyre) != null) {
-  //       counterBackTyreReset = counterBackTyreReset - 1;
-  //       if (counterBackTyreReset < 0) {
-  //         totalDistanceBackTyre = 0.0f;
-  //         attentionReset();
-  //       } else {
-  //         attentionCountDown();
-  //       }
-  //     }
-  //   }
-  // }
-
-  // function attentionCountDown() as Void {
-  //   if (Attention has :playTone) {
-  //     if (Attention has :ToneProfile) {
-  //       var toneProfileBeeps = [new Attention.ToneProfile(1500, 50)] as Lang.Array<Attention.ToneProfile>;
-  //       Attention.playTone({ :toneProfile => toneProfileBeeps });
-  //     } else {
-  //       Attention.playTone(Attention.TONE_ALERT_LO);
-  //     }
-  //   }
-  // }
-
-  // function attentionReset() as Void {
-  //   if (Attention has :playTone) {
-  //     Attention.playTone(Attention.TONE_RESET);
-  //   }
-  // }
-
+  
   function save(loadValues as Boolean) as Void {
     try {
       setDistanceAsMeters("totalDistance", totalDistance + elapsedDistanceLastSaved);
@@ -305,8 +251,8 @@ class Totals {
 
     var switchFB = Storage.getValue("switch_front_back") ? true : false;
 
-    totalDistanceFrontTyre = getDistanceAsMeters_Storage("totalDistanceFrontTyre") - elapsedDistanceLastSaved;
-    maxDistanceFrontTyre = getDistanceAsMeters_Storage("maxDistanceFrontTyre");
+    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre") - elapsedDistanceLastSaved;
+    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre");
     var reset = Storage.getValue("reset_front") ? true : false;
     if (reset) {
       totalDistanceFrontTyre = 0.0f;
@@ -315,8 +261,8 @@ class Totals {
         setDistanceAsMeters("totalDistanceFrontTyre", totalDistanceFrontTyre);
       }
     }
-    totalDistanceBackTyre = getDistanceAsMeters_Storage("totalDistanceBackTyre") - elapsedDistanceLastSaved;
-    maxDistanceBackTyre = getDistanceAsMeters_Storage("maxDistanceBackTyre");
+    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre") - elapsedDistanceLastSaved;
+    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre");
     reset = Storage.getValue("reset_back") ? true : false;
     if (reset) {
       totalDistanceBackTyre = 0.0f;
@@ -337,25 +283,8 @@ class Totals {
   }
 
   hidden function getDistanceAsMeters(key as String) as Float {
-    try {
-      var overrule = getApplicationProperty(key, 0) as Number;
-      if (overrule > 0) {
-        setProperty(key, 0);
-        var distanceMeters = overrule.toFloat() * 1000.0f;
-        Toybox.Application.Storage.setValue(key, distanceMeters);
-        return distanceMeters as Float;
-      }
-      return getStorageValue(key, 0.0f) as Float;
-    } catch (ex) {
-      ex.printStackTrace();
-      return 0.0f;
-    }
-  }
-
-
-  hidden function getDistanceAsMeters_Storage(key as String) as Float {
     try {      
-      return getStorageValue(key, 0.0f) as Float;
+      return $.getStorageValue(key, 0.0f) as Float;
     } catch (ex) {
       ex.printStackTrace();
       return 0.0f;
