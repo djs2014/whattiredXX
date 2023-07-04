@@ -45,7 +45,7 @@ class whattiredView extends WatchUi.DataField {
   function initialize() {
     DataField.initialize();
     mTotals = getApp().mTotals;
-    checkFeatures();
+    checkFeatures();  
   }
 
   function checkFeatures() as Void {

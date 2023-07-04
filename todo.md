@@ -1,4 +1,5 @@
 track small field no asc/desc display
+show year/weeknr/etc in big screen
 bug reload focus/setting after change
 bug menu focus value
 track recording

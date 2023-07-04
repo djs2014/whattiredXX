@@ -357,34 +357,39 @@ class NumericInputView extends WatchUi.View {
   // }
 
   public function getKeyPressed(coord as Lang.Array<Lang.Number>) as String {
-    try {
-      var x = coord[0] as Number;
+     var x = coord[0] as Number;
       var y = coord[1] as Number;
-      for (var idxKey = 0; idxKey < _keyCoord.size(); idxKey++) {
-        var range = _keyCoord[idxKey] as Lang.Array<Lang.Number>;
-        if (
-          (range[0] as Number) < x &&
-          x < (range[1] as Number) &&
-          (range[2] as Number) < y &&
-          y < range[3]
-        ) {
-          return _keys[idxKey];
+      // Double try/catch fix for bug Value may not be initialized.
+      try {
+        for (var idxKey = 0; idxKey < _keyCoord.size(); idxKey++) {
+          var range = _keyCoord[idxKey] as Lang.Array<Lang.Number>;
+          if (
+            (range[0] as Number) < x &&
+            x < (range[1] as Number) &&
+            (range[2] as Number) < y &&
+            y < range[3]
+          ) {
+            return _keys[idxKey] as String;
+          }
         }
-      }
-      for (var idxCtrl = 0; idxCtrl < _controlCoord.size(); idxCtrl++) {
-        var range = _controlCoord[idxCtrl] as Lang.Array<Lang.Number>;
-        if (
-          (range[0] as Number) < x &&
-          x < (range[1] as Number) &&
-          (range[2] as Number) < y &&
-          y < (range[3] as Number)
-        ) {
-          return _controls[idxCtrl];
-        }
-      }
-    } catch (ex) {
+       } catch (ex) {
       ex.printStackTrace();
-    }
+      }
+      try {  
+        for (var idxCtrl = 0; idxCtrl < _controlCoord.size(); idxCtrl++) {
+          var range = _controlCoord[idxCtrl] as Lang.Array<Lang.Number>;
+          if (
+            (range[0] as Number) < x &&
+            x < (range[1] as Number) &&
+            (range[2] as Number) < y &&
+            y < (range[3] as Number)
+          ) {
+            return _controls[idxCtrl] as String;
+          }
+        }
+      } catch (ex) {
+        ex.printStackTrace();
+      }
     return "";
   }
 
