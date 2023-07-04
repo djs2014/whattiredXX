@@ -450,7 +450,7 @@ class Totals {
       totalDistanceLastMonth = 0.0f;
       totalDistanceMonth = 0.0f;
 
-      currentWeek = getWeekNumber(Time.now());
+      currentWeek = iso_week_number(today.year, today.month as Number, today.day); 
       totalDistanceLastWeek = 0.0f;
       totalDistanceWeek = 0.0f;
 
@@ -482,7 +482,7 @@ class Totals {
       saveMonth();
     }
     // week change
-    var week = getWeekNumber(Time.now());
+    var week = iso_week_number(today.year, today.month as Number, today.day);
     if (currentWeek != week) {
       currentWeek = week;
       totalDistanceLastWeek = totalDistanceWeek;
@@ -511,18 +511,7 @@ class Totals {
   hidden function setProperty(key as PropertyKeyType,
                               value as PropertyValueType) as Void {
     Application.Properties.setValue(key, value);
-  }
-
-  hidden function getWeekNumber(time as Time.Moment) as Number {
-    var day = Gregorian.info(time, Time.FORMAT_SHORT);
-
-    var options = {
-      :year => day.year - 1, :month => 12, :day => 31, :hour => 0, :minute => 0,
-    };
-    var firstDayOfYear = Gregorian.moment(options);
-    var seconds = time.compare(firstDayOfYear);
-    return (Math.round(seconds / (86400 * 7)) + 1) as Number;
-  }
+  } 
 }
 
 class Total {
