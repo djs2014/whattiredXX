@@ -11,5 +11,13 @@ module Types {
     FocusFront = 6,
     FocusBack = 7,
     FocusCourse = 8,
+    FocusTrack = 9,
+  }
+
+  enum EnumTrackRecording {
+    TrackRecDisabled = 0,
+    TrackRecAlways = 1,
+    TrackRecWhenVisible = 2,
+    TrackRecWhenFocus = 3,
   }
 }

@@ -1,27 +1,24 @@
-remove settinsg.xml
-show fields on device
-+ show which fields
-+ larger font is less fields
+track small field no asc/desc display
+bug reload focus/setting after change
+bug menu focus value
+track recording
+- always
+- disabled
+- when field displayed
+- when focus
 
 
-enter settings 
- - activity paused - saved - load ok 
- - activity running -> no save exit settings - load wrong correction 
-
-na exit settings is load zonder elapsed correction
-
-remove settings -> on device
-
-x reset front/back by change to actprofile front or back
-    - ciq field What Tired need to be active in that profile
-    - beeps for 10 seconds then reset front / back value
-    - switch back to normal profile.
+what metrics - pause display title etc.. and time
 
 
-perc greater than > 100 second circle
- - loop boolean 
- - ouline color 100+x perc
- - inside color x perc
+- show numbers week/year/month
+- fix number of show fields and font size for display lines .. wide/small field
+- 
+front/back record distance
+- for set _/A/B/C/D
+
+
+
 
 
 - create color if available
@@ -30,15 +27,3 @@ perc greater than > 100 second circle
   - circle from 100% green to 0% red
 - course => show distance to end, remember start distance when course active./reset when inactive
   - then show ride bredere cirkel
-
-on device settings
-- hide/show fields 
-- activity active -> no save values, keep i nmemory
-else save
-TEST it front / back example
-
-
-TODO to test
-docu:
-Editing the distance values on device settings
-The actual values are values on storage with the already elapsed activity distance.

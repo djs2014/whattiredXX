@@ -50,17 +50,24 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
   //! @return true if handled, false otherwise
   public function onMenu() as Boolean {
     var menu = new $.DataFieldSettingsMenu();
-    var boolean = Storage.getValue("reset_front") ? true : false;
+    var boolean = $.getStorageValue("reset_front", false) as Boolean;
     menu.addItem(new WatchUi.ToggleMenuItem("Reset front", null, "reset_front", boolean, null));
 
-    boolean = Storage.getValue("reset_back") ? true : false;
+    boolean =  $.getStorageValue("reset_back", false) as Boolean; 
     menu.addItem(new WatchUi.ToggleMenuItem("Reset back", null, "reset_back", boolean, null));
 
-    boolean = Storage.getValue("switch_front_back") ? true : false;
+    boolean = $.getStorageValue("switch_front_back", false) as Boolean;
     menu.addItem(new WatchUi.ToggleMenuItem("Front <-> back", null, "switch_front_back", boolean, null));
+
+    boolean =  $.getStorageValue("reset_track", false) as Boolean; 
+    menu.addItem(new WatchUi.ToggleMenuItem("Reset track", null, "reset_track", boolean, null));
 
     var mi = new WatchUi.MenuItem("Focus", null, "showFocusSmallField", null);
     mi.setSubLabel($.getFocusMenuSubLabel(mi.getId() as String));
+    menu.addItem(mi);
+
+    mi = new WatchUi.MenuItem("Track recording", null, "trackRecording", null);
+    mi.setSubLabel($.getTrackRecordingSubLabel(mi.getId() as String));
     menu.addItem(mi);
 
     mi = new WatchUi.MenuItem("Distance", null, "menuDistance", null);
@@ -87,6 +94,7 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
 
   public function onBack() as Boolean {
     getApp().onSettingsChanged();
+    getApp().triggerFrontBack();
     return false;
   }
 }
@@ -98,7 +106,7 @@ function getDistanceMenuSubLabel(key as Application.PropertyKeyType) as String {
 }
 
 function getFocusMenuSubLabel(key as Application.PropertyKeyType) as String {
-  var current = $.getStorageValue(key, Types.FocusNothing) as Types.EnumFocus;
+  var current = $.getStorageValue(key, $.gShowFocusSmallField) as Types.EnumFocus;
   switch (current) {
     case Types.FocusNothing:
       return "Nothing";
@@ -118,7 +126,25 @@ function getFocusMenuSubLabel(key as Application.PropertyKeyType) as String {
       return "Back";
     case Types.FocusCourse:
       return "Course";
+    case Types.FocusTrack:
+      return "Track";
     default:
       return "Nothing";
+  }
+}
+
+function getTrackRecordingSubLabel(key as Application.PropertyKeyType) as String {
+  var current = $.getStorageValue(key, $.gTrackRecording) as Types.EnumTrackRecording;
+  switch (current) {
+    case Types.TrackRecDisabled:
+      return "Disabled";
+    case Types.TrackRecAlways:
+      return "Always";
+    case Types.TrackRecWhenFocus:
+      return "When focused";
+    case Types.TrackRecWhenVisible:
+      return "When visible";
+    default:
+      return "Disabled";
   }
 }

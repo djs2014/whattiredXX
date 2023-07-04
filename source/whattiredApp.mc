@@ -7,13 +7,16 @@ var gShowValues as Boolean = true;
 var gShowColorsSmallField as Boolean = true;
 var gShowValuesSmallField as Boolean = false;
 var gShowCurrentProfile as Boolean = false;
-var gShowFocusSmallField as Types.EnumFocus = Types.FocusNothing;
+var gShowFocusSmallField as Types.EnumFocus = Types.FocusRide;
+var gTrackRecording as Types.EnumTrackRecording = Types.TrackRecAlways;
+var gTrackRecordingActive as Boolean = true;
 
 var gShowOdo as Boolean = true;
 var gShowYear as Boolean = true;
 var gShowMonth as Boolean = true;
 var gShowWeek as Boolean = true;
 var gShowRide as Boolean = true;
+var gShowTrack as Boolean = true;
 var gShowFront as Boolean = true;
 var gShowBack as Boolean = true;
 var gNrOfDefaultFields as Number = 5;
@@ -30,9 +33,10 @@ class whattiredApp extends Application.AppBase {
 
   // onStop() is called when your application is exiting
   function onStop(state as Dictionary?) as Void {
-    mTotals.save(false);
+    // mTotals.save(false);
   }
 
+  
   //! Return the initial view of your application here
   function getInitialView() as Array<Views or InputDelegates>? {
     loadUserSettings();
@@ -49,6 +53,10 @@ class whattiredApp extends Application.AppBase {
     loadUserSettings();
   }
 
+  function triggerFrontBack() as Void {
+    mTotals.triggerFrontBack();
+  }
+
   (:typecheck(disableBackgroundCheck))
   function loadUserSettings() as Void {
     try {
@@ -60,15 +68,17 @@ class whattiredApp extends Application.AppBase {
       $.gShowColorsSmallField = $.getStorageValue("showColorsSmallField", true) as Boolean;
       $.gShowValuesSmallField = $.getStorageValue("showValuesSmallField", false) as Boolean;
 
-      $.gShowFocusSmallField = $.getStorageValue("showFocusSmallField", Types.FocusNothing) as Types.EnumFocus;
+      $.gShowFocusSmallField = $.getStorageValue("showFocusSmallField", gShowFocusSmallField) as Types.EnumFocus;
+      $.gTrackRecording = $.getStorageValue("trackRecording", gTrackRecording) as Types.EnumTrackRecording;
 
-      $.gShowOdo = $.getStorageValue("showOdo", true) as Boolean;
-      $.gShowYear = $.getStorageValue("showYear", true) as Boolean;
-      $.gShowMonth = $.getStorageValue("showMonth", true) as Boolean;
-      $.gShowWeek = $.getStorageValue("showWeek", true) as Boolean;
-      $.gShowRide = $.getStorageValue("showRide", true) as Boolean;
-      $.gShowFront = $.getStorageValue("showFront", true) as Boolean;
-      $.gShowBack = $.getStorageValue("showBack", true) as Boolean;
+      $.gShowOdo = $.getStorageValue("showOdo", gShowOdo) as Boolean;
+      $.gShowYear = $.getStorageValue("showYear", gShowYear) as Boolean;
+      $.gShowMonth = $.getStorageValue("showMonth", gShowMonth) as Boolean;
+      $.gShowWeek = $.getStorageValue("showWeek", gShowWeek) as Boolean;
+      $.gShowRide = $.getStorageValue("showRide", gShowRide) as Boolean;
+      $.gShowTrack = $.getStorageValue("showTrack", gShowTrack) as Boolean;
+      $.gShowFront = $.getStorageValue("showFront", gShowFront) as Boolean;
+      $.gShowBack = $.getStorageValue("showBack", gShowBack) as Boolean;
 
       $.gNrOfDefaultFields = 0;
       if ($.gShowOdo) {
@@ -86,6 +96,15 @@ class whattiredApp extends Application.AppBase {
       if ($.gShowRide) {
         $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;
       }
+      if ($.gShowTrack) {
+        $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;
+      }
+
+
+      $.gTrackRecordingActive = ( $.gTrackRecording == Types.TrackRecAlways 
+        || $.gTrackRecording == Types.TrackRecWhenVisible and $.gShowTrack
+        || $.gTrackRecording == Types.TrackRecWhenFocus and $.gShowFocusSmallField == Types.FocusTrack
+      ); 
 
       System.println("loadUserSettings loaded");
     } catch (ex) {
