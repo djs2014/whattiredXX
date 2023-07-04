@@ -8,6 +8,8 @@ var gShowColorsSmallField as Boolean = true;
 var gShowValuesSmallField as Boolean = false;
 var gShowCurrentProfile as Boolean = false;
 var gShowFocusSmallField as Types.EnumFocus = Types.FocusRide;
+var gTrackRecording as Types.EnumTrackRecording = Types.TrackRecAlways;
+var gTrackRecordingActive as Boolean = true;
 
 var gShowOdo as Boolean = true;
 var gShowYear as Boolean = true;
@@ -67,6 +69,7 @@ class whattiredApp extends Application.AppBase {
       $.gShowValuesSmallField = $.getStorageValue("showValuesSmallField", false) as Boolean;
 
       $.gShowFocusSmallField = $.getStorageValue("showFocusSmallField", gShowFocusSmallField) as Types.EnumFocus;
+      $.gTrackRecording = $.getStorageValue("trackRecording", gTrackRecording) as Types.EnumTrackRecording;
 
       $.gShowOdo = $.getStorageValue("showOdo", gShowOdo) as Boolean;
       $.gShowYear = $.getStorageValue("showYear", gShowYear) as Boolean;
@@ -96,6 +99,12 @@ class whattiredApp extends Application.AppBase {
       if ($.gShowTrack) {
         $.gNrOfDefaultFields = $.gNrOfDefaultFields + 1;
       }
+
+
+      $.gTrackRecordingActive = ( $.gTrackRecording == Types.TrackRecAlways 
+        || $.gTrackRecording == Types.TrackRecWhenVisible and $.gShowTrack
+        || $.gTrackRecording == Types.TrackRecWhenFocus and $.gShowFocusSmallField == Types.FocusTrack
+      ); 
 
       System.println("loadUserSettings loaded");
     } catch (ex) {

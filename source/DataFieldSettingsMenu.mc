@@ -141,6 +141,16 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       focusMenu.addItem(new WatchUi.MenuItem("Course", null, Types.FocusCourse, {}));
       focusMenu.setFocus(current); // 0-index
       WatchUi.pushView(focusMenu, new $.FocusMenuDelegate(self), WatchUi.SLIDE_UP);
+    } else if (id instanceof String && id.equals("trackRecording")) {
+      var trackMenu = new WatchUi.Menu2({ :title => "Track recording active" });
+      var current = $.getStorageValue(id as String, Types.TrackRecAlways) as Types.EnumTrackRecording;
+      trackMenu.addItem(new WatchUi.MenuItem("Disabled", null, Types.TrackRecDisabled, {}));
+      trackMenu.addItem(new WatchUi.MenuItem("Always on", null, Types.TrackRecAlways, {}));
+      trackMenu.addItem(new WatchUi.MenuItem("When track field visible", null, Types.TrackRecWhenVisible, {}));
+      trackMenu.addItem(new WatchUi.MenuItem("When track field focus", null, Types.TrackRecWhenFocus, {}));
+      
+      trackMenu.setFocus(current); // 0-index
+      WatchUi.pushView(trackMenu, new $.TrackMenuDelegate(self), WatchUi.SLIDE_UP);
     } else if (id instanceof String && id.equals("menuFields")) {
       var fieldsMenu = new WatchUi.Menu2({ :title => "Show fields" });
 
@@ -182,6 +192,16 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       var id = mi.getId();
       if (id instanceof String && (id as String).equals("showFocusSmallField")) {
         mi.setSubLabel($.getFocusMenuSubLabel(mi.getId() as String));
+      }
+    }
+  }
+  public function onAcceptTrackRecording() as Void {
+    // update menu sublabel
+    if (_currentMenuItem != null) {
+      var mi = _currentMenuItem as MenuItem;
+      var id = mi.getId();
+      if (id instanceof String && (id as String).equals("trackRecording")) {
+        mi.setSubLabel($.getTrackRecordingSubLabel(mi.getId() as String));
       }
     }
   }
@@ -308,6 +328,31 @@ class FocusMenuDelegate extends WatchUi.Menu2InputDelegate {
   //! Handle the back key being pressed
   public function onBack() as Void {
     _delegate.onAcceptFocus();
+    WatchUi.popView(WatchUi.SLIDE_DOWN);
+  }
+
+  //! Handle the done item being selected
+  public function onDone() as Void {
+    WatchUi.popView(WatchUi.SLIDE_DOWN);
+  }
+}
+class TrackMenuDelegate extends WatchUi.Menu2InputDelegate {
+  private var _delegate as DataFieldSettingsMenuDelegate;
+
+  public function initialize(delegate as DataFieldSettingsMenuDelegate) {
+    Menu2InputDelegate.initialize();
+    _delegate = delegate;
+  }
+
+  public function onSelect(item as MenuItem) as Void {
+    Storage.setValue("trackRecording", item.getId() as Types.EnumTrackRecording);
+    onBack();
+    return;
+  }
+
+  //! Handle the back key being pressed
+  public function onBack() as Void {
+    _delegate.onAcceptTrackRecording();
     WatchUi.popView(WatchUi.SLIDE_DOWN);
   }
 

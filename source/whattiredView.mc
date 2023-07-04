@@ -40,6 +40,7 @@ class whattiredView extends WatchUi.DataField {
   var mSmallField as Boolean = false;
   var mWideField as Boolean = false;
   var mShowFBCircles as Boolean = false;
+  var mShowAscDesc as Boolean = false;
 
   function initialize() {
     DataField.initialize();
@@ -71,12 +72,14 @@ class whattiredView extends WatchUi.DataField {
       mShowColors = $.gShowColorsSmallField;
       mFocus = $.gShowFocusSmallField;
       mSmallField = true;
+      mShowAscDesc = false;
     } else {
       mFontText = Graphics.FONT_SMALL;
       mShowValues = $.gShowValues;
       mShowColors = $.gShowColors;
       mFocus = Types.FocusNothing;
       mSmallField = false;
+      mShowAscDesc = true;
     }
 
     mLabelWidth = dc.getTextWidthInPixels("Month", mFontText) + 2;
@@ -123,12 +126,14 @@ class whattiredView extends WatchUi.DataField {
   // }
 
   function onTimerReset() {
+    System.println("onTimerReset");
     mTotals.save(true);
   }
 
-  // function onTimerStop() {
-  //   mTotals.save(false);
-  // }
+  function onTimerStop() {
+    System.println("onTimerStop");
+    mTotals.save(false);
+  }
 
   function compute(info as Activity.Info) as Void {
     mTotals.compute(info);
@@ -242,31 +247,32 @@ class whattiredView extends WatchUi.DataField {
         nothingHasFocus
       );
       line = line + 1;
-    
-      DrawAscentLine(
-        dc,
-        line,
-        "Asc",
-        "A",
-        mTotals.GetTotalAscentTrack(),
-        mTotals.GetTotalAscentLastTrack(),
-        mShowValues,
-        mShowColors,
-        nothingHasFocus
-      );
-      line = line + 1;
-      DrawAscentLine(
-        dc,
-        line,
-        "Desc",
-        "D",
-        mTotals.GetTotalDescentTrack(),
-        mTotals.GetTotalDescentLastTrack(),
-        mShowValues,
-        mShowColors,
-        nothingHasFocus
-      );
-      line = line + 1;
+      if (mShowAscDesc) {
+        DrawAscentLine(
+          dc,
+          line,
+          "-asc",
+          "A",
+          mTotals.GetTotalAscentTrack(),
+          mTotals.GetTotalAscentLastTrack(),
+          mShowValues,
+          mShowColors,
+          nothingHasFocus
+        );
+        line = line + 1;
+        DrawAscentLine(
+          dc,
+          line,
+          "-desc",
+          "D",
+          mTotals.GetTotalDescentTrack(),
+          mTotals.GetTotalDescentLastTrack(),
+          mShowValues,
+          mShowColors,
+          nothingHasFocus
+        );
+        line = line + 1;
+      }
     }
 
     if (mShowFBCircles && focus != Types.FocusFront && focus != Types.FocusBack) {

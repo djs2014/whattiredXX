@@ -91,9 +91,27 @@ class Totals {
   function GetTotalDistanceWeek() as Float {
     return totalDistanceWeek + elapsedDistanceActivity;
   }
- public function GetTotalDistanceTrack() as Float { return totalDistanceTrack + elapsedDistanceActivity; }
- public function GetTotalAscentTrack() as Number { return totalAscentTrack + elapsedAscentActivity; }
- public function GetTotalDescentTrack() as Number { return totalDescentTrack + elapsedDescentActivity; }
+ public function GetTotalDistanceTrack() as Float { 
+  if ( $.gTrackRecordingActive ) {
+    return totalDistanceTrack + elapsedDistanceActivity; 
+  } else {
+    return totalDistanceTrack;
+  }
+}
+ public function GetTotalAscentTrack() as Number { 
+  if ( $.gTrackRecordingActive ) {
+    return totalAscentTrack + elapsedAscentActivity;
+  } else {
+    return totalAscentTrack;
+  }
+}
+ public function GetTotalDescentTrack() as Number { 
+  if ( $.gTrackRecordingActive ) {
+    return totalDescentTrack + elapsedDescentActivity; 
+  } else {
+    return totalDescentTrack;
+  }
+    }
 
  public
   function GetTotalDistanceRide() as Float { return elapsedDistanceActivity; }
@@ -231,8 +249,22 @@ class Totals {
       saveMonth();
       saveWeek();
       saveRide();
-      saveTrack();
 
+
+
+      setDistanceAsMeters("totalDistanceFrontTyre",
+                          totalDistanceFrontTyre + elapsedDistanceActivity);
+      setDistanceAsMeters("totalDistanceBackTyre",
+                          totalDistanceBackTyre + elapsedDistanceActivity);
+
+      if ( $.gTrackRecordingActive ) {
+        saveTrack();
+      }
+      System.println("totals saved");
+      if (loadValues) {
+        load(false);
+      }
+      
       System.println(
           Lang.format("save: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
             rideStarted,
@@ -240,15 +272,6 @@ class Totals {
             totalDistanceLastRide,
           ]));
 
-      setDistanceAsMeters("totalDistanceFrontTyre",
-                          totalDistanceFrontTyre + elapsedDistanceActivity);
-      setDistanceAsMeters("totalDistanceBackTyre",
-                          totalDistanceBackTyre + elapsedDistanceActivity);
-
-      System.println("totals saved");
-      if (loadValues) {
-        load(false);
-      }
     } catch (ex) {
       ex.printStackTrace();
     }
@@ -294,7 +317,11 @@ class Totals {
 
   hidden function setDistanceAsMeters(key as String,
                                       distanceMeters as Float) as Void {
-    Toybox.Application.Storage.setValue(key, distanceMeters);
+    try {
+      Storage.setValue(key, distanceMeters);
+    } catch (ex) {
+      ex.printStackTrace();
+    }
   }
 
   // Storage values are in meters, (overrule) properties are in kilometers!
@@ -341,10 +368,16 @@ class Totals {
 
     totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre");
     maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre");
-    if (maxDistanceFrontTyre == 0.0f) { maxDistanceFrontTyre = 5000.0f; }
+    if (maxDistanceFrontTyre == 0.0f) { 
+      maxDistanceFrontTyre = 5000000.0f;
+      setDistanceAsMeters("maxDistanceFrontTyre", maxDistanceFrontTyre);
+    }
     totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre");
     maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre");
-    if (maxDistanceBackTyre == 0.0f) { maxDistanceBackTyre = 5000.0f; }
+    if (maxDistanceBackTyre == 0.0f) { 
+      maxDistanceBackTyre = 5000000.0f; 
+      setDistanceAsMeters("maxDistanceBackTyre", maxDistanceBackTyre);
+    }
   }
 
   function triggerFrontBack() as Void {

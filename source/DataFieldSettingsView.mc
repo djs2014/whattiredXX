@@ -66,6 +66,10 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
     mi.setSubLabel($.getFocusMenuSubLabel(mi.getId() as String));
     menu.addItem(mi);
 
+    mi = new WatchUi.MenuItem("Track recording", null, "trackRecording", null);
+    mi.setSubLabel($.getTrackRecordingSubLabel(mi.getId() as String));
+    menu.addItem(mi);
+
     mi = new WatchUi.MenuItem("Distance", null, "menuDistance", null);
     mi.setSubLabel("Manage distance settings");
     menu.addItem(mi);
@@ -102,7 +106,7 @@ function getDistanceMenuSubLabel(key as Application.PropertyKeyType) as String {
 }
 
 function getFocusMenuSubLabel(key as Application.PropertyKeyType) as String {
-  var current = $.getStorageValue(key, Types.FocusNothing) as Types.EnumFocus;
+  var current = $.getStorageValue(key, $.gShowFocusSmallField) as Types.EnumFocus;
   switch (current) {
     case Types.FocusNothing:
       return "Nothing";
@@ -122,7 +126,25 @@ function getFocusMenuSubLabel(key as Application.PropertyKeyType) as String {
       return "Back";
     case Types.FocusCourse:
       return "Course";
+    case Types.FocusTrack:
+      return "Track";
     default:
       return "Nothing";
+  }
+}
+
+function getTrackRecordingSubLabel(key as Application.PropertyKeyType) as String {
+  var current = $.getStorageValue(key, $.gTrackRecording) as Types.EnumTrackRecording;
+  switch (current) {
+    case Types.TrackRecDisabled:
+      return "Disabled";
+    case Types.TrackRecAlways:
+      return "Always";
+    case Types.TrackRecWhenFocus:
+      return "When focused";
+    case Types.TrackRecWhenVisible:
+      return "When visible";
+    default:
+      return "Disabled";
   }
 }
