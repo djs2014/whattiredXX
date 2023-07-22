@@ -40,7 +40,7 @@ class DataFieldSettingsView extends WatchUi.View {
 }
 
 //! Handle opening the settings menu
-class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
+class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {  
   //! Constructor
   public function initialize() {
     BehaviorDelegate.initialize();
@@ -82,6 +82,8 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
     menu.addItem(new WatchUi.ToggleMenuItem("Show colors small field", null, "showColorsSmallField", boolean, null));
     boolean = $.getStorageValue("showValuesSmallField", false) as Boolean;
     menu.addItem(new WatchUi.ToggleMenuItem("Show values small field", null, "showValuesSmallField", boolean, null));
+    boolean = $.getStorageValue("showLastDistance", false) as Boolean;
+    menu.addItem(new WatchUi.ToggleMenuItem("Show lastdistance", null, "showLastDistance", boolean, null));
 
     mi = new WatchUi.MenuItem("Show fields", null, "menuFields", null);
     mi.setSubLabel("Display data");

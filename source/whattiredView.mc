@@ -493,12 +493,22 @@ class whattiredView extends WatchUi.DataField {
         dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
       }
       dc.drawText(x, y, mFontText, formattedValue + " " + units, Graphics.TEXT_JUSTIFY_LEFT);
-      // draw perc right
+      
+      // draw perc last distance
       if (perc > -1) {
+        formattedValue = "";
         if (perc >= 130 && showColors) {
           dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
         }
-        dc.drawText(mWidth - 1, y, mFontText, perc.format("%d") + "%", Graphics.TEXT_JUSTIFY_RIGHT);
+        if ($.gShowLastDistance) {
+          units = getUnits(lastDistanceInMeters);
+          value = getDistanceInMeterOrKm(lastDistanceInMeters);
+          formattedValue = getNumberString(value, distanceInMeters) + " " + units;
+        } else {
+          formattedValue = perc.format("%d") + "%";
+        }
+
+        dc.drawText(mWidth - 1, y, mFontText, formattedValue, Graphics.TEXT_JUSTIFY_RIGHT);
       }
     }
   }
