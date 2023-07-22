@@ -41,11 +41,12 @@ class whattiredView extends WatchUi.DataField {
   var mWideField as Boolean = false;
   var mShowFBCircles as Boolean = false;
   var mShowAscDesc as Boolean = false;
+  var mDataSaved as Boolean = true;
 
   function initialize() {
     DataField.initialize();
     mTotals = getApp().mTotals;
-    checkFeatures();  
+    checkFeatures();
   }
 
   function checkFeatures() as Void {
@@ -128,15 +129,40 @@ class whattiredView extends WatchUi.DataField {
   function onTimerReset() {
     System.println("onTimerReset");
     mTotals.save(true);
+    mDataSaved = true;
   }
 
   function onTimerStop() {
-    System.println("onTimerStop");
-    mTotals.save(false);
+    if (!mDataSaved) {
+      System.println("onTimerStop");
+      mTotals.save(false);
+      mDataSaved = true;
+    }
   }
 
   function compute(info as Activity.Info) as Void {
     mTotals.compute(info);
+
+    // not always onTimerStop and onTimerReset is executed (??)
+    if (info has :timerState) {
+      if (info.timerState != null) {
+        if (info.timerState == Activity.TIMER_STATE_STOPPED) {
+          if (!mDataSaved) {
+            System.println("compute TIMER_STATE_STOPPED");
+            mTotals.save(false);
+            mDataSaved = true;
+          }
+        } else if (info.timerState == Activity.TIMER_STATE_OFF) {
+          if (!mDataSaved) {
+            System.println("compute TIMER_STATE_OFF");
+            mTotals.save(true);
+            mDataSaved = true;
+          }
+        } else if (info.timerState == Activity.TIMER_STATE_ON) {
+          mDataSaved = false;
+        }
+      }
+    }
   }
 
   function onUpdate(dc as Dc) as Void {
@@ -158,6 +184,16 @@ class whattiredView extends WatchUi.DataField {
     }
 
     drawData(dc, mFocus);
+    if (mDataSaved) {
+      dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+      dc.drawText(
+        dc.getWidth(),
+        dc.getHeight() - dc.getFontHeight(Graphics.FONT_TINY),
+        Graphics.FONT_TINY,
+        "(s)",
+        Graphics.TEXT_JUSTIFY_RIGHT
+      );
+    }
   }
 
   function drawData(dc as Dc, focus as Types.EnumFocus) as Void {
@@ -177,7 +213,7 @@ class whattiredView extends WatchUi.DataField {
         nothingHasFocus
       );
       line = line + 1;
-    }   
+    }
     if (mTotals.HasRide() && focus != Types.FocusRide) {
       DrawDistanceLine(
         dc,
@@ -383,7 +419,7 @@ class whattiredView extends WatchUi.DataField {
           true
         );
         if (mWideField and mSmallField) {
-          drawAscentDescent(dc, mTotals.GetTotalAscentTrack(), mTotals.GetTotalDescentTrack());                    
+          drawAscentDescent(dc, mTotals.GetTotalAscentTrack(), mTotals.GetTotalDescentTrack());
         }
         break;
       case Types.FocusCourse:
@@ -493,7 +529,7 @@ class whattiredView extends WatchUi.DataField {
       showColors = true;
     }
 
-    var units = getDistanceInMeterOrFeetUnits(); 
+    var units = getDistanceInMeterOrFeetUnits();
     var formattedValue = getDistanceInMeterOrFeet(valueInMeters).format("%d");
 
     var perc = -1;
@@ -683,40 +719,52 @@ class whattiredView extends WatchUi.DataField {
     dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);
 
     drawArrowUp(dc, 1, y, w, fh);
-    dc.drawText(1 + w + 1, y, font, getDistanceInMeterOrFeet(totalAscent).format("%0d") + " " + getDistanceInMeterOrFeetUnits(),
-     Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(
+      1 + w + 1,
+      y,
+      font,
+      getDistanceInMeterOrFeet(totalAscent).format("%0d") + " " + getDistanceInMeterOrFeetUnits(),
+      Graphics.TEXT_JUSTIFY_LEFT
+    );
 
     drawArrowDown(dc, mWidth - w, y, w, fh);
-    dc.drawText(mWidth - w - 1, y, font, getDistanceInMeterOrFeet(totalDescent).format("%0d") + " " + getDistanceInMeterOrFeetUnits(),
-     Graphics.TEXT_JUSTIFY_RIGHT);
+    dc.drawText(
+      mWidth - w - 1,
+      y,
+      font,
+      getDistanceInMeterOrFeet(totalDescent).format("%0d") + " " + getDistanceInMeterOrFeetUnits(),
+      Graphics.TEXT_JUSTIFY_RIGHT
+    );
   }
 
   function drawArrowUp(dc as Dc, x as Number, y as Number, width as Number, height as Number) as Void {
-    var xm = x + (width / 2);
-    var yd = (height / 3);
+    var xm = x + width / 2;
+    var yd = height / 3;
     var ym = y + yd;
 
     dc.fillPolygon(
       [
         [xm, y],
         [x, ym],
-        [x + width, ym],        
-      ] as Array<Array<Number> >);
+        [x + width, ym],
+      ] as Array<Array<Number> >
+    );
     dc.fillRectangle(xm - 1, ym, 3, height - yd);
   }
 
   function drawArrowDown(dc as Dc, x as Number, y as Number, width as Number, height as Number) as Void {
     var xm = x + width / 2;
-    var yd = (height / 3);
+    var yd = height / 3;
     var ym = y + height - yd;
 
     dc.fillRectangle(xm - 1, y, 3, height - yd);
     dc.fillPolygon(
       [
         [x, ym],
-        [x + width, ym],        
+        [x + width, ym],
         [xm, y + height],
-      ] as Array<Array<Number> >);
+      ] as Array<Array<Number> >
+    );
   }
 
   function drawDistanceCircle(
@@ -777,7 +825,7 @@ class whattiredView extends WatchUi.DataField {
     var value = distanceInMeters;
     if (mDevSettings.distanceUnits == System.UNIT_STATUTE) {
       value = meterToFeet(value).toNumber();
-    }    
+    }
     return value;
   }
   hidden function getDistanceInMeterOrFeetUnits() as String {

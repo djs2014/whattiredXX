@@ -32,8 +32,7 @@ class whattiredApp extends Application.AppBase {
   function onStart(state as Dictionary?) as Void {}
 
   // onStop() is called when your application is exiting
-  function onStop(state as Dictionary?) as Void {
-    // mTotals.save(false);
+  function onStop(state as Dictionary?) as Void {    
   }
 
   

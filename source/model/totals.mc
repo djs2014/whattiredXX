@@ -217,7 +217,7 @@ class Totals {
     if (info has : timerState) {
       if (info.timerState != null) {
         rideTimerState = info.timerState as Number;
-        if (rideTimerState == Activity.TIMER_STATE_STOPPED) {
+        if (rideTimerState == Activity.TIMER_STATE_STOPPED or rideTimerState == Activity.TIMER_STATE_OFF) {
           rideStarted = false;
         }
         if (!rideStarted && rideTimerState == Activity.TIMER_STATE_ON) {
