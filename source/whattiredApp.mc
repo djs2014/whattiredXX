@@ -4,6 +4,7 @@ import Toybox.WatchUi;
 
 var gShowColors as Boolean = true;
 var gShowValues as Boolean = true;
+var gShowLastDistance as Boolean = false;
 var gShowColorsSmallField as Boolean = true;
 var gShowValuesSmallField as Boolean = false;
 var gShowCurrentProfile as Boolean = false;
@@ -32,8 +33,7 @@ class whattiredApp extends Application.AppBase {
   function onStart(state as Dictionary?) as Void {}
 
   // onStop() is called when your application is exiting
-  function onStop(state as Dictionary?) as Void {
-    // mTotals.save(false);
+  function onStop(state as Dictionary?) as Void {    
   }
 
   
@@ -65,6 +65,7 @@ class whattiredApp extends Application.AppBase {
       mTotals.load(true);
       $.gShowColors = $.getStorageValue("showColors", true) as Boolean;
       $.gShowValues = $.getStorageValue("showValues", true) as Boolean;
+      $.gShowLastDistance = $.getStorageValue("showLastDistance", false) as Boolean;
       $.gShowColorsSmallField = $.getStorageValue("showColorsSmallField", true) as Boolean;
       $.gShowValuesSmallField = $.getStorageValue("showValuesSmallField", false) as Boolean;
 

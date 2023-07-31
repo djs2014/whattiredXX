@@ -1,15 +1,18 @@
 track small field no asc/desc display
 show year/weeknr/etc in big screen
-bug reload focus/setting after change
-bug menu focus value
-track recording
-- always
-- disabled
-- when field displayed
-- when focus
+x show perc or distance last ride
+
+x bug reload focus/setting after change
+x bug menu focus value
+
+x track recording
+x- always
+x- disabled
+x- when field displayed
+x- when focus
 
 
-what metrics - pause display title etc.. and time
+x what metrics - pause display title etc.. and time
 
 
 - show numbers week/year/month

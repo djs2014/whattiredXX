@@ -321,6 +321,7 @@ class FocusMenuDelegate extends WatchUi.Menu2InputDelegate {
 
   public function onSelect(item as MenuItem) as Void {
     Storage.setValue("showFocusSmallField", item.getId() as Types.EnumFocus);
+    
     onBack();
     return;
   }
