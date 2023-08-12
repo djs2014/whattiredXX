@@ -70,6 +70,10 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
     mi.setSubLabel($.getTrackRecordingSubLabel(mi.getId() as String));
     menu.addItem(mi);
 
+    mi = new WatchUi.MenuItem("Tire recording", null, "tireRecording", null);
+    mi.setSubLabel($.getTireRecordingSubLabel(mi.getId() as String));
+    menu.addItem(mi);
+
     mi = new WatchUi.MenuItem("Distance", null, "menuDistance", null);
     mi.setSubLabel("Manage distance settings");
     menu.addItem(mi);
@@ -148,5 +152,25 @@ function getTrackRecordingSubLabel(key as Application.PropertyKeyType) as String
       return "When visible";
     default:
       return "Disabled";
+  }
+}
+
+function getTireRecordingSubLabel(key as Application.PropertyKeyType) as String {
+  var current = $.getStorageValue(key, $.gTireRecording) as Types.EnumTireRecording;
+  switch (current) {
+    case Types.TireRecDefault:
+      return "default";
+    case Types.TireRecProfile:
+      return "profile";
+    case Types.TireRecSetA:
+      return "set A";
+    case Types.TireRecSetB:
+      return "set B";
+    case Types.TireRecSetC:
+      return "set C";
+    case Types.TireRecSetD:
+      return "set D";          
+    default:
+      return "default";
   }
 }

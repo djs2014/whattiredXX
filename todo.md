@@ -1,3 +1,26 @@
+x tire recording
+  detect profile switch - nodig?
+x max kleur circles / grijs mode
+if createcolor -> tire wit -- rood -- donkerpaars
+
+
+enum EnumTireRecording {
+    TireRecDefault = 0,
+      -> without postfix
+    TireRecProfile = 1,
+      -> postfix current profile when save 
+        -> before save, load old value
+    TireRecSetA = 2,
+      -> postfix A when save 
+        -> before save, load old value
+    TireRecSetB = 3,
+    TireRecSetC = 4,
+    TireRecSetD = 5
+  }
+
+handle date starting app 1 time
+show weeknr / month / year - for x seconds on pause
+
 track small field no asc/desc display
 show year/weeknr/etc in big screen
 x show perc or distance last ride

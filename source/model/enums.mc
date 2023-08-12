@@ -20,4 +20,13 @@ module Types {
     TrackRecWhenVisible = 2,
     TrackRecWhenFocus = 3,
   }
+
+  enum EnumTireRecording {
+    TireRecDefault = 0,
+    TireRecProfile = 1,
+    TireRecSetA = 2,
+    TireRecSetB = 3,
+    TireRecSetC = 4,
+    TireRecSetD = 5
+  }
 }

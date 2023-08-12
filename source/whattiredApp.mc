@@ -11,6 +11,7 @@ var gShowCurrentProfile as Boolean = false;
 var gShowFocusSmallField as Types.EnumFocus = Types.FocusRide;
 var gTrackRecording as Types.EnumTrackRecording = Types.TrackRecAlways;
 var gTrackRecordingActive as Boolean = true;
+var gTireRecording as Types.EnumTireRecording = Types.TireRecDefault;
 
 var gShowOdo as Boolean = true;
 var gShowYear as Boolean = true;
@@ -62,6 +63,8 @@ class whattiredApp extends Application.AppBase {
     try {
       System.println("Load usersettings");
 
+      $.gTireRecording = $.getStorageValue("tireRecording", gTireRecording) as Types.EnumTireRecording;
+      
       mTotals.load(true);
       $.gShowColors = $.getStorageValue("showColors", true) as Boolean;
       $.gShowValues = $.getStorageValue("showValues", true) as Boolean;

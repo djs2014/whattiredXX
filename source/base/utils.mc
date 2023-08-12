@@ -98,15 +98,25 @@ function drawPercentageCircleTarget(
   dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
   dc.drawCircle(x, y, radius);
 
-  setColorByPerc(dc, perc);
-  drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
+  if (perc < 100) {
+    setColorByPerc(dc, perc);
+    drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
+  } else {
+    setColorByPerc(dc, 100);
+    drawPercentageCircle(dc, x, y, radius, 100, circleWidth);
+  }
 
   var percRemain = perc - 100;
   var radiusInner = radius - circleWidth - 3;
   while (percRemain > 0 && radiusInner > 0) {
-    setColorByPerc(dc, percRemain);
-    drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
-
+    if (percRemain < 100) {
+      setColorByPerc(dc, percRemain);
+      drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
+    } else {
+      setColorByPerc(dc, 100);
+      drawPercentageCircle(dc, x, y, radiusInner, 100, circleWidth);
+    }
+  
     radiusInner = radiusInner - circleWidth - 3;
     percRemain = percRemain - 100;
   }

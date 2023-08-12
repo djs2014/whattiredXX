@@ -668,6 +668,11 @@ class whattiredView extends WatchUi.DataField {
     var yLabel = y - radius;
     var yValue = y;
 
+    var label = $.getTireRecordingSubLabel("tireRecording");
+    if (!label.equals("default")) {
+      dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);
+      dc.drawText(mWidth/2, yLabel, Graphics.FONT_XTINY, "for " + label, Graphics.TEXT_JUSTIFY_CENTER); 
+    }
     if (mTotals.HasFrontTyre()) {
       var meters_front = mTotals.GetTotalDistanceFrontTyre();
       var maxMeters_front = mTotals.GetMaxDistanceFrontTyre();

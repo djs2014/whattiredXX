@@ -11,9 +11,12 @@ import Toybox.StringUtil;
 import Toybox.Attention;
 
 class Totals {
- private var elapsedDistanceActivity as Float = 0.0f;
- private var elapsedAscentActivity as Number = 0;
- private var elapsedDescentActivity as Number = 0;
+ private
+  var elapsedDistanceActivity as Float = 0.0f;
+ private
+  var elapsedAscentActivity as Number = 0;
+ private
+  var elapsedDescentActivity as Number = 0;
   // odo
  private
   var totalDistance as Float = 0.0f;
@@ -43,12 +46,18 @@ class Totals {
  private
   var totalDistanceWeek as Float = 0.0f;
 
- private var totalDistanceLastTrack as Float = 0.0f;
- private var totalDistanceTrack as Float = 0.0f;
- private var totalAscentLastTrack as Number = 0;
- private var totalAscentTrack as Number = 0;
- private var totalDescentLastTrack as Number = 0;
- private var totalDescentTrack as Number = 0;
+ private
+  var totalDistanceLastTrack as Float = 0.0f;
+ private
+  var totalDistanceTrack as Float = 0.0f;
+ private
+  var totalAscentLastTrack as Number = 0;
+ private
+  var totalAscentTrack as Number = 0;
+ private
+  var totalDescentLastTrack as Number = 0;
+ private
+  var totalDescentTrack as Number = 0;
 
  private
   var totalDistanceLastRide as Float = 0.0f;
@@ -91,27 +100,30 @@ class Totals {
   function GetTotalDistanceWeek() as Float {
     return totalDistanceWeek + elapsedDistanceActivity;
   }
- public function GetTotalDistanceTrack() as Float { 
-  if ( $.gTrackRecordingActive ) {
-    return totalDistanceTrack + elapsedDistanceActivity; 
-  } else {
-    return totalDistanceTrack;
-  }
-}
- public function GetTotalAscentTrack() as Number { 
-  if ( $.gTrackRecordingActive ) {
-    return totalAscentTrack + elapsedAscentActivity;
-  } else {
-    return totalAscentTrack;
-  }
-}
- public function GetTotalDescentTrack() as Number { 
-  if ( $.gTrackRecordingActive ) {
-    return totalDescentTrack + elapsedDescentActivity; 
-  } else {
-    return totalDescentTrack;
-  }
+ public
+  function GetTotalDistanceTrack() as Float {
+    if ($.gTrackRecordingActive) {
+      return totalDistanceTrack + elapsedDistanceActivity;
+    } else {
+      return totalDistanceTrack;
     }
+  }
+ public
+  function GetTotalAscentTrack() as Number {
+    if ($.gTrackRecordingActive) {
+      return totalAscentTrack + elapsedAscentActivity;
+    } else {
+      return totalAscentTrack;
+    }
+  }
+ public
+  function GetTotalDescentTrack() as Number {
+    if ($.gTrackRecordingActive) {
+      return totalDescentTrack + elapsedDescentActivity;
+    } else {
+      return totalDescentTrack;
+    }
+  }
 
  public
   function GetTotalDistanceRide() as Float { return elapsedDistanceActivity; }
@@ -121,12 +133,21 @@ class Totals {
   function GetTotalDistanceLastMonth() as Float {
     return totalDistanceLastMonth;
   }
- public function GetTotalDistanceLastWeek() as Float { return totalDistanceLastWeek; }
- public function GetTotalDistanceLastTrack() as Float { return totalDistanceLastTrack; }
- public function GetTotalAscentLastTrack() as Number { return totalAscentLastTrack; }
- public function GetTotalDescentLastTrack() as Number { return totalDescentLastTrack; }
+ public
+  function GetTotalDistanceLastWeek() as Float { return totalDistanceLastWeek; }
+ public
+  function GetTotalDistanceLastTrack() as Float {
+    return totalDistanceLastTrack;
+  }
+ public
+  function GetTotalAscentLastTrack() as Number { return totalAscentLastTrack; }
+ public
+  function GetTotalDescentLastTrack() as Number {
+    return totalDescentLastTrack;
+  }
 
- public function GetTotalDistanceLastRide() as Float { return totalDistanceLastRide; }
+ public
+  function GetTotalDistanceLastRide() as Float { return totalDistanceLastRide; }
  public
   function GetElapsedDistanceToDestination() as Float {
     return elapsedDistanceActivity - startDistanceCourse;
@@ -178,7 +199,7 @@ class Totals {
  public
   function HasRide() as Boolean { return $.gShowRide; }
  public
-  function HasTrack() as Boolean { return $.gShowTrack; } 
+  function HasTrack() as Boolean { return $.gShowTrack; }
  public
   function HasFrontTyre() as Boolean {
     return $.gShowFront;  // && maxDistanceFrontTyre >= 1000;
@@ -217,7 +238,8 @@ class Totals {
     if (info has : timerState) {
       if (info.timerState != null) {
         rideTimerState = info.timerState as Number;
-        if (rideTimerState == Activity.TIMER_STATE_STOPPED or rideTimerState == Activity.TIMER_STATE_OFF) {
+        if (rideTimerState == Activity.TIMER_STATE_STOPPED or
+            rideTimerState == Activity.TIMER_STATE_OFF) {
           rideStarted = false;
         }
         if (!rideStarted && rideTimerState == Activity.TIMER_STATE_ON) {
@@ -250,28 +272,27 @@ class Totals {
       saveWeek();
       saveRide();
 
-
-
-      setDistanceAsMeters("totalDistanceFrontTyre",
+      loadTireDistance();
+      var tr = $.getTireRecPostfix();
+      setDistanceAsMeters("totalDistanceFrontTyre" + tr,
                           totalDistanceFrontTyre + elapsedDistanceActivity);
-      setDistanceAsMeters("totalDistanceBackTyre",
+      setDistanceAsMeters("totalDistanceBackTyre" + tr,
                           totalDistanceBackTyre + elapsedDistanceActivity);
 
-      if ( $.gTrackRecordingActive ) {
+      if ($.gTrackRecordingActive) {
         saveTrack();
       }
       System.println("totals saved");
       if (loadValues) {
         load(false);
       }
-      
+
       System.println(
           Lang.format("save: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
             rideStarted,
             elapsedDistanceActivity,
             totalDistanceLastRide,
           ]));
-
     } catch (ex) {
       ex.printStackTrace();
     }
@@ -305,15 +326,17 @@ class Totals {
   }
 
   function saveTrack() as Void {
-    setDistanceAsMeters("totalDistanceLastTrack", totalDistanceLastTrack);    
-    setDistanceAsMeters("totalDistanceTrack", totalDistanceTrack + elapsedDistanceActivity);
+    setDistanceAsMeters("totalDistanceLastTrack", totalDistanceLastTrack);
+    setDistanceAsMeters("totalDistanceTrack",
+                        totalDistanceTrack + elapsedDistanceActivity);
 
     Storage.setValue("totalAscentLastTrack", totalAscentLastTrack);
-    Storage.setValue("totalAscentTrack", totalAscentTrack + elapsedAscentActivity);
+    Storage.setValue("totalAscentTrack",
+                     totalAscentTrack + elapsedAscentActivity);
     Storage.setValue("totalDescentLastTrack", totalDescentLastTrack);
-    Storage.setValue("totalDescentTrack", totalDescentTrack + elapsedDescentActivity);     
+    Storage.setValue("totalDescentTrack",
+                     totalDescentTrack + elapsedDescentActivity);
   }
-
 
   hidden function setDistanceAsMeters(key as String,
                                       distanceMeters as Float) as Void {
@@ -347,9 +370,11 @@ class Totals {
     totalDistanceLastTrack = getDistanceAsMeters("totalDistanceLastTrack");
     totalDistanceTrack = getDistanceAsMeters("totalDistanceTrack");
 
-    totalAscentLastTrack = $.getStorageValue("totalAscentLastTrack", 0) as Number;
+    totalAscentLastTrack =
+        $.getStorageValue("totalAscentLastTrack", 0) as Number;
     totalAscentTrack = $.getStorageValue("totalAscentTrack", 0) as Number;
-    totalDescentLastTrack = $.getStorageValue("totalDescentLastTrack", 0) as Number;
+    totalDescentLastTrack =
+        $.getStorageValue("totalDescentLastTrack", 0) as Number;
     totalDescentTrack = $.getStorageValue("totalDescentTrack", 0) as Number;
 
     totalDistanceLastRide = getDistanceAsMeters("totalDistanceLastRide");
@@ -366,34 +391,44 @@ class Totals {
       handleDate();
     }
 
-    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre");
-    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre");
-    if (maxDistanceFrontTyre == 0.0f) { 
+    // @@ TODO
+    // Add prefix , if switch tirerec then load the last values
+    // onCompute -> detect profile switch?
+    loadTireDistance();
+  }
+
+  function loadTireDistance() as Void {
+    var tr = $.getTireRecPostfix();
+    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre" + tr);
+    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre" + tr);
+    if (maxDistanceFrontTyre == 0.0f) {
       maxDistanceFrontTyre = 5000000.0f;
-      setDistanceAsMeters("maxDistanceFrontTyre", maxDistanceFrontTyre);
+      setDistanceAsMeters("maxDistanceFrontTyre" + tr, maxDistanceFrontTyre);
     }
-    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre");
-    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre");
-    if (maxDistanceBackTyre == 0.0f) { 
-      maxDistanceBackTyre = 5000000.0f; 
-      setDistanceAsMeters("maxDistanceBackTyre", maxDistanceBackTyre);
+    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre" + tr);
+    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre" + tr);
+    if (maxDistanceBackTyre == 0.0f) {
+      maxDistanceBackTyre = 5000000.0f;
+      setDistanceAsMeters("maxDistanceBackTyre" + tr, maxDistanceBackTyre);
     }
   }
 
   function triggerFrontBack() as Void {
+    var tr = $.getTireRecPostfix();
     var switchFB = $.getStorageValue("switch_front_back", false) as Boolean;
 
-    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre");
-    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre");
-    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre");
-    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre");
+    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre" + tr);
+    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre" + tr);
+    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre" + tr);
+    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre" + tr);
 
     var reset = $.getStorageValue("reset_front", false) as Boolean;
     if (reset) {
       totalDistanceFrontTyre = 0.0f;
       Storage.setValue("reset_front", false);
       if (!switchFB) {
-        setDistanceAsMeters("totalDistanceFrontTyre", totalDistanceFrontTyre);
+        setDistanceAsMeters("totalDistanceFrontTyre" + tr,
+                            totalDistanceFrontTyre);
       }
     }
 
@@ -402,7 +437,8 @@ class Totals {
       totalDistanceBackTyre = 0.0f;
       Storage.setValue("reset_back", false);
       if (!switchFB) {
-        setDistanceAsMeters("totalDistanceBackTyre", totalDistanceFrontTyre);
+        setDistanceAsMeters("totalDistanceBackTyre" + tr,
+                            totalDistanceFrontTyre);
       }
     }
 
@@ -411,8 +447,9 @@ class Totals {
       var tmpBack = totalDistanceBackTyre;
       totalDistanceBackTyre = totalDistanceFrontTyre;
       totalDistanceFrontTyre = tmpBack;
-      setDistanceAsMeters("totalDistanceFrontTyre", totalDistanceFrontTyre);
-      setDistanceAsMeters("totalDistanceBackTyre", totalDistanceBackTyre);
+      setDistanceAsMeters("totalDistanceFrontTyre" + tr,
+                          totalDistanceFrontTyre);
+      setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceBackTyre);
     }
 
     reset = $.getStorageValue("reset_track", false) as Boolean;
@@ -421,15 +458,15 @@ class Totals {
         totalDistanceLastTrack = totalDistanceTrack;
         totalAscentLastTrack = totalAscentTrack;
         totalDescentLastTrack = totalDescentTrack;
-      }        
-        totalDistanceTrack = 0.0f;
-        totalAscentTrack = 0;
-        totalDescentTrack = 0;
-        saveTrack();
+      }
+      totalDistanceTrack = 0.0f;
+      totalAscentTrack = 0;
+      totalDescentTrack = 0;
+      saveTrack();
       Storage.setValue("reset_track", false);
     }
   }
-
+  
   hidden function getDistanceAsMeters(key as String) as Float {
     try {
       return $.getStorageValue(key, 0.0f) as Float;
@@ -450,7 +487,8 @@ class Totals {
       totalDistanceLastMonth = 0.0f;
       totalDistanceMonth = 0.0f;
 
-      currentWeek = iso_week_number(today.year, today.month as Number, today.day); 
+      currentWeek =
+          iso_week_number(today.year, today.month as Number, today.day);
       totalDistanceLastWeek = 0.0f;
       totalDistanceWeek = 0.0f;
 
@@ -511,7 +549,7 @@ class Totals {
   hidden function setProperty(key as PropertyKeyType,
                               value as PropertyValueType) as Void {
     Application.Properties.setValue(key, value);
-  } 
+  }
 }
 
 class Total {
@@ -524,3 +562,27 @@ class Total {
  public
   var distanceLast as Float = 0.0f;
 }
+
+function getTireRecPostfix() as String {
+    switch ($.gTireRecording) {
+      case Types.TireRecDefault:
+        return "";
+      case Types.TireRecProfile:
+        var info = Activity.getProfileInfo();
+        var arr = info.uniqueIdentifier;
+        if (arr == null) {
+          return "";
+        }
+        return arr.toString();
+        break;
+      case Types.TireRecSetA:
+        return "A";
+      case Types.TireRecSetB:
+        return "B";
+      case Types.TireRecSetC:
+        return "C";
+      case Types.TireRecSetD:
+        return "D";
+    }
+    return "";
+  }
