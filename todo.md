@@ -1,28 +1,27 @@
+show ride
+current / stopped ::: last ride
+when start -> current to last , current = 0
+
+Activity OFF
+=>
+totalDistanceRide > 0 
+save lastDistanceRide
+totalDistanceRide = 0
+
+if debug -> set ride?
+
 x tire recording
   detect profile switch - nodig?
-x max kleur circles / grijs mode
-if createcolor -> tire wit -- rood -- donkerpaars
-
-
-enum EnumTireRecording {
-    TireRecDefault = 0,
-      -> without postfix
-    TireRecProfile = 1,
-      -> postfix current profile when save 
-        -> before save, load old value
-    TireRecSetA = 2,
-      -> postfix A when save 
-        -> before save, load old value
-    TireRecSetB = 3,
-    TireRecSetC = 4,
-    TireRecSetD = 5
-  }
+  remember last/current profile
+  front/back tracking: if createcolor -> tire wit -- rood -- donkerpaars
+  gray mode?
+  show profilename (max length)
 
 handle date starting app 1 time
 show weeknr / month / year - for x seconds on pause
+show year/weeknr/etc in big screen
 
 track small field no asc/desc display
-show year/weeknr/etc in big screen
 x show perc or distance last ride
 
 x bug reload focus/setting after change

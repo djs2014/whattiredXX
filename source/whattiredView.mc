@@ -127,17 +127,11 @@ class whattiredView extends WatchUi.DataField {
   // }
 
   function onTimerReset() {
-    System.println("onTimerReset");
-    mTotals.save(true);
-    mDataSaved = true;
+    saveTotals("onTimerReset");
   }
 
   function onTimerStop() {
-    if (!mDataSaved) {
-      System.println("onTimerStop");
-      mTotals.save(false);
-      mDataSaved = true;
-    }
+    saveTotals("onTimerStop");
   }
 
   function compute(info as Activity.Info) as Void {
@@ -147,21 +141,21 @@ class whattiredView extends WatchUi.DataField {
     if (info has :timerState) {
       if (info.timerState != null) {
         if (info.timerState == Activity.TIMER_STATE_STOPPED) {
-          if (!mDataSaved) {
-            System.println("compute TIMER_STATE_STOPPED");
-            mTotals.save(false);
-            mDataSaved = true;
-          }
+          saveTotals("compute TIMER_STATE_STOPPED");
         } else if (info.timerState == Activity.TIMER_STATE_OFF) {
-          if (!mDataSaved) {
-            System.println("compute TIMER_STATE_OFF");
-            mTotals.save(true);
-            mDataSaved = true;
-          }
+          saveTotals("compute TIMER_STATE_OFF");
         } else if (info.timerState == Activity.TIMER_STATE_ON) {
           mDataSaved = false;
         }
       }
+    }
+  }
+
+  function saveTotals(info as String) as Void {
+    if (!mDataSaved) {
+      System.println("saveTotals: " + info);
+      mTotals.save(true);
+      mDataSaved = true;
     }
   }
 
@@ -493,7 +487,7 @@ class whattiredView extends WatchUi.DataField {
         dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
       }
       dc.drawText(x, y, mFontText, formattedValue + " " + units, Graphics.TEXT_JUSTIFY_LEFT);
-      
+
       // draw perc last distance
       if (perc > -1) {
         formattedValue = "";
@@ -604,7 +598,7 @@ class whattiredView extends WatchUi.DataField {
     if (maxMeters_front > 0) {
       perc_front = percentageOf(meters_front, maxMeters_front);
       if (showColors) {
-        drawPercentageLine(dc, x, y + 1, halfWidth - x - 1, perc_front, mLineHeight - 1, percentageToColor(perc_front));
+        drawPercentageLine(dc, x, y + 1, halfWidth - x - 1, perc_front, mLineHeight - 1, percentageToColor(perc_front)); // - x - 1
       }
     }
     if (showValues) {
@@ -628,7 +622,7 @@ class whattiredView extends WatchUi.DataField {
     if (maxMeters_back > 0) {
       perc_back = percentageOf(meters_back, maxMeters_back);
       if (showColors) {
-        drawPercentageLine(dc, x2, y + 1, mWidth - x2 - 1, perc_back, mLineHeight - 1, percentageToColor(perc_back));
+        drawPercentageLine(dc, x2, y + 1, mWidth - x2 - 1, perc_back, mLineHeight - 1, percentageToColor(perc_back)); // - x2 - 1
       }
     }
 
@@ -671,7 +665,7 @@ class whattiredView extends WatchUi.DataField {
     var label = $.getTireRecordingSubLabel("tireRecording");
     if (!label.equals("default")) {
       dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);
-      dc.drawText(mWidth/2, yLabel, Graphics.FONT_XTINY, "for " + label, Graphics.TEXT_JUSTIFY_CENTER); 
+      dc.drawText(mWidth / 2, yLabel, Graphics.FONT_XTINY, "for " + label, Graphics.TEXT_JUSTIFY_CENTER);
     }
     if (mTotals.HasFrontTyre()) {
       var meters_front = mTotals.GetTotalDistanceFrontTyre();

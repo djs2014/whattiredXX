@@ -11,113 +11,80 @@ import Toybox.StringUtil;
 import Toybox.Attention;
 
 class Totals {
- private
-  var elapsedDistanceActivity as Float = 0.0f;
- private
-  var elapsedAscentActivity as Number = 0;
- private
-  var elapsedDescentActivity as Number = 0;
+  private var elapsedDistanceActivity as Float = 0.0f;
+  private var elapsedAscentActivity as Number = 0;
+  private var elapsedDescentActivity as Number = 0;
+  private var debugElapsedDistance as Float = 0.0f;
   // odo
- private
-  var totalDistance as Float = 0.0f;
- private
-  var maxDistance as Float = 0.0f;
+  private var totalDistance as Float = 0.0f;
+  private var maxDistance as Float = 0.0f;
 
- private
-  var lastYear as Number = 0;
- private
-  var totalDistanceLastYear as Float = 0.0f;
- private
-  var currentYear as Number = 0;
- private
-  var totalDistanceYear as Float = 0.0f;
+  private var lastYear as Number = 0;
+  private var totalDistanceLastYear as Float = 0.0f;
+  private var currentYear as Number = 0;
+  private var totalDistanceYear as Float = 0.0f;
 
- private
-  var totalDistanceLastMonth as Float = 0.0f;
- private
-  var currentMonth as Number = 0;
- private
-  var totalDistanceMonth as Float = 0.0f;
+  private var totalDistanceLastMonth as Float = 0.0f;
+  private var currentMonth as Number = 0;
+  private var totalDistanceMonth as Float = 0.0f;
 
- private
-  var currentWeek as Number = 0;
- private
-  var totalDistanceLastWeek as Float = 0.0f;
- private
-  var totalDistanceWeek as Float = 0.0f;
+  private var currentWeek as Number = 0;
+  private var totalDistanceLastWeek as Float = 0.0f;
+  private var totalDistanceWeek as Float = 0.0f;
 
- private
-  var totalDistanceLastTrack as Float = 0.0f;
- private
-  var totalDistanceTrack as Float = 0.0f;
- private
-  var totalAscentLastTrack as Number = 0;
- private
-  var totalAscentTrack as Number = 0;
- private
-  var totalDescentLastTrack as Number = 0;
- private
-  var totalDescentTrack as Number = 0;
+  private var totalDistanceLastTrack as Float = 0.0f;
+  private var totalDistanceTrack as Float = 0.0f;
+  private var totalAscentLastTrack as Number = 0;
+  private var totalAscentTrack as Number = 0;
+  private var totalDescentLastTrack as Number = 0;
+  private var totalDescentTrack as Number = 0;
 
- private
-  var totalDistanceLastRide as Float = 0.0f;
- private
-  var totalDistanceRide as Float = 0.0f;
- private
-  var startDistanceCourse as Float = 0.0f;
- private
-  var totalDistanceToDestination as Float = 0.0f;
+  private var totalDistanceLastRide as Float = 0.0f;
+  private var totalDistanceRide as Float = 0.0f;
+  private var startDistanceCourse as Float = 0.0f;
+  private var totalDistanceToDestination as Float = 0.0f;
 
- private
-  var rideStarted as Boolean = false;
- private
-  var rideTimerState as Number = Activity.TIMER_STATE_OFF;
+  private var rideStarted as Boolean = false;
+  private var rideTimerState as Number = Activity.TIMER_STATE_OFF;
 
- private
-  var totalDistanceFrontTyre as Float = 0.0f;
- private
-  var maxDistanceFrontTyre as Float = 0.0f;
- private
-  var totalDistanceBackTyre as Float = 0.0f;
- private
-  var maxDistanceBackTyre as Float = 0.0f;
+  private var totalDistanceFrontTyre as Float = 0.0f;
+  private var maxDistanceFrontTyre as Float = 0.0f;
+  private var totalDistanceBackTyre as Float = 0.0f;
+  private var maxDistanceBackTyre as Float = 0.0f;
 
- public
-  function GetTotalDistance() as Float {
-    return totalDistance + elapsedDistanceActivity;
+  hidden function GetElapsedDistance() {
+    return elapsedDistanceActivity + debugElapsedDistance;
   }
- public
-  function GetMaxDistance() as Float { return maxDistance; }
- public
-  function GetTotalDistanceYear() as Float {
-    return totalDistanceYear + elapsedDistanceActivity;
+  public function GetTotalDistance() as Float {
+    return totalDistance + GetElapsedDistance();
   }
- public
-  function GetTotalDistanceMonth() as Float {
-    return totalDistanceMonth + elapsedDistanceActivity;
+  public function GetMaxDistance() as Float {
+    return maxDistance;
   }
- public
-  function GetTotalDistanceWeek() as Float {
-    return totalDistanceWeek + elapsedDistanceActivity;
+  public function GetTotalDistanceYear() as Float {
+    return totalDistanceYear + GetElapsedDistance();
   }
- public
-  function GetTotalDistanceTrack() as Float {
+  public function GetTotalDistanceMonth() as Float {
+    return totalDistanceMonth + GetElapsedDistance();
+  }
+  public function GetTotalDistanceWeek() as Float {
+    return totalDistanceWeek + GetElapsedDistance();
+  }
+  public function GetTotalDistanceTrack() as Float {
     if ($.gTrackRecordingActive) {
-      return totalDistanceTrack + elapsedDistanceActivity;
+      return totalDistanceTrack + GetElapsedDistance();
     } else {
       return totalDistanceTrack;
     }
   }
- public
-  function GetTotalAscentTrack() as Number {
+  public function GetTotalAscentTrack() as Number {
     if ($.gTrackRecordingActive) {
       return totalAscentTrack + elapsedAscentActivity;
     } else {
       return totalAscentTrack;
     }
   }
- public
-  function GetTotalDescentTrack() as Number {
+  public function GetTotalDescentTrack() as Number {
     if ($.gTrackRecordingActive) {
       return totalDescentTrack + elapsedDescentActivity;
     } else {
@@ -125,39 +92,41 @@ class Totals {
     }
   }
 
- public
-  function GetTotalDistanceRide() as Float { return elapsedDistanceActivity; }
- public
-  function GetTotalDistanceLastYear() as Float { return totalDistanceLastYear; }
- public
-  function GetTotalDistanceLastMonth() as Float {
+  public function GetTotalDistanceRide() as Float {
+    if (rideTimerState == Activity.TIMER_STATE_OFF) {
+      return totalDistanceRide;
+    }
+    return GetElapsedDistance();
+  }
+  public function GetTotalDistanceLastYear() as Float {
+    return totalDistanceLastYear;
+  }
+  public function GetTotalDistanceLastMonth() as Float {
     return totalDistanceLastMonth;
   }
- public
-  function GetTotalDistanceLastWeek() as Float { return totalDistanceLastWeek; }
- public
-  function GetTotalDistanceLastTrack() as Float {
+  public function GetTotalDistanceLastWeek() as Float {
+    return totalDistanceLastWeek;
+  }
+  public function GetTotalDistanceLastTrack() as Float {
     return totalDistanceLastTrack;
   }
- public
-  function GetTotalAscentLastTrack() as Number { return totalAscentLastTrack; }
- public
-  function GetTotalDescentLastTrack() as Number {
+  public function GetTotalAscentLastTrack() as Number {
+    return totalAscentLastTrack;
+  }
+  public function GetTotalDescentLastTrack() as Number {
     return totalDescentLastTrack;
   }
 
- public
-  function GetTotalDistanceLastRide() as Float { return totalDistanceLastRide; }
- public
-  function GetElapsedDistanceToDestination() as Float {
-    return elapsedDistanceActivity - startDistanceCourse;
+  public function GetTotalDistanceLastRide() as Float {
+    return totalDistanceLastRide;
   }
- public
-  function GetDistanceToDestination() as Float {
+  public function GetElapsedDistanceToDestination() as Float {
+    return GetElapsedDistance() - startDistanceCourse;
+  }
+  public function GetDistanceToDestination() as Float {
     return totalDistanceToDestination;
   }
- public
-  function IsCourseActive() as Boolean {
+  public function IsCourseActive() as Boolean {
     System.println("totalDistanceToDestination:");
     System.println(totalDistanceToDestination / 1000.0);
     System.println("GetElapsedDistanceToDestination()");
@@ -165,54 +134,57 @@ class Totals {
     System.println("startDistanceCourse()");
     System.println(startDistanceCourse / 1000.0);
     System.println("elapsedDistanceActivity");
-    System.println(elapsedDistanceActivity / 1000.0);
+    System.println(GetElapsedDistance() / 1000.0);
 
     return totalDistanceToDestination > 0;
   }
 
- public
-  function IsActivityStopped() as Boolean {
+  public function IsActivityStopped() as Boolean {
     return rideTimerState == Activity.TIMER_STATE_STOPPED;
   }
 
- public
-  function GetTotalDistanceFrontTyre() as Float {
-    return totalDistanceFrontTyre + elapsedDistanceActivity;
+  public function GetTotalDistanceFrontTyre() as Float {
+    return totalDistanceFrontTyre + GetElapsedDistance();
   }
- public
-  function GetMaxDistanceFrontTyre() as Float { return maxDistanceFrontTyre; }
- public
-  function GetTotalDistanceBackTyre() as Float {
-    return totalDistanceBackTyre + elapsedDistanceActivity;
+  public function GetMaxDistanceFrontTyre() as Float {
+    return maxDistanceFrontTyre;
   }
- public
-  function GetMaxDistanceBackTyre() as Float { return maxDistanceBackTyre; }
+  public function GetTotalDistanceBackTyre() as Float {
+    return totalDistanceBackTyre + GetElapsedDistance();
+  }
+  public function GetMaxDistanceBackTyre() as Float {
+    return maxDistanceBackTyre;
+  }
 
- public
-  function HasOdo() as Boolean { return $.gShowOdo; }
- public
-  function HasYear() as Boolean { return $.gShowYear; }
- public
-  function HasMonth() as Boolean { return $.gShowMonth; }
- public
-  function HasWeek() as Boolean { return $.gShowWeek; }
- public
-  function HasRide() as Boolean { return $.gShowRide; }
- public
-  function HasTrack() as Boolean { return $.gShowTrack; }
- public
-  function HasFrontTyre() as Boolean {
-    return $.gShowFront;  // && maxDistanceFrontTyre >= 1000;
+  public function HasOdo() as Boolean {
+    return $.gShowOdo;
   }
- public
-  function HasBackTyre() as Boolean {
-    return $.gShowBack;  // && maxDistanceBackTyre >= 1000;
+  public function HasYear() as Boolean {
+    return $.gShowYear;
+  }
+  public function HasMonth() as Boolean {
+    return $.gShowMonth;
+  }
+  public function HasWeek() as Boolean {
+    return $.gShowWeek;
+  }
+  public function HasRide() as Boolean {
+    return $.gShowRide;
+  }
+  public function HasTrack() as Boolean {
+    return $.gShowTrack;
+  }
+  public function HasFrontTyre() as Boolean {
+    return $.gShowFront; // && maxDistanceFrontTyre >= 1000;
+  }
+  public function HasBackTyre() as Boolean {
+    return $.gShowBack; // && maxDistanceBackTyre >= 1000;
   }
 
   function initialize() {}
 
   function compute(info as Activity.Info) as Void {
-    if (info has : elapsedDistance) {
+    if (info has :elapsedDistance) {
       if (info.elapsedDistance != null) {
         elapsedDistanceActivity = info.elapsedDistance as Float;
       } else {
@@ -220,14 +192,14 @@ class Totals {
       }
     }
 
-    if (info has : totalAscent) {
+    if (info has :totalAscent) {
       if (info.totalAscent != null) {
         elapsedAscentActivity = info.totalAscent as Number;
       } else {
         elapsedAscentActivity = 0;
       }
     }
-    if (info has : totalDescent) {
+    if (info has :totalDescent) {
       if (info.totalDescent != null) {
         elapsedDescentActivity = info.totalDescent as Number;
       } else {
@@ -235,21 +207,20 @@ class Totals {
       }
     }
 
-    if (info has : timerState) {
+    if (info has :timerState) {
       if (info.timerState != null) {
         rideTimerState = info.timerState as Number;
-        if (rideTimerState == Activity.TIMER_STATE_STOPPED or
-            rideTimerState == Activity.TIMER_STATE_OFF) {
+        if (rideTimerState == Activity.TIMER_STATE_STOPPED or rideTimerState == Activity.TIMER_STATE_OFF) {
           rideStarted = false;
         }
         if (!rideStarted && rideTimerState == Activity.TIMER_STATE_ON) {
-          handleDate();
+          handleRide();
         }
       }
     }
 
     totalDistanceToDestination = 0.0f;
-    if (info has : distanceToDestination) {
+    if (info has :distanceToDestination) {
       if (info.distanceToDestination != null) {
         totalDistanceToDestination = info.distanceToDestination as Float;
       }
@@ -258,41 +229,47 @@ class Totals {
     if (totalDistanceToDestination == 0.0f) {
       startDistanceCourse = 0.0f;
     } else if (startDistanceCourse == 0.0f) {
-      startDistanceCourse = elapsedDistanceActivity;
+      startDistanceCourse = GetElapsedDistance();
     }
   }
 
   function save(loadValues as Boolean) as Void {
     try {
-      setDistanceAsMeters("totalDistance",
-                          totalDistance + elapsedDistanceActivity);
+      setDistanceAsMeters("totalDistance", totalDistance + GetElapsedDistance());
 
       saveYear();
       saveMonth();
       saveWeek();
-      saveRide();
 
-      loadTireDistance();
+      loadTireDistance(false);
       var tr = $.getTireRecPostfix();
-      setDistanceAsMeters("totalDistanceFrontTyre" + tr,
-                          totalDistanceFrontTyre + elapsedDistanceActivity);
-      setDistanceAsMeters("totalDistanceBackTyre" + tr,
-                          totalDistanceBackTyre + elapsedDistanceActivity);
+      setDistanceAsMeters("totalDistanceFrontTyre" + tr, totalDistanceFrontTyre + GetElapsedDistance());
+      setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceBackTyre + GetElapsedDistance());
 
       if ($.gTrackRecordingActive) {
         saveTrack();
       }
-      System.println("totals saved");
+
+      saveRide();
+      if (debugElapsedDistance>0) {
+        debugElapsedDistance = 0.0f;
+        setDistanceAsMeters("debugElapsedDistance", debugElapsedDistance);
+        System.println("debugElapsedDistance reset to 0");
+      }
+      System.println("save completed");
+
       if (loadValues) {
         load(false);
       }
 
       System.println(
-          Lang.format("save: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
-            rideStarted,
-            elapsedDistanceActivity,
-            totalDistanceLastRide,
-          ]));
+        Lang.format("save: rideStarted [$1$] ride [$2$] last ride [$3$] loadValues[$4$]", [
+          rideStarted,
+          GetElapsedDistance(),
+          totalDistanceLastRide,
+          loadValues
+        ])
+      );
     } catch (ex) {
       ex.printStackTrace();
     }
@@ -303,43 +280,37 @@ class Totals {
     setDistanceAsMeters("totalDistanceLastYear", totalDistanceLastYear);
 
     Toybox.Application.Storage.setValue("currentYear", currentYear);
-    setDistanceAsMeters("totalDistanceYear",
-                        totalDistanceYear + elapsedDistanceActivity);
+    setDistanceAsMeters("totalDistanceYear", totalDistanceYear + GetElapsedDistance());
   }
   function saveMonth() as Void {
     Toybox.Application.Storage.setValue("currentMonth", currentMonth);
     setDistanceAsMeters("totalDistanceLastMonth", totalDistanceLastMonth);
-    setDistanceAsMeters("totalDistanceMonth",
-                        totalDistanceMonth + elapsedDistanceActivity);
+    setDistanceAsMeters("totalDistanceMonth", totalDistanceMonth + GetElapsedDistance());
   }
   function saveWeek() as Void {
     Toybox.Application.Storage.setValue("currentWeek", currentWeek);
     setDistanceAsMeters("totalDistanceLastWeek", totalDistanceLastWeek);
-    setDistanceAsMeters("totalDistanceWeek",
-                        totalDistanceWeek + elapsedDistanceActivity);
+    setDistanceAsMeters("totalDistanceWeek", totalDistanceWeek + GetElapsedDistance());
   }
   function saveRide() as Void {
-    if (totalDistanceLastRide > 500.0) {
-      setDistanceAsMeters("totalDistanceLastRide", totalDistanceLastRide);
-    }
-    setDistanceAsMeters("totalDistanceRide", elapsedDistanceActivity);
+    // if (totalDistanceLastRide > 500.0) {
+    //   setDistanceAsMeters("totalDistanceLastRide", totalDistanceLastRide);
+    // }
+    setDistanceAsMeters("totalDistanceRide", GetElapsedDistance());
+    totalDistanceRide = GetElapsedDistance();
   }
 
   function saveTrack() as Void {
     setDistanceAsMeters("totalDistanceLastTrack", totalDistanceLastTrack);
-    setDistanceAsMeters("totalDistanceTrack",
-                        totalDistanceTrack + elapsedDistanceActivity);
+    setDistanceAsMeters("totalDistanceTrack", totalDistanceTrack + GetElapsedDistance());
 
     Storage.setValue("totalAscentLastTrack", totalAscentLastTrack);
-    Storage.setValue("totalAscentTrack",
-                     totalAscentTrack + elapsedAscentActivity);
+    Storage.setValue("totalAscentTrack", totalAscentTrack + elapsedAscentActivity);
     Storage.setValue("totalDescentLastTrack", totalDescentLastTrack);
-    Storage.setValue("totalDescentTrack",
-                     totalDescentTrack + elapsedDescentActivity);
+    Storage.setValue("totalDescentTrack", totalDescentTrack + elapsedDescentActivity);
   }
 
-  hidden function setDistanceAsMeters(key as String,
-                                      distanceMeters as Float) as Void {
+  hidden function setDistanceAsMeters(key as String, distanceMeters as Float) as Void {
     try {
       Storage.setValue(key, distanceMeters);
     } catch (ex) {
@@ -370,22 +341,22 @@ class Totals {
     totalDistanceLastTrack = getDistanceAsMeters("totalDistanceLastTrack");
     totalDistanceTrack = getDistanceAsMeters("totalDistanceTrack");
 
-    totalAscentLastTrack =
-        $.getStorageValue("totalAscentLastTrack", 0) as Number;
+    totalAscentLastTrack = $.getStorageValue("totalAscentLastTrack", 0) as Number;
     totalAscentTrack = $.getStorageValue("totalAscentTrack", 0) as Number;
-    totalDescentLastTrack =
-        $.getStorageValue("totalDescentLastTrack", 0) as Number;
+    totalDescentLastTrack = $.getStorageValue("totalDescentLastTrack", 0) as Number;
     totalDescentTrack = $.getStorageValue("totalDescentTrack", 0) as Number;
 
     totalDistanceLastRide = getDistanceAsMeters("totalDistanceLastRide");
     totalDistanceRide = getDistanceAsMeters("totalDistanceRide");
+    debugElapsedDistance = getDistanceAsMeters("debugElapsedDistance");
 
     System.println(
-        Lang.format("load: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
-          rideStarted,
-          totalDistanceRide,
-          totalDistanceLastRide,
-        ]));
+      Lang.format("load: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
+        rideStarted,
+        totalDistanceRide,
+        totalDistanceLastRide,
+      ])
+    );
 
     if (processDate) {
       handleDate();
@@ -394,11 +365,18 @@ class Totals {
     // @@ TODO
     // Add prefix , if switch tirerec then load the last values
     // onCompute -> detect profile switch?
-    loadTireDistance();
+    $.gTireRecPostfix = "";
+    loadTireDistance(true);
   }
 
-  function loadTireDistance() as Void {
+  function loadTireDistance(force as Boolean) as Void {
     var tr = $.getTireRecPostfix();
+    if (!force and tr.equals($.gTireRecPostfix)) {
+      System.println("Tire distance already loaded for: " + $.gTireRecPostfix);
+      return;
+    }
+    // @@ TODO test when connect IQ app started during activity -> save current tr in storage?
+    $.gTireRecPostfix = tr;
     totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre" + tr);
     maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre" + tr);
     if (maxDistanceFrontTyre == 0.0f) {
@@ -411,6 +389,7 @@ class Totals {
       maxDistanceBackTyre = 5000000.0f;
       setDistanceAsMeters("maxDistanceBackTyre" + tr, maxDistanceBackTyre);
     }
+    System.println("Tire distance loaded for: " + $.gTireRecPostfix);
   }
 
   function triggerFrontBack() as Void {
@@ -427,8 +406,7 @@ class Totals {
       totalDistanceFrontTyre = 0.0f;
       Storage.setValue("reset_front", false);
       if (!switchFB) {
-        setDistanceAsMeters("totalDistanceFrontTyre" + tr,
-                            totalDistanceFrontTyre);
+        setDistanceAsMeters("totalDistanceFrontTyre" + tr, totalDistanceFrontTyre);
       }
     }
 
@@ -437,8 +415,7 @@ class Totals {
       totalDistanceBackTyre = 0.0f;
       Storage.setValue("reset_back", false);
       if (!switchFB) {
-        setDistanceAsMeters("totalDistanceBackTyre" + tr,
-                            totalDistanceFrontTyre);
+        setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceFrontTyre);
       }
     }
 
@@ -447,8 +424,7 @@ class Totals {
       var tmpBack = totalDistanceBackTyre;
       totalDistanceBackTyre = totalDistanceFrontTyre;
       totalDistanceFrontTyre = tmpBack;
-      setDistanceAsMeters("totalDistanceFrontTyre" + tr,
-                          totalDistanceFrontTyre);
+      setDistanceAsMeters("totalDistanceFrontTyre" + tr, totalDistanceFrontTyre);
       setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceBackTyre);
     }
 
@@ -466,7 +442,7 @@ class Totals {
       Storage.setValue("reset_track", false);
     }
   }
-  
+
   hidden function getDistanceAsMeters(key as String) as Float {
     try {
       return $.getStorageValue(key, 0.0f) as Float;
@@ -487,8 +463,7 @@ class Totals {
       totalDistanceLastMonth = 0.0f;
       totalDistanceMonth = 0.0f;
 
-      currentWeek =
-          iso_week_number(today.year, today.month as Number, today.day);
+      currentWeek = iso_week_number(today.year, today.month as Number, today.day);
       totalDistanceLastWeek = 0.0f;
       totalDistanceWeek = 0.0f;
 
@@ -527,62 +502,80 @@ class Totals {
       totalDistanceWeek = 0.0f;
       saveWeek();
     }
+  }
 
+  hidden function handleRide() as Void {
     // ride started - via activity?
+    // if (rideTimerState == Activity.TIMER_STATE_OFF and totalDistanceRide > 0) {
+    //   if (totalDistanceRide > 500.0) {
+    //     totalDistanceLastRide = totalDistanceRide;
+    //   }
+    //   totalDistanceRide = 0.0f; // same as elapseddistance
+    //   System.println(
+    //     Lang.format("handledate: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
+    //       rideStarted,
+    //       totalDistanceRide,
+    //       totalDistanceLastRide,
+    //     ])
+    //   );
+    //   saveRide();
+    // } else
     if (!rideStarted && rideTimerState == Activity.TIMER_STATE_ON) {
-      // Only valid rides..
+      // Only valid rides.. totalDistanceRide is current saved ride after activity
+
       if (totalDistanceRide > 500.0) {
         totalDistanceLastRide = totalDistanceRide;
+        setDistanceAsMeters("totalDistanceLastRide", totalDistanceLastRide);
       }
-      totalDistanceRide = 0.0f;  // same as elapseddistance
+
+      debugElapsedDistance = 0.0f;
+      setDistanceAsMeters("debugElapsedDistance", debugElapsedDistance);
+    
+      totalDistanceRide = 0.0f; // same as elapseddistance
       rideStarted = true;
-      System.println(Lang.format(
-          "handledate: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
-            rideStarted,
-            totalDistanceRide,
-            totalDistanceLastRide,
-          ]));
+      System.println(
+        Lang.format("handleRide: rideStarted [$1$] ride [$2$] last ride [$3$] ", [
+          rideStarted,
+          totalDistanceRide,
+          totalDistanceLastRide,
+        ])
+      );
       saveRide();
     }
   }
 
-  hidden function setProperty(key as PropertyKeyType,
-                              value as PropertyValueType) as Void {
+  hidden function setProperty(key as PropertyKeyType, value as PropertyValueType) as Void {
     Application.Properties.setValue(key, value);
   }
 }
 
 class Total {
- public
-  var title as String = "";
- public
-  var abbreviated as String = "";
- public
-  var distance as Float = 0.0f;
- public
-  var distanceLast as Float = 0.0f;
+  public var title as String = "";
+  public var abbreviated as String = "";
+  public var distance as Float = 0.0f;
+  public var distanceLast as Float = 0.0f;
 }
 
 function getTireRecPostfix() as String {
-    switch ($.gTireRecording) {
-      case Types.TireRecDefault:
-        return "";
-      case Types.TireRecProfile:
-        var info = Activity.getProfileInfo();
-        var arr = info.uniqueIdentifier;
-        if (arr == null) {
-          return "";
-        }
-        return arr.toString();
-        break;
-      case Types.TireRecSetA:
-        return "A";
-      case Types.TireRecSetB:
-        return "B";
-      case Types.TireRecSetC:
-        return "C";
-      case Types.TireRecSetD:
-        return "D";
-    }
-    return "";
+  switch ($.gTireRecording) {
+    case Types.TireRecDefault:
+      return "";
+    case Types.TireRecProfile:
+      var info = Activity.getProfileInfo();
+      var arr = info.uniqueIdentifier;
+      if (arr == null) {
+        return $.gActivityProfileId;
+      }
+      $.gActivityProfileId = arr.toString();
+      return $.gActivityProfileId;
+    case Types.TireRecSetA:
+      return "A";
+    case Types.TireRecSetB:
+      return "B";
+    case Types.TireRecSetC:
+      return "C";
+    case Types.TireRecSetD:
+      return "D";
   }
+  return "";
+}

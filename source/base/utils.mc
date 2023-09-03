@@ -80,6 +80,7 @@ function drawPercentageLine(
   height as Number,
   color as ColorType
 ) as Void {
+  if (percentage > 100.0) { percentage = 100.0; }
   var wPercentage = (maxwidth / 100.0) * percentage;
   dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 
@@ -99,24 +100,28 @@ function drawPercentageCircleTarget(
   dc.drawCircle(x, y, radius);
 
   if (perc < 100) {
-    setColorByPerc(dc, perc);
+    setColorByPerc(dc, perc, 0);
     drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
   } else {
-    setColorByPerc(dc, 100);
+    setColorByPerc(dc, 100, 0);
     drawPercentageCircle(dc, x, y, radius, 100, circleWidth);
+    setColorByPerc(dc, 100, 15);
+    dc.drawCircle(x, y, radius - circleWidth / 2);
   }
 
   var percRemain = perc - 100;
   var radiusInner = radius - circleWidth - 3;
   while (percRemain > 0 && radiusInner > 0) {
     if (percRemain < 100) {
-      setColorByPerc(dc, percRemain);
+      setColorByPerc(dc, percRemain, 0);
       drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
     } else {
-      setColorByPerc(dc, 100);
+      setColorByPerc(dc, 100, 0);
       drawPercentageCircle(dc, x, y, radiusInner, 100, circleWidth);
+      setColorByPerc(dc, 100, 15);
+      dc.drawCircle(x, y, radiusInner - circleWidth / 2);
     }
-  
+
     radiusInner = radiusInner - circleWidth - 3;
     percRemain = percRemain - 100;
   }
@@ -181,10 +186,10 @@ function getMatchingFont(
   return font;
 }
 
-function setColorByPerc(dc as Dc, perc as Numeric) as Void {
+function setColorByPerc(dc as Dc, perc as Numeric, darker as Number) as Void {
   var color = 0;
   if ($.gCreateColors) {
-    color = percentageToColorAlt(perc, 180, $.PERC_COLORS_SCHEME);
+    color = percentageToColorAlt(perc, 180, $.PERC_COLORS_SCHEME, darker);
   } else {
     color = percentageToColor(perc);
   }
@@ -198,10 +203,17 @@ function setColorByPerc(dc as Dc, perc as Numeric) as Void {
 }
 
 // [perc, R, G, B]
-const PERC_COLORS_WHITE_RED =
+const PERC_COLORS_SCHEME_100 =
   [
     [0, 255, 255, 255],
-    [100, 255, 0, 0],
+    [55, 244, 246, 247], // COLOR_WHITE_4
+    [65, 174, 214, 241], // COLOR_WHITE_BLUE_3
+    [70, 169, 204, 227], // COLOR_WHITE_DK_BLUE_3
+    [75, 163, 228, 215], // COLOR_WHITE_LT_GREEN_3
+    [80, 169, 223, 191], // COLOR_WHITE_GREEN_3
+    [85, 249, 231, 159], // COLOR_WHITE_YELLOW_3
+    [95, 250, 215, 160], // COLOR_WHITE_ORANGE_3
+    [100, 255, 0, 0],    
   ] as Array<Array<Number> >;
 
 const PERC_COLORS_SCHEME =
@@ -222,14 +234,15 @@ const PERC_COLORS_SCHEME =
     [145, 215, 189, 226], // COLOR_WHITE_PURPLE_3
     [155, 210, 180, 222], // COLOR_WHITE_DK_PURPLE_3
     [165, 187, 143, 206], // COLOR_WHITE_DK_PURPLE_4
-    [999, 0, 0, 0], // COLOR_WHITE_DK_PURPLE_4
+    [999, 0, 0, 0], 
   ] as Array<Array<Number> >;
 
 // alpha, 255 is solid, 0 is transparent
 function percentageToColorAlt(
   percentage as Numeric?,
   alpha as Number,
-  colorScheme as Array<Array<Number> >
+  colorScheme as Array<Array<Number> >,
+  darker as Number
 ) as ColorType {
   var pcolor = 0;
   var pColors = colorScheme;
@@ -270,6 +283,13 @@ function percentageToColorAlt(
   var red = Math.floor(lower[1] * pctLower + upper[1] * pctUpper);
   var green = Math.floor(lower[2] * pctLower + upper[2] * pctUpper);
   var blue = Math.floor(lower[3] * pctLower + upper[3] * pctUpper);
+
+  if (darker > 0 && darker < 100) {
+    red = red - (red / 100) * darker;
+    green = green - (green / 100) * darker;
+    blue = blue - (blue / 100) * darker;
+  }
+
   return Graphics.createColor(alpha, red.toNumber(), green.toNumber(), blue.toNumber());
 }
 /* TODO

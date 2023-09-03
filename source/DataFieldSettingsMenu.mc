@@ -34,7 +34,7 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
     _currentMenuItem = menuItem;
     var id = menuItem.getId();
     var distanceItems = [] as Array<String>;
-    if (id instanceof String && (id.equals("menuDistance") or id.equals("menuDistanceDebug"))) {
+    if (id instanceof String && (id.equals("menuDistance"))) {
       var distanceMenu = new WatchUi.Menu2({ :title => "Set distance for" });
 
       var mi = new WatchUi.MenuItem("Odo", null, "totalDistance", null);
@@ -62,12 +62,7 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       distanceMenu.addItem(mi);
       distanceItems.add(mi.getId() as String);
 
-      // Not needed, is actual activity ride
-      // @@ make readonly item
-      // mi = new WatchUi.MenuItem("Ride", null, "totalDistanceRide", null);
-      // mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
-      // distanceMenu.addItem(mi);
-      // distanceItems.add(mi.getId() as String);
+  
 
       var labelTireRec = $.getTireRecordingSubLabel("tireRecording");
       if (labelTireRec.equals("default")) {
@@ -127,7 +122,13 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       distanceMenu.addItem(mi);
       distanceItems.add(mi.getId() as String);
 
-      var debug = id.equals("menuDistanceDebug");
+      // Not needed, is actual activity ride
+      mi = new WatchUi.MenuItem("Elapsed (debug)", null, "debugElapsedDistance", null);
+      mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
+      distanceMenu.addItem(mi);
+      distanceItems.add(mi.getId() as String);
+
+      var debug = false;
 
       WatchUi.pushView(
         distanceMenu,
