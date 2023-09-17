@@ -94,18 +94,19 @@ function drawPercentageCircleTarget(
   y as Number,
   radius as Number,
   perc as Numeric,
-  circleWidth as Number
+  circleWidth as Number,
+  colorPerc100 as ColorType? 
 ) as Void {
   dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
   dc.drawCircle(x, y, radius);
 
   if (perc < 100) {
-    setColorByPerc(dc, perc, 0);
+    setColorByPerc(dc, perc, 0, null);
     drawPercentageCircle(dc, x, y, radius, perc, circleWidth);
-  } else {
-    setColorByPerc(dc, 100, 0);
+  } else {    
+    setColorByPerc(dc, 100, 0, colorPerc100);
     drawPercentageCircle(dc, x, y, radius, 100, circleWidth);
-    setColorByPerc(dc, 100, 15);
+    setColorByPerc(dc, 100, 15, null);    
     dc.drawCircle(x, y, radius - circleWidth / 2);
   }
 
@@ -113,12 +114,12 @@ function drawPercentageCircleTarget(
   var radiusInner = radius - circleWidth - 3;
   while (percRemain > 0 && radiusInner > 0) {
     if (percRemain < 100) {
-      setColorByPerc(dc, percRemain, 0);
+      setColorByPerc(dc, percRemain, 0, null);
       drawPercentageCircle(dc, x, y, radiusInner, percRemain, circleWidth);
     } else {
-      setColorByPerc(dc, 100, 0);
+      setColorByPerc(dc, 100, 0, colorPerc100);
       drawPercentageCircle(dc, x, y, radiusInner, 100, circleWidth);
-      setColorByPerc(dc, 100, 15);
+      setColorByPerc(dc, 100, 15, null);
       dc.drawCircle(x, y, radiusInner - circleWidth / 2);
     }
 
@@ -186,7 +187,11 @@ function getMatchingFont(
   return font;
 }
 
-function setColorByPerc(dc as Dc, perc as Numeric, darker as Number) as Void {
+function setColorByPerc(dc as Dc, perc as Numeric, darker as Number, colorPerc100 as ColorType? ) as Void {
+  if (perc == 100 && colorPerc100 != null) {
+      dc.setColor(colorPerc100, Graphics.COLOR_TRANSPARENT);
+      return;
+  } 
   var color = 0;
   if ($.gCreateColors) {
     color = percentageToColorAlt(perc, 180, $.PERC_COLORS_SCHEME, darker);

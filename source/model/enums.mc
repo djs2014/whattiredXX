@@ -8,8 +8,8 @@ module Types {
     FocusMonth = 3,
     FocusWeek = 4,
     FocusRide = 5,
-    FocusFront = 6,
-    FocusBack = 7,
+    // FocusFront = 6,
+    // FocusBack = 7,
     FocusCourse = 8,
     FocusTrack = 9,
   }
@@ -28,5 +28,15 @@ module Types {
     TireRecSetB = 3,
     TireRecSetC = 4,
     TireRecSetD = 5
+  }
+
+  enum EnumChainRecording {
+    ChainRecDefault = 0,
+    ChainRecProfile = 1,
+    ChainRecAsTire = 2,
+    ChainRecSetA = 3,
+    ChainRecSetB = 4,
+    ChainRecSetC = 5,
+    ChainRecSetD = 6
   }
 }

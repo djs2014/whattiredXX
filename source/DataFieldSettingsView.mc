@@ -50,19 +50,11 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
   //! @return true if handled, false otherwise
   public function onMenu() as Boolean {
     var menu = new $.DataFieldSettingsMenu();
-    var boolean = $.getStorageValue("reset_front", false) as Boolean;
-    menu.addItem(new WatchUi.ToggleMenuItem("Reset front", null, "reset_front", boolean, null));
 
-    boolean =  $.getStorageValue("reset_back", false) as Boolean; 
-    menu.addItem(new WatchUi.ToggleMenuItem("Reset back", null, "reset_back", boolean, null));
-
-    boolean = $.getStorageValue("switch_front_back", false) as Boolean;
-    menu.addItem(new WatchUi.ToggleMenuItem("Front <-> back", null, "switch_front_back", boolean, null));
-
-    boolean =  $.getStorageValue("reset_track", false) as Boolean; 
-    menu.addItem(new WatchUi.ToggleMenuItem("Reset track", null, "reset_track", boolean, null));
-
-    var mi = new WatchUi.MenuItem("Focus", null, "showFocusSmallField", null);
+    var mi = new WatchUi.MenuItem("Reset options", null, "resetOptions", null);    
+    menu.addItem(mi);
+  
+    mi = new WatchUi.MenuItem("Focus", null, "showFocusSmallField", null);
     mi.setSubLabel($.getFocusMenuSubLabel(mi.getId() as String));
     menu.addItem(mi);
 
@@ -74,21 +66,17 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
     mi.setSubLabel($.getTireRecordingSubLabel(mi.getId() as String));
     menu.addItem(mi);
 
+    mi = new WatchUi.MenuItem("Chain recording", null, "chainRecording", null);
+    mi.setSubLabel($.getChainRecordingSubLabel(mi.getId() as String));
+    menu.addItem(mi);
+
     mi = new WatchUi.MenuItem("Distance", null, "menuDistance", null);
     mi.setSubLabel("Manage distance settings");
     menu.addItem(mi);
 
-    boolean = $.getStorageValue("showColors", true) as Boolean;
-    menu.addItem(new WatchUi.ToggleMenuItem("Show colors", null, "showColors", boolean, null));
-    boolean = $.getStorageValue("showValues", true) as Boolean;
-    menu.addItem(new WatchUi.ToggleMenuItem("Show values", null, "showValues", boolean, null));
-    boolean = $.getStorageValue("showColorsSmallField", true) as Boolean;
-    menu.addItem(new WatchUi.ToggleMenuItem("Show colors small field", null, "showColorsSmallField", boolean, null));
-    boolean = $.getStorageValue("showValuesSmallField", false) as Boolean;
-    menu.addItem(new WatchUi.ToggleMenuItem("Show values small field", null, "showValuesSmallField", boolean, null));
-    boolean = $.getStorageValue("showLastDistance", false) as Boolean;
-    menu.addItem(new WatchUi.ToggleMenuItem("Show lastdistance", null, "showLastDistance", boolean, null));
-
+    mi = new WatchUi.MenuItem("Show options", null, "showOptions", null);    
+    menu.addItem(mi);
+  
     mi = new WatchUi.MenuItem("Show fields", null, "menuFields", null);
     mi.setSubLabel("Display data");
     menu.addItem(mi);
@@ -126,10 +114,10 @@ function getFocusMenuSubLabel(key as Application.PropertyKeyType) as String {
       return "Week";
     case Types.FocusRide:
       return "Ride";
-    case Types.FocusFront:
-      return "Front";
-    case Types.FocusBack:
-      return "Back";
+    // case Types.FocusFront:
+    //   return "Front";
+    // case Types.FocusBack:
+    //   return "Back";
     case Types.FocusCourse:
       return "Course";
     case Types.FocusTrack:
@@ -161,15 +149,36 @@ function getTireRecordingSubLabel(key as Application.PropertyKeyType) as String 
     case Types.TireRecDefault:
       return "default";
     case Types.TireRecProfile:
-      return "profile";
+      return $.getProfileName("profile");
     case Types.TireRecSetA:
-      return "set A";
+      return "tire A";
     case Types.TireRecSetB:
-      return "set B";
+      return "tire B";
     case Types.TireRecSetC:
-      return "set C";
+      return "tire C";
     case Types.TireRecSetD:
-      return "set D";          
+      return "tire D";          
+    default:
+      return "default";
+  }
+}
+function getChainRecordingSubLabel(key as Application.PropertyKeyType) as String {
+  var current = $.getStorageValue(key, $.gChainRecording) as Types.EnumChainRecording;
+  switch (current) {
+    case Types.ChainRecDefault:
+      return "default";
+    case Types.ChainRecProfile:
+      return $.getProfileName("profile");
+    case Types.ChainRecAsTire:
+      return "as tire";      
+    case Types.ChainRecSetA:
+      return "chain A";
+    case Types.ChainRecSetB:
+      return "chain B";
+    case Types.ChainRecSetC:
+      return "chain C";
+    case Types.ChainRecSetD:
+      return "chain D";          
     default:
       return "default";
   }

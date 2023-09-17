@@ -1,3 +1,19 @@
+menu
+  - reset to default
+  
+F /B/C
+IF > 100% => RED line under to emphasize
+
+
+chain
+- circles red if max 100
+- 
+todo $.gshowDateNumbers 
+  Y 2023
+  W 35
+  M 9
+  When paused /active for x seconds
+
 show ride
 current / stopped ::: last ride
 when start -> current to last , current = 0

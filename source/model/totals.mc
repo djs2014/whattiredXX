@@ -51,8 +51,10 @@ class Totals {
   private var maxDistanceFrontTyre as Float = 0.0f;
   private var totalDistanceBackTyre as Float = 0.0f;
   private var maxDistanceBackTyre as Float = 0.0f;
+  private var totalDistanceChain as Float = 0.0f;
+  private var maxDistanceChain as Float = 0.0f;
 
-  hidden function GetElapsedDistance() {
+  hidden function GetElapsedDistance() as Float {
     return elapsedDistanceActivity + debugElapsedDistance;
   }
   public function GetTotalDistance() as Float {
@@ -155,6 +157,12 @@ class Totals {
   public function GetMaxDistanceBackTyre() as Float {
     return maxDistanceBackTyre;
   }
+  public function GetTotalDistanceChain() as Float {
+    return totalDistanceChain + GetElapsedDistance();
+  }
+  public function GetMaxDistanceChain() as Float {
+    return maxDistanceChain;
+  }
 
   public function HasOdo() as Boolean {
     return $.gShowOdo;
@@ -175,10 +183,13 @@ class Totals {
     return $.gShowTrack;
   }
   public function HasFrontTyre() as Boolean {
-    return $.gShowFront; // && maxDistanceFrontTyre >= 1000;
+    return $.gShowFront; 
   }
   public function HasBackTyre() as Boolean {
-    return $.gShowBack; // && maxDistanceBackTyre >= 1000;
+    return $.gShowBack; 
+  }
+  public function HasChain() as Boolean {
+    return $.gShowChain; 
   }
 
   function initialize() {}
@@ -245,6 +256,10 @@ class Totals {
       var tr = $.getTireRecPostfix();
       setDistanceAsMeters("totalDistanceFrontTyre" + tr, totalDistanceFrontTyre + GetElapsedDistance());
       setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceBackTyre + GetElapsedDistance());
+
+      loadChainDistance(false);
+      var cr = $.getChainRecPostfix();
+      setDistanceAsMeters("totalDistanceChain" + cr, totalDistanceChain + GetElapsedDistance());
 
       if ($.gTrackRecordingActive) {
         saveTrack();
@@ -367,6 +382,8 @@ class Totals {
     // onCompute -> detect profile switch?
     $.gTireRecPostfix = "";
     loadTireDistance(true);
+    $.gChainRecPostfix = "";
+    loadChainDistance(true);
   }
 
   function loadTireDistance(force as Boolean) as Void {
@@ -389,7 +406,24 @@ class Totals {
       maxDistanceBackTyre = 5000000.0f;
       setDistanceAsMeters("maxDistanceBackTyre" + tr, maxDistanceBackTyre);
     }
+    
     System.println("Tire distance loaded for: " + $.gTireRecPostfix);
+  }
+
+  function loadChainDistance(force as Boolean) as Void {
+    var cr = $.getChainRecPostfix();
+    if (!force and cr.equals($.gChainRecPostfix)) {
+      System.println("Chain distance already loaded for: " + $.gChainRecPostfix);
+      return;
+    }
+    $.gChainRecPostfix = cr;
+    totalDistanceChain = getDistanceAsMeters("totalDistanceChain" + cr);
+    maxDistanceChain = getDistanceAsMeters("maxDistanceChain" + cr);
+    if (maxDistanceChain == 0.0f) {
+      maxDistanceChain = 5000000.0f;
+      setDistanceAsMeters("maxDistanceChain" + cr, maxDistanceChain);
+    }    
+    System.println("TChainire distance loaded for: " + $.gChainRecPostfix);
   }
 
   function triggerFrontBack() as Void {
@@ -400,6 +434,7 @@ class Totals {
     maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre" + tr);
     totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre" + tr);
     maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre" + tr);
+    maxDistanceChain = getDistanceAsMeters("maxDistanceChain" + tr);
 
     var reset = $.getStorageValue("reset_front", false) as Boolean;
     if (reset) {
@@ -426,6 +461,14 @@ class Totals {
       totalDistanceFrontTyre = tmpBack;
       setDistanceAsMeters("totalDistanceFrontTyre" + tr, totalDistanceFrontTyre);
       setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceBackTyre);
+    }
+
+    var cr = $.getChainRecPostfix();
+    reset = $.getStorageValue("reset_chain", false) as Boolean;
+    if (reset) {
+      totalDistanceChain = 0.0f;
+      setDistanceAsMeters("totalDistanceChain" + cr, totalDistanceChain);
+      Storage.setValue("reset_chain", false);
     }
 
     reset = $.getStorageValue("reset_track", false) as Boolean;
@@ -562,6 +605,9 @@ function getTireRecPostfix() as String {
       return "";
     case Types.TireRecProfile:
       var info = Activity.getProfileInfo();
+      if (info == null) {
+        return $.gActivityProfileId;
+      }
       var arr = info.uniqueIdentifier;
       if (arr == null) {
         return $.gActivityProfileId;
@@ -578,4 +624,48 @@ function getTireRecPostfix() as String {
       return "D";
   }
   return "";
+}
+
+function getChainRecPostfix() as String {
+  switch ($.gChainRecording) {
+    case Types.ChainRecDefault:
+      return "";
+    case Types.ChainRecProfile:
+      var info = Activity.getProfileInfo();
+      if (info == null) {
+        return $.gActivityProfileId;
+      }
+      var arr = info.uniqueIdentifier;
+      if (arr == null) {
+        return $.gActivityProfileId;
+      }
+      $.gActivityProfileId = arr.toString();
+      return $.gActivityProfileId;
+    case Types.ChainRecAsTire:
+      return getTireRecPostfix();
+    case Types.ChainRecSetA:
+      return "A";
+    case Types.ChainRecSetB:
+      return "B";
+    case Types.ChainRecSetC:
+      return "C";
+    case Types.ChainRecSetD:
+      return "D";
+  }
+  return "";
+}
+
+
+function getProfileName(def as String) as String {
+    var info = Activity.getProfileInfo();
+    if (info == null) {
+      return def;
+    }
+    if (info.name != null) {
+      $.gActivityProfileName = info.name as String;
+    }
+    if ($.gActivityProfileName.length == 0) {
+      return def;
+    }
+    return $.gActivityProfileName;    
 }

@@ -12,7 +12,10 @@ var gShowFocusSmallField as Types.EnumFocus = Types.FocusRide;
 var gTrackRecording as Types.EnumTrackRecording = Types.TrackRecAlways;
 var gTrackRecordingActive as Boolean = true;
 var gTireRecording as Types.EnumTireRecording = Types.TireRecDefault;
+var gChainRecording as Types.EnumChainRecording = Types.ChainRecAsTire;
 var gActivityProfileId as String = "";
+var gActivityProfileName as String = "";
+var gshowDateNumbers as Boolean = false;
 
 var gShowOdo as Boolean = true;
 var gShowYear as Boolean = true;
@@ -22,8 +25,10 @@ var gShowRide as Boolean = true;
 var gShowTrack as Boolean = true;
 var gShowFront as Boolean = true;
 var gShowBack as Boolean = true;
+var gShowChain as Boolean = true;
 var gNrOfDefaultFields as Number = 5;
 var gTireRecPostfix as String = "-";
+var gChainRecPostfix as String = "-";
 
 class whattiredApp extends Application.AppBase {
   var mTotals as Totals = new Totals();
@@ -64,13 +69,14 @@ class whattiredApp extends Application.AppBase {
       System.println("Load usersettings");
 
       $.gTireRecording = $.getStorageValue("tireRecording", $.gTireRecording) as Types.EnumTireRecording;
+      $.gChainRecording = $.getStorageValue("chainRecording", $.gChainRecording) as Types.EnumChainRecording;
 
       mTotals.load(true);
       $.gShowColors = $.getStorageValue("showColors", $.gShowColors ) as Boolean;
       $.gShowValues = $.getStorageValue("showValues", $.gShowValues) as Boolean;
       $.gShowLastDistance = $.getStorageValue("showLastDistance", $.gShowLastDistance) as Boolean;
       $.gShowColorsSmallField = $.getStorageValue("showColorsSmallField",  $.gShowColorsSmallField) as Boolean;
-      $.gShowValuesSmallField = $.getStorageValue("showValuesSmallField", $.gShowValuesSmallField) as Boolean;
+      $.gshowDateNumbers = $.getStorageValue("showDateNumbers", $.gshowDateNumbers) as Boolean;
 
       $.gShowFocusSmallField = $.getStorageValue("showFocusSmallField", gShowFocusSmallField) as Types.EnumFocus;
       $.gTrackRecording = $.getStorageValue("trackRecording", gTrackRecording) as Types.EnumTrackRecording;
@@ -81,8 +87,10 @@ class whattiredApp extends Application.AppBase {
       $.gShowWeek = $.getStorageValue("showWeek", $.gShowWeek) as Boolean;
       $.gShowRide = $.getStorageValue("showRide", $.gShowRide) as Boolean;
       $.gShowTrack = $.getStorageValue("showTrack", $.gShowTrack) as Boolean;
+      
       $.gShowFront = $.getStorageValue("showFront", $.gShowFront) as Boolean;
       $.gShowBack = $.getStorageValue("showBack", $.gShowBack) as Boolean;
+      $.gShowChain = $.getStorageValue("showChain", $.gShowChain) as Boolean;
 
       $.gNrOfDefaultFields = 0;
       if ($.gShowOdo) {
