@@ -686,25 +686,27 @@ class whattiredView extends WatchUi.DataField {
 
     // the warning bars
     if (perc_front >= 100 || perc_chain >= 100 || perc_back >= 100) {
-    var yWarning = y + mLineHeight + 1;
-    var barHeight = mLineHeight;
-    if (yWarning > dc.getHeight()) {
-      yWarning = dc.getHeight();
-      barHeight = yWarning - y - 1;
-      if (barHeight <= 0) { barHeight = 1;}
-    }
-    if (perc_front >= 100) {
-      dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
-      dc.fillRectangle(xStart, yWarning, barWidthStart, barHeight);
-    }
-    if (perc_chain >= 100) {
-      dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
-      dc.fillRectangle(x2Start, yWarning, barWidthStart, barHeight);
-    }
-    if (perc_back >= 100) {
-      dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
-      dc.fillRectangle(x3Start, yWarning, barWidthStart, barHeight);
-    }
+      var yWarning = y + mLineHeight + 1;
+      var barHeight = mLineHeight;
+      if (yWarning > dc.getHeight()) {
+        yWarning = dc.getHeight();
+        barHeight = yWarning - y - 1;
+        if (barHeight <= 0) {
+          barHeight = 1;
+        }
+      }
+      if (perc_front >= 100) {
+        dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(xStart, yWarning, barWidthStart, barHeight);
+      }
+      if (perc_chain >= 100) {
+        dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(x2Start, yWarning, barWidthStart, barHeight);
+      }
+      if (perc_back >= 100) {
+        dc.setColor(mColorPerc100, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(x3Start, yWarning, barWidthStart, barHeight);
+      }
     }
   }
 
@@ -731,7 +733,19 @@ class whattiredView extends WatchUi.DataField {
     var yLabel = y - radius;
     var yValue = y;
 
-   
+    var fontRecLabel = Graphics.FONT_TINY;
+    var lineHeightRecLabel = dc.getFontHeight(fontRecLabel);
+    var yRecLabel = yValue - mLineHeight / 2;
+    // Space left to place label under?
+    if (yValue + radius + 2 * lineHeightRecLabel < mHeight) {
+      yRecLabel = yValue + radius + lineHeightRecLabel;
+    } else {
+      fontRecLabel = Graphics.FONT_XTINY;
+      lineHeightRecLabel = dc.getFontHeight(fontRecLabel);
+      if (yValue + radius + 2 * lineHeightRecLabel < mHeight) {
+        yRecLabel = yValue + radius + lineHeightRecLabel;
+      }
+    }
 
     if (mTotals.HasFrontTyre()) {
       var meters_front = mTotals.GetTotalDistanceFrontTyre();
@@ -794,20 +808,20 @@ class whattiredView extends WatchUi.DataField {
 
     // @@ TODO tire / chain -> calc and cached
     var labelT = $.getTireRecordingSubLabel("tireRecording");
-    if (labelT.equals("default")) { labelT = "";}
+    if (labelT.equals("default")) {
+      labelT = "";
+    }
     var labelC = $.getChainRecordingSubLabel("chainRecording");
-    if (labelC.equals("default") || labelC.equals("as tire")) { labelC = "";}
+    if (labelC.equals("default") || labelC.equals("as tire")) {
+      labelC = "";
+    }
     var label = labelT;
-    if (labelC.length() > 0) { label = label + "/" + labelC;}
+    if (labelC.length() > 0) {
+      label = label + "/" + labelC;
+    }
     if (label.length() > 0) {
       dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);
-      dc.drawText(
-        mWidth / 2,
-        yLabel - mLineHeight / 2,
-        Graphics.FONT_XTINY,
-        label,
-        Graphics.TEXT_JUSTIFY_CENTER
-      );
+      dc.drawText(mWidth / 2, yRecLabel, fontRecLabel, label, Graphics.TEXT_JUSTIFY_CENTER);
     }
     //"as tire"
   }

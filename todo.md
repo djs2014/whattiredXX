@@ -1,30 +1,17 @@
 menu
   - reset to default
   
-F /B/C
-IF > 100% => RED line under to emphasize
+track rec title
+- above if no space left under (small)
+- if enough space, bigger font and circles lower
 
-
-chain
-- circles red if max 100
-- 
 todo $.gshowDateNumbers 
   Y 2023
   W 35
   M 9
   When paused /active for x seconds
 
-show ride
-current / stopped ::: last ride
-when start -> current to last , current = 0
 
-Activity OFF
-=>
-totalDistanceRide > 0 
-save lastDistanceRide
-totalDistanceRide = 0
-
-if debug -> set ride?
 
 x tire recording
   detect profile switch - nodig?
