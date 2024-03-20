@@ -10,6 +10,8 @@ import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.Application;
 
+var gExitedMenu as Boolean = false;
+
 //! Initial view for the settings
 class DataFieldSettingsView extends WatchUi.View {
   //! Constructor
@@ -87,6 +89,7 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
   }
 
   public function onBack() as Boolean {
+    $.gExitedMenu = true;
     getApp().onSettingsChanged();
     getApp().triggerFrontBack();
     return false;

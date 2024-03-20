@@ -44,6 +44,7 @@ class whattiredView extends WatchUi.DataField {
   var mShowFBCCircles as Boolean = false;
   var mShowAscDesc as Boolean = false;
   var mDataSaved as Boolean = true;
+  var mPaused as Boolean = false;
 
   function initialize() {
     DataField.initialize();
@@ -150,6 +151,7 @@ class whattiredView extends WatchUi.DataField {
         } else if (info.timerState == Activity.TIMER_STATE_ON) {
           mDataSaved = false;
         }
+        mPaused = info.timerState == Activity.TIMER_STATE_PAUSED || info.timerState == Activity.TIMER_STATE_OFF;
       }
     }
   }
@@ -163,6 +165,12 @@ class whattiredView extends WatchUi.DataField {
   }
 
   function onUpdate(dc as Dc) as Void {
+    if ($.gExitedMenu) {
+      // fix for leaving menu, draw complete screen, large field
+      dc.clearClip();
+      $.gExitedMenu = false;
+    }
+
     mBackgroundColor = getBackgroundColor();
     mNightMode = mBackgroundColor == Graphics.COLOR_BLACK;
     dc.setColor(mBackgroundColor, mBackgroundColor);
@@ -196,7 +204,7 @@ class whattiredView extends WatchUi.DataField {
   function drawData(dc as Dc, focus as Types.EnumFocus) as Void {
     var line = 0;
     var nothingHasFocus = focus == Types.FocusNothing;
-
+    var shortLabel = "";
     if (mTotals.HasOdo() && focus != Types.FocusOdo) {
       DrawDistanceLine(
         dc,
@@ -226,11 +234,15 @@ class whattiredView extends WatchUi.DataField {
       line = line + 1;
     }
     if (mTotals.HasWeek() && focus != Types.FocusWeek) {
+      shortLabel = "W";
+      if ($.gshowDateNumbers && mPaused) {
+        shortLabel = shortLabel + " " + mTotals.GetCurrentWeek();
+      }
       DrawDistanceLine(
         dc,
         line,
         "Week",
-        "W",
+        shortLabel,
         mTotals.GetTotalDistanceWeek(),
         mTotals.GetTotalDistanceLastWeek(),
         mShowValues,
@@ -240,11 +252,15 @@ class whattiredView extends WatchUi.DataField {
       line = line + 1;
     }
     if (mTotals.HasMonth() && focus != Types.FocusMonth) {
+      shortLabel = "M";
+      if ($.gshowDateNumbers && mPaused) {
+        shortLabel = shortLabel + " " + mTotals.GetCurrentMonth();
+      }
       DrawDistanceLine(
         dc,
         line,
         "Month",
-        "M",
+        shortLabel,
         mTotals.GetTotalDistanceMonth(),
         mTotals.GetTotalDistanceLastMonth(),
         mShowValues,
@@ -254,11 +270,15 @@ class whattiredView extends WatchUi.DataField {
       line = line + 1;
     }
     if (mTotals.HasYear() && focus != Types.FocusYear) {
+      shortLabel = "Y";
+      if ($.gshowDateNumbers && mPaused) {
+        shortLabel = shortLabel + " " + mTotals.GetCurrentYear();
+      }
       DrawDistanceLine(
         dc,
         line,
         "Year",
-        "Y",
+        shortLabel,
         mTotals.GetTotalDistanceYear(),
         mTotals.GetTotalDistanceLastYear(),
         mShowValues,

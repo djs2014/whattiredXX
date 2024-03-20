@@ -192,6 +192,16 @@ class Totals {
     return $.gShowChain; 
   }
 
+  public function GetCurrentWeek() as Number {
+    return currentWeek;
+  }
+  public function GetCurrentMonth() as Number {
+    return currentMonth;
+  }
+  public function GetCurrentYear() as Number {
+    return currentYear;
+  }
+
   function initialize() {}
 
   function compute(info as Activity.Info) as Void {
