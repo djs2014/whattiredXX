@@ -14,12 +14,12 @@ class DataFieldSettingsMenu extends WatchUi.Menu2 {
 //! Handles menu input and stores the menu data
 class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
   private var _currentMenuItem as MenuItem?;
-  private var _view as DataFieldSettingsView;
+  // private var _view as DataFieldSettingsView;
 
   //! Constructor
-  public function initialize(view as DataFieldSettingsView) {
+  public function initialize() {
     Menu2InputDelegate.initialize();
-    _view = view;
+    // _view = view;
   }
 
   //! Handle a menu item selection
@@ -130,51 +130,49 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       distanceMenu.addItem(mi);
       distanceItems.add(mi.getId() as String);
 
-      var debug = false;
-
-      WatchUi.pushView(
-        distanceMenu,
-        new $.DistanceMenuDelegate(debug, self, distanceMenu, distanceItems),
-        WatchUi.SLIDE_UP
-      );
-    } else if (id instanceof String && id.equals("resetOptions")) {
+      WatchUi.pushView(distanceMenu, new $.DistanceMenuDelegate(), WatchUi.SLIDE_UP);
+      return;
+    }
+    if (id instanceof String && id.equals("resetOptions")) {
       var resetMenu = new WatchUi.Menu2({ :title => "Reset options" });
       var boolean = $.getStorageValue("reset_front", false) as Boolean;
-    resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset front", null, "reset_front", boolean, null));
+      resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset front", null, "reset_front", boolean, null));
 
-    boolean =  $.getStorageValue("reset_back", false) as Boolean; 
-    resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset back", null, "reset_back", boolean, null));
+      boolean = $.getStorageValue("reset_back", false) as Boolean;
+      resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset back", null, "reset_back", boolean, null));
 
-    boolean = $.getStorageValue("switch_front_back", false) as Boolean;
-    resetMenu.addItem(new WatchUi.ToggleMenuItem("Front <-> back", null, "switch_front_back", boolean, null));
+      boolean = $.getStorageValue("switch_front_back", false) as Boolean;
+      resetMenu.addItem(new WatchUi.ToggleMenuItem("Front <-> back", null, "switch_front_back", boolean, null));
 
-    boolean =  $.getStorageValue("reset_chain", false) as Boolean; 
-    resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset chain", null, "reset_chain", boolean, null));
+      boolean = $.getStorageValue("reset_chain", false) as Boolean;
+      resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset chain", null, "reset_chain", boolean, null));
 
-    boolean =  $.getStorageValue("reset_track", false) as Boolean; 
-    resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset track", null, "reset_track", boolean, null));
-    
-    WatchUi.pushView(resetMenu , new $.ToggleMenuDelegate(self), WatchUi.SLIDE_UP);
+      boolean = $.getStorageValue("reset_track", false) as Boolean;
+      resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset track", null, "reset_track", boolean, null));
 
-    } else if (id instanceof String && id.equals("showOptions")) {
-       var showMenu = new WatchUi.Menu2({ :title => "Show options" });
+      WatchUi.pushView(resetMenu, new $.GeneralMenuDelegate(), WatchUi.SLIDE_UP);
+      return;
+    }
+    if (id instanceof String && id.equals("showOptions")) {
+      var showMenu = new WatchUi.Menu2({ :title => "Show options" });
 
-var boolean = $.getStorageValue("showColors", true) as Boolean;
-    showMenu.addItem(new WatchUi.ToggleMenuItem("Colors", null, "showColors", boolean, null));
-    boolean = $.getStorageValue("showValues", true) as Boolean;
-    showMenu.addItem(new WatchUi.ToggleMenuItem("Values", null, "showValues", boolean, null));
-    boolean = $.getStorageValue("showColorsSmallField", true) as Boolean;
-    showMenu.addItem(new WatchUi.ToggleMenuItem("Colors small field", null, "showColorsSmallField", boolean, null));
-    boolean = $.getStorageValue("showValuesSmallField", false) as Boolean;
-    showMenu.addItem(new WatchUi.ToggleMenuItem("Values small field", null, "showValuesSmallField", boolean, null));
-    boolean = $.getStorageValue("showLastDistance", false) as Boolean;
-    showMenu.addItem(new WatchUi.ToggleMenuItem("Last distance", null, "showLastDistance", boolean, null));
-    boolean = $.getStorageValue("showDateNumbers", false) as Boolean;
-    showMenu.addItem(new WatchUi.ToggleMenuItem("Date numbers", null, "showDateNumbers", boolean, null));
+      var boolean = $.getStorageValue("showColors", true) as Boolean;
+      showMenu.addItem(new WatchUi.ToggleMenuItem("Colors", null, "showColors", boolean, null));
+      boolean = $.getStorageValue("showValues", true) as Boolean;
+      showMenu.addItem(new WatchUi.ToggleMenuItem("Values", null, "showValues", boolean, null));
+      boolean = $.getStorageValue("showColorsSmallField", true) as Boolean;
+      showMenu.addItem(new WatchUi.ToggleMenuItem("Colors small field", null, "showColorsSmallField", boolean, null));
+      boolean = $.getStorageValue("showValuesSmallField", false) as Boolean;
+      showMenu.addItem(new WatchUi.ToggleMenuItem("Values small field", null, "showValuesSmallField", boolean, null));
+      boolean = $.getStorageValue("showLastDistance", false) as Boolean;
+      showMenu.addItem(new WatchUi.ToggleMenuItem("Last distance", null, "showLastDistance", boolean, null));
+      boolean = $.getStorageValue("showDateNumbers", false) as Boolean;
+      showMenu.addItem(new WatchUi.ToggleMenuItem("Date numbers", null, "showDateNumbers", boolean, null));
 
-    WatchUi.pushView(showMenu , new $.ToggleMenuDelegate(self), WatchUi.SLIDE_UP);
-
-    } else if (id instanceof String && id.equals("showFocusSmallField")) {
+      WatchUi.pushView(showMenu, new $.GeneralMenuDelegate(), WatchUi.SLIDE_UP);
+      return;
+    }
+    if (id instanceof String && id.equals("showFocusSmallField")) {
       var focusMenu = new WatchUi.Menu2({ :title => "Show focus on" });
       var current = $.getStorageValue(id as String, Types.FocusNothing) as Types.EnumFocus;
       focusMenu.addItem(new WatchUi.MenuItem("Nothing", null, Types.FocusNothing, {}));
@@ -188,8 +186,10 @@ var boolean = $.getStorageValue("showColors", true) as Boolean;
       // focusMenu.addItem(new WatchUi.MenuItem("Back", null, Types.FocusBack, {}));
       focusMenu.addItem(new WatchUi.MenuItem("Course", null, Types.FocusCourse, {}));
       focusMenu.setFocus(current); // 0-index
-      WatchUi.pushView(focusMenu , new $.FocusMenuDelegate(self), WatchUi.SLIDE_UP);
-    } else if (id instanceof String && id.equals("trackRecording")) {
+      WatchUi.pushView(focusMenu, new $.FocusMenuDelegate(self), WatchUi.SLIDE_UP);
+      return;
+    }
+    if (id instanceof String && id.equals("trackRecording")) {
       var trackMenu = new WatchUi.Menu2({ :title => "Track recording active" });
       var current = $.getStorageValue(id as String, Types.TrackRecAlways) as Types.EnumTrackRecording;
       trackMenu.addItem(new WatchUi.MenuItem("Disabled", null, Types.TrackRecDisabled, {}));
@@ -199,7 +199,9 @@ var boolean = $.getStorageValue("showColors", true) as Boolean;
 
       trackMenu.setFocus(current); // 0-index
       WatchUi.pushView(trackMenu, new $.TrackMenuDelegate(self), WatchUi.SLIDE_UP);
-    } else if (id instanceof String && id.equals("tireRecording")) {
+      return;
+    }
+    if (id instanceof String && id.equals("tireRecording")) {
       var tireMenu = new WatchUi.Menu2({ :title => "Tire recording f/b" });
       var current = $.getStorageValue(id as String, Types.TireRecDefault) as Types.EnumTireRecording;
       tireMenu.addItem(new WatchUi.MenuItem("Default", null, Types.TireRecDefault, {}));
@@ -211,7 +213,9 @@ var boolean = $.getStorageValue("showColors", true) as Boolean;
 
       tireMenu.setFocus(current); // 0-index
       WatchUi.pushView(tireMenu, new $.TireMenuDelegate(self), WatchUi.SLIDE_UP);
-    } else if (id instanceof String && id.equals("chainRecording")) {
+      return;
+    }
+    if (id instanceof String && id.equals("chainRecording")) {
       var chainMenu = new WatchUi.Menu2({ :title => "Chain recording" });
       var current = $.getStorageValue(id as String, Types.ChainRecDefault) as Types.EnumChainRecording;
       chainMenu.addItem(new WatchUi.MenuItem("Default", null, Types.ChainRecDefault, {}));
@@ -224,7 +228,9 @@ var boolean = $.getStorageValue("showColors", true) as Boolean;
 
       chainMenu.setFocus(current); // 0-index
       WatchUi.pushView(chainMenu, new $.ChainMenuDelegate(self), WatchUi.SLIDE_UP);
-    } else if (id instanceof String && id.equals("menuFields")) {
+      return;
+    }
+    if (id instanceof String && id.equals("menuFields")) {
       var fieldsMenu = new WatchUi.Menu2({ :title => "Show fields" });
 
       var boolean = $.getStorageValue("showOdo", true) as Boolean;
@@ -247,9 +253,12 @@ var boolean = $.getStorageValue("showColors", true) as Boolean;
       boolean = $.getStorageValue("showChain", true) as Boolean;
       fieldsMenu.addItem(new WatchUi.ToggleMenuItem("Show chain", null, "showChain", boolean, null));
 
-      WatchUi.pushView(fieldsMenu, new $.FieldsMenuDelegate(self), WatchUi.SLIDE_UP);
-    } else if (id instanceof String && menuItem instanceof ToggleMenuItem) {
+      WatchUi.pushView(fieldsMenu, new $.GeneralMenuDelegate(), WatchUi.SLIDE_UP);
+      return;
+    }
+    if (id instanceof String && menuItem instanceof ToggleMenuItem) {
       Storage.setValue(id as String, menuItem.isEnabled());
+      return;
     }
     // if (WatchUi has :TextPicker) {
     //   WatchUi.pushView(
@@ -259,7 +268,7 @@ var boolean = $.getStorageValue("showColors", true) as Boolean;
     //   );
     // }
   }
- 
+
   public function onAcceptFocus() as Void {
     // update menu sublabel
     if (_currentMenuItem != null) {
@@ -301,57 +310,76 @@ var boolean = $.getStorageValue("showColors", true) as Boolean;
     }
   }
 }
-/*
-class DistanceMenuDelegate extends WatchUi.Menu2InputDelegate {
-  private var _debug as Boolean = false;
-  private var _delegate as DataFieldSettingsMenuDelegate;
-  private var _currentDistanceField as String = "";
-  private var _currentPrompt as String = "";
-  private var _currentMenuItem as MenuItem?;
 
-  private var _distanceMenu as Menu2;
-  private var _distanceItems as Array<String>;
+//--
+class GeneralMenuDelegate extends WatchUi.Menu2InputDelegate {
+  hidden var _item as MenuItem?;
+  hidden var _currentPrompt as String = "";
+  hidden var _debug as Boolean = false;
 
-  public function initialize(
-    debug as Boolean,
-    delegate as DataFieldSettingsMenuDelegate,
-    distanceMenu as Menu2,
-    distanceItems as Array<String>
-  ) {
+  function initialize() {
     Menu2InputDelegate.initialize();
-    _debug = debug;
-    _delegate = delegate;
-    _distanceMenu = distanceMenu;
-    _distanceItems = distanceItems;
   }
 
-  public function onSelect(item as MenuItem) as Void {
-    _currentDistanceField = item.getId() as String;
-    _currentMenuItem = item;
+  function onSelect(item as MenuItem) as Void {
+    _item = item;
+    var id = item.getId();
+
+    // if (id instanceof String && id.equals("showInfoSmallField")) {
+    //   var sp = new selectionMenuPicker("Small field", id as String);
+    //   for (var i = 0; i <= 5; i++) {
+    //     sp.add($.getShowInfoText(i), null, i);
+    //   }
+    //   sp.setOnSelected(self, :onSelectedSelection, item);
+    //   sp.show();
+    //   return;
+    // }
+    if (id instanceof String && item instanceof ToggleMenuItem) {
+      Storage.setValue(id as String, item.isEnabled());
+      return;
+    }
+
+    // @@ TODO cleanup and refactor
     _currentPrompt = item.getLabel();
+    var numericOptions = $.parseLabelToOptions(_currentPrompt);
 
-    var currentDistanceInKm = (($.getStorageValue(_currentDistanceField, 0.0f) as Float) / 1000).toFloat();
-    var view = new $.NumericInputView(_debug, self, _currentPrompt, currentDistanceInKm);
+    var currentValue = $.getStorageValue(id as String, 0) as Numeric;
+    if (numericOptions.isFloat) {
+      currentValue = currentValue.toFloat();
+    }
 
-    Toybox.WatchUi.pushView(view, new $.NumericInputDelegate(_debug, view, self), WatchUi.SLIDE_RIGHT);
+    var view = new $.NumericInputView(_debug, _currentPrompt, currentValue);
+    view.processOptions(numericOptions);
+
+    view.setOnAccept(self, :onAcceptNumericinput);
+    view.setOnKeypressed(self, :onNumericinput);
+
+    Toybox.WatchUi.pushView(view, new $.NumericInputDelegate(_debug, view), WatchUi.SLIDE_RIGHT);
   }
 
-  public function onAcceptNumericinput(distanceInKm as Float) as Void {
+  // function onSelectedAfterXUnits(value as Object, storageKey as String) as Void {
+  //   var unit = value as AfterXUnits;
+  //   Storage.setValue(storageKey, unit);
+  //   if (_item != null) {
+  //     (_item as MenuItem).setSubLabel($.getStartAfterUnitsText(unit));
+  //   }
+  // }
+
+  function onAcceptNumericinput(value as Numeric) as Void {
     try {
-      if (_currentDistanceField.length() > 0) {
-        var distanceInMeters = distanceInKm * 1000.0f;
-        Storage.setValue(_currentDistanceField, distanceInMeters);
+      if (_item != null) {
+        var storageKey = _item.getId() as String;
+        Storage.setValue(storageKey, value);
 
-        // update menu sublabel
-        if (_currentMenuItem != null) {
-          var mi = _currentMenuItem as MenuItem;
-          mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
-
-          // index is a number
-          var idx = _distanceItems.indexOf(mi.getId() as String);
-          if (idx != null) {
-            _distanceMenu.setFocus(idx);
-          }
+        switch (value) {
+          case instanceof Long:
+          case instanceof Number:
+            (_item as MenuItem).setSubLabel(value.format("%.0d"));
+            break;
+          case instanceof Float:
+          case instanceof Double:
+            (_item as MenuItem).setSubLabel(value.format("%.2f"));
+            break;
         }
       }
     } catch (ex) {
@@ -359,127 +387,37 @@ class DistanceMenuDelegate extends WatchUi.Menu2InputDelegate {
     }
   }
 
-  public function onNumericinput(editData as Array<Char>, cursorPos as Number, insert as Boolean) as Void {
+  function onNumericinput(
+    editData as Array<Char>,
+    cursorPos as Number,
+    insert as Boolean,
+    negative as Boolean,
+    opt as NumericOptions
+  ) as Void {
     // Hack to refresh screen
     WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-    var view = new $.NumericInputView(_debug, self, _currentPrompt, 0.0f);
-    view.setEditData(editData, cursorPos, insert);
+    var view = new $.NumericInputView(_debug, _currentPrompt, 0);
+    view.processOptions(opt);
+    view.setEditData(editData, cursorPos, insert, negative);
+    view.setOnAccept(self, :onAcceptNumericinput);
+    view.setOnKeypressed(self, :onNumericinput);
 
-    Toybox.WatchUi.pushView(view, new $.NumericInputDelegate(_debug, view, self), WatchUi.SLIDE_IMMEDIATE);
+    Toybox.WatchUi.pushView(view, new $.NumericInputDelegate(_debug, view), WatchUi.SLIDE_IMMEDIATE);
   }
 
   //! Handle the back key being pressed
-  public function onBack() as Void {
+
+  function onBack() as Void {
     WatchUi.popView(WatchUi.SLIDE_DOWN);
   }
 
   //! Handle the done item being selected
-  public function onDone() as Void {
+
+  function onDone() as Void {
     WatchUi.popView(WatchUi.SLIDE_DOWN);
+  }
+
+  function onSelectedSelection(value as Object, storageKey as String) as Void {
+    Storage.setValue(storageKey, value as Number);
   }
 }
-class FieldsMenuDelegate extends WatchUi.Menu2InputDelegate {
-  private var _delegate as DataFieldSettingsMenuDelegate;
-
-  public function initialize(delegate as DataFieldSettingsMenuDelegate) {
-    Menu2InputDelegate.initialize();
-    _delegate = delegate;
-  }
-
-  public function onSelect(menuItem as MenuItem) as Void {
-    var id = menuItem.getId();
-    if (id instanceof String && menuItem instanceof ToggleMenuItem) {
-      Storage.setValue(id as String, menuItem.isEnabled());
-    }
-    //onBack();
-    return;
-  }
-
-  //! Handle the back key being pressed
-  public function onBack() as Void {
-    // _delegate.onAcceptField();
-    WatchUi.popView(WatchUi.SLIDE_DOWN);
-  }
-
-  //! Handle the done item being selected
-  public function onDone() as Void {
-    WatchUi.popView(WatchUi.SLIDE_DOWN);
-  }
-}
-class FocusMenuDelegate extends WatchUi.Menu2InputDelegate {
-  private var _delegate as DataFieldSettingsMenuDelegate;
-
-  public function initialize(delegate as DataFieldSettingsMenuDelegate) {
-    Menu2InputDelegate.initialize();
-    _delegate = delegate;
-  }
-
-  public function onSelect(item as MenuItem) as Void {
-    Storage.setValue("showFocusSmallField", item.getId() as Types.EnumFocus);
-
-    onBack();
-    return;
-  }
-
-  //! Handle the back key being pressed
-  public function onBack() as Void {
-    _delegate.onAcceptFocus();
-    WatchUi.popView(WatchUi.SLIDE_DOWN);
-  }
-
-  //! Handle the done item being selected
-  public function onDone() as Void {
-    WatchUi.popView(WatchUi.SLIDE_DOWN);
-  }
-}
-class TrackMenuDelegate extends WatchUi.Menu2InputDelegate {
-  private var _delegate as DataFieldSettingsMenuDelegate;
-
-  public function initialize(delegate as DataFieldSettingsMenuDelegate) {
-    Menu2InputDelegate.initialize();
-    _delegate = delegate;
-  }
-
-  public function onSelect(item as MenuItem) as Void {
-    Storage.setValue("trackRecording", item.getId() as Types.EnumTrackRecording);
-    onBack();
-    return;
-  }
-
-  //! Handle the back key being pressed
-  public function onBack() as Void {
-    _delegate.onAcceptTrackRecording();
-    WatchUi.popView(WatchUi.SLIDE_DOWN);
-  }
-
-  //! Handle the done item being selected
-  public function onDone() as Void {
-    WatchUi.popView(WatchUi.SLIDE_DOWN);
-  }
-}
-class TireMenuDelegate extends WatchUi.Menu2InputDelegate {
-  private var _delegate as DataFieldSettingsMenuDelegate;
-
-  public function initialize(delegate as DataFieldSettingsMenuDelegate) {
-    Menu2InputDelegate.initialize();
-    _delegate = delegate;
-  }
-
-  public function onSelect(item as MenuItem) as Void {
-    Storage.setValue("tireRecording", item.getId() as Types.EnumTireRecording);
-    onBack();
-    return;
-  }
-
-  //! Handle the back key being pressed
-  public function onBack() as Void {
-    _delegate.onAcceptTireRecording();
-    WatchUi.popView(WatchUi.SLIDE_DOWN);
-  }
-
-  //! Handle the done item being selected
-  public function onDone() as Void {
-    WatchUi.popView(WatchUi.SLIDE_DOWN);
-  }
-}
-*/

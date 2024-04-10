@@ -44,15 +44,15 @@ class whattiredApp extends Application.AppBase {
   function onStop(state as Dictionary?) as Void {}
 
   //! Return the initial view of your application here
-  function getInitialView() as Array<Views or InputDelegates>? {
+  function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
     loadUserSettings();
-    return [new whattiredView()] as Array<Views or InputDelegates>;
+    return [new whattiredView()];
   }
 
   //! Return the settings view and delegate for the app
   //! @return Array Pair [View, Delegate]
-  public function getSettingsView() as Array<Views or InputDelegates>? {
-    return [new $.DataFieldSettingsView(), new $.DataFieldSettingsDelegate()] as Array<Views or InputDelegates>;
+  public function getSettingsView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] or Null {
+    return [new $.DataFieldSettingsView(), new $.DataFieldSettingsDelegate()];
   }
 
   function onSettingsChanged() {
@@ -72,10 +72,10 @@ class whattiredApp extends Application.AppBase {
       $.gChainRecording = $.getStorageValue("chainRecording", $.gChainRecording) as Types.EnumChainRecording;
 
       mTotals.load(true);
-      $.gShowColors = $.getStorageValue("showColors", $.gShowColors ) as Boolean;
+      $.gShowColors = $.getStorageValue("showColors", $.gShowColors) as Boolean;
       $.gShowValues = $.getStorageValue("showValues", $.gShowValues) as Boolean;
       $.gShowLastDistance = $.getStorageValue("showLastDistance", $.gShowLastDistance) as Boolean;
-      $.gShowColorsSmallField = $.getStorageValue("showColorsSmallField",  $.gShowColorsSmallField) as Boolean;
+      $.gShowColorsSmallField = $.getStorageValue("showColorsSmallField", $.gShowColorsSmallField) as Boolean;
       $.gshowDateNumbers = $.getStorageValue("showDateNumbers", $.gshowDateNumbers) as Boolean;
 
       $.gShowFocusSmallField = $.getStorageValue("showFocusSmallField", gShowFocusSmallField) as Types.EnumFocus;
@@ -87,7 +87,7 @@ class whattiredApp extends Application.AppBase {
       $.gShowWeek = $.getStorageValue("showWeek", $.gShowWeek) as Boolean;
       $.gShowRide = $.getStorageValue("showRide", $.gShowRide) as Boolean;
       $.gShowTrack = $.getStorageValue("showTrack", $.gShowTrack) as Boolean;
-      
+
       $.gShowFront = $.getStorageValue("showFront", $.gShowFront) as Boolean;
       $.gShowBack = $.getStorageValue("showBack", $.gShowBack) as Boolean;
       $.gShowChain = $.getStorageValue("showChain", $.gShowChain) as Boolean;

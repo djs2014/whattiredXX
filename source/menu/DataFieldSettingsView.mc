@@ -1,9 +1,3 @@
-//
-// Copyright 2016-2021 by Garmin Ltd. or its subsidiaries.
-// Subject to Garmin SDK License Agreement and Wearables
-// Application Developer Agreement.
-//
-
 import Toybox.Application.Storage;
 import Toybox.Graphics;
 import Toybox.Lang;
@@ -83,8 +77,8 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
     mi.setSubLabel("Display data");
     menu.addItem(mi);
    
-    var view = new $.DataFieldSettingsView();
-    WatchUi.pushView(menu, new $.DataFieldSettingsMenuDelegate(view), WatchUi.SLIDE_IMMEDIATE);
+    //var view = new $.DataFieldSettingsView();
+    WatchUi.pushView(menu, new $.DataFieldSettingsMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
     return true;
   }
 

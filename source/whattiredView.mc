@@ -204,13 +204,12 @@ class whattiredView extends WatchUi.DataField {
   function drawData(dc as Dc, focus as Types.EnumFocus) as Void {
     var line = 0;
     var nothingHasFocus = focus == Types.FocusNothing;
-    var shortLabel = "";
+    var info = "";
     if (mTotals.HasOdo() && focus != Types.FocusOdo) {
       DrawDistanceLine(
         dc,
         line,
-        "Odo",
-        "O",
+        ["Odo", "O", ""],
         mTotals.GetTotalDistance(),
         mTotals.GetMaxDistance(),
         mShowValues,
@@ -223,8 +222,7 @@ class whattiredView extends WatchUi.DataField {
       DrawDistanceLine(
         dc,
         line,
-        "Ride",
-        "R",
+        ["Ride", "R", ""],
         mTotals.GetTotalDistanceRide(),
         mTotals.GetTotalDistanceLastRide(),
         mShowValues,
@@ -234,15 +232,13 @@ class whattiredView extends WatchUi.DataField {
       line = line + 1;
     }
     if (mTotals.HasWeek() && focus != Types.FocusWeek) {
-      shortLabel = "W";
-      if ($.gshowDateNumbers && mPaused) {
-        shortLabel = shortLabel + " " + mTotals.GetCurrentWeek();
+      if (mPaused) {
+        info = mTotals.GetCurrentWeek().toString();
       }
       DrawDistanceLine(
         dc,
         line,
-        "Week",
-        shortLabel,
+        ["Week", "W", info],
         mTotals.GetTotalDistanceWeek(),
         mTotals.GetTotalDistanceLastWeek(),
         mShowValues,
@@ -252,15 +248,13 @@ class whattiredView extends WatchUi.DataField {
       line = line + 1;
     }
     if (mTotals.HasMonth() && focus != Types.FocusMonth) {
-      shortLabel = "M";
-      if ($.gshowDateNumbers && mPaused) {
-        shortLabel = shortLabel + " " + mTotals.GetCurrentMonth();
+      if (mPaused) {
+        info = mTotals.GetCurrentMonth().toString();
       }
       DrawDistanceLine(
         dc,
         line,
-        "Month",
-        shortLabel,
+        ["Month", "M", info],
         mTotals.GetTotalDistanceMonth(),
         mTotals.GetTotalDistanceLastMonth(),
         mShowValues,
@@ -270,15 +264,13 @@ class whattiredView extends WatchUi.DataField {
       line = line + 1;
     }
     if (mTotals.HasYear() && focus != Types.FocusYear) {
-      shortLabel = "Y";
-      if ($.gshowDateNumbers && mPaused) {
-        shortLabel = shortLabel + " " + mTotals.GetCurrentYear();
+      if (mPaused) {
+        info = mTotals.GetCurrentYear().toString();
       }
       DrawDistanceLine(
         dc,
         line,
-        "Year",
-        shortLabel,
+        ["Year", "Y", info],
         mTotals.GetTotalDistanceYear(),
         mTotals.GetTotalDistanceLastYear(),
         mShowValues,
@@ -291,8 +283,7 @@ class whattiredView extends WatchUi.DataField {
       DrawDistanceLine(
         dc,
         line,
-        "Track",
-        "T",
+        ["Track", "T", ""],
         mTotals.GetTotalDistanceTrack(),
         mTotals.GetTotalDistanceLastTrack(),
         mShowValues,
@@ -471,8 +462,7 @@ class whattiredView extends WatchUi.DataField {
   function DrawDistanceLine(
     dc as Dc,
     line as Number,
-    label as String,
-    abbreviated as String,
+    details as Array<String>, // [label, abbreviated, info]
     distanceInMeters as Float,
     lastDistanceInMeters as Float,
     showValues as Boolean,
@@ -481,6 +471,10 @@ class whattiredView extends WatchUi.DataField {
   ) as Void {
     var x = 1;
     var y = mLineHeight * line;
+
+    var label = details[0];
+    var abbreviated = details[1];
+    var info = details[2];
 
     if (nothingHasFocus) {
       dc.setColor(mColor, Graphics.COLOR_TRANSPARENT);
@@ -532,6 +526,9 @@ class whattiredView extends WatchUi.DataField {
 
         dc.drawText(mWidth - 1, y, mFontText, formattedValue, Graphics.TEXT_JUSTIFY_RIGHT);
       }
+    } else if (info.length() > 0) {
+      dc.setColor(mColorValues, Graphics.COLOR_TRANSPARENT);
+      dc.drawText(x, y, mFontText, info, Graphics.TEXT_JUSTIFY_LEFT);
     }
   }
 
@@ -883,7 +880,7 @@ class whattiredView extends WatchUi.DataField {
         [xm, y],
         [x, ym],
         [x + width, ym],
-      ] as Array<Array<Number> >
+      ] as Array<Point2D>
     );
     dc.fillRectangle(xm - 1, ym, 3, height - yd);
   }
@@ -899,7 +896,7 @@ class whattiredView extends WatchUi.DataField {
         [x, ym],
         [x + width, ym],
         [xm, y + height],
-      ] as Array<Array<Number> >
+      ] as Array<Point2D>
     );
   }
 
