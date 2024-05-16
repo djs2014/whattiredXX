@@ -36,7 +36,7 @@ class DataFieldSettingsView extends WatchUi.View {
 }
 
 //! Handle opening the settings menu
-class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {  
+class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
   //! Constructor
   public function initialize() {
     BehaviorDelegate.initialize();
@@ -47,37 +47,40 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
   public function onMenu() as Boolean {
     var menu = new $.DataFieldSettingsMenu();
 
-    var mi = new WatchUi.MenuItem("Reset options", null, "resetOptions", null);    
+    var mi = new WatchUi.MenuItem("Reset options", null, "resetOptions", null);
     menu.addItem(mi);
-  
+
     mi = new WatchUi.MenuItem("Focus", null, "showFocusSmallField", null);
-    mi.setSubLabel($.getFocusMenuSubLabel(mi.getId() as String));
+    var value = getStorageValue(mi.getId() as String, FocusNothing) as EnumFocus;
+    mi.setSubLabel($.getFocusAsString(value));
     menu.addItem(mi);
 
     mi = new WatchUi.MenuItem("Track recording", null, "trackRecording", null);
-    mi.setSubLabel($.getTrackRecordingSubLabel(mi.getId() as String));
+    value = getStorageValue(mi.getId() as String, TrackRecAlways) as EnumTrackRecording;
+    mi.setSubLabel($.getTrackRecordingAsString(value));
     menu.addItem(mi);
 
     mi = new WatchUi.MenuItem("Tire recording", null, "tireRecording", null);
-    mi.setSubLabel($.getTireRecordingSubLabel(mi.getId() as String));
+    value = getStorageValue(mi.getId() as String, TireRecProfile) as EnumTireRecording;
+    mi.setSubLabel($.getTireRecordingAsString(value));
     menu.addItem(mi);
 
     mi = new WatchUi.MenuItem("Chain recording", null, "chainRecording", null);
-    mi.setSubLabel($.getChainRecordingSubLabel(mi.getId() as String));
+    value = getStorageValue(mi.getId() as String, ChainRecProfile) as EnumChainRecording;
+    mi.setSubLabel($.getChainRecordingAsString(value));    
     menu.addItem(mi);
 
     mi = new WatchUi.MenuItem("Distance", null, "menuDistance", null);
     mi.setSubLabel("Manage distance settings");
     menu.addItem(mi);
 
-    mi = new WatchUi.MenuItem("Show options", null, "showOptions", null);    
+    mi = new WatchUi.MenuItem("Show options", null, "showOptions", null);
     menu.addItem(mi);
-  
+
     mi = new WatchUi.MenuItem("Show fields", null, "menuFields", null);
     mi.setSubLabel("Display data");
     menu.addItem(mi);
-   
-    //var view = new $.DataFieldSettingsView();
+
     WatchUi.pushView(menu, new $.DataFieldSettingsMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
     return true;
   }
@@ -96,86 +99,83 @@ function getDistanceMenuSubLabel(key as Application.PropertyKeyType) as String {
   return ((getStorageValue(key, 0.0f) as Float) / 1000).format("%.2f") + " km";
 }
 
-function getFocusMenuSubLabel(key as Application.PropertyKeyType) as String {
-  var current = $.getStorageValue(key, $.gShowFocusSmallField) as Types.EnumFocus;
-  switch (current) {
-    case Types.FocusNothing:
+function getFocusAsString(value as EnumFocus) as String {
+  switch (value) {
+    case FocusNothing:
       return "Nothing";
-    case Types.FocusOdo:
+    case FocusOdo:
       return "Odo";
-    case Types.FocusYear:
+    case FocusYear:
       return "Year";
-    case Types.FocusMonth:
+    case FocusMonth:
       return "Month";
-    case Types.FocusWeek:
+    case FocusWeek:
       return "Week";
-    case Types.FocusRide:
+    case FocusRide:
       return "Ride";
-    // case Types.FocusFront:
-    //   return "Front";
-    // case Types.FocusBack:
-    //   return "Back";
-    case Types.FocusCourse:
+    case FocusFront:
+      return "Front";
+    case FocusBack:
+      return "Back";
+    case FocusCourse:
       return "Course";
-    case Types.FocusTrack:
+    case FocusTrack:
       return "Track";
     default:
       return "Nothing";
   }
 }
 
-function getTrackRecordingSubLabel(key as Application.PropertyKeyType) as String {
-  var current = $.getStorageValue(key, $.gTrackRecording) as Types.EnumTrackRecording;
-  switch (current) {
-    case Types.TrackRecDisabled:
+function getTrackRecordingAsString(value as EnumTrackRecording) as String {
+  switch (value) {
+    case TrackRecDisabled:
       return "Disabled";
-    case Types.TrackRecAlways:
+    case TrackRecAlways:
       return "Always";
-    case Types.TrackRecWhenFocus:
+    case TrackRecWhenFocus:
       return "When focused";
-    case Types.TrackRecWhenVisible:
+    case TrackRecWhenVisible:
       return "When visible";
     default:
       return "Disabled";
   }
 }
 
-function getTireRecordingSubLabel(key as Application.PropertyKeyType) as String {
-  var current = $.getStorageValue(key, $.gTireRecording) as Types.EnumTireRecording;
-  switch (current) {
-    case Types.TireRecDefault:
+function getTireRecordingAsString(value as EnumTireRecording) as String {
+  switch (value) {
+    case TireRecDefault:
       return "default";
-    case Types.TireRecProfile:
+    case TireRecProfile:
       return $.getProfileName("profile");
-    case Types.TireRecSetA:
+    case TireRecSetA:
       return "tire A";
-    case Types.TireRecSetB:
+    case TireRecSetB:
       return "tire B";
-    case Types.TireRecSetC:
+    case TireRecSetC:
       return "tire C";
-    case Types.TireRecSetD:
-      return "tire D";          
+    case TireRecSetD:
+      return "tire D";
     default:
       return "default";
   }
 }
-function getChainRecordingSubLabel(key as Application.PropertyKeyType) as String {
-  var current = $.getStorageValue(key, $.gChainRecording) as Types.EnumChainRecording;
-  switch (current) {
-    case Types.ChainRecDefault:
+
+function getChainRecordingAsString(value as EnumChainRecording) as String {
+  switch (value) {
+    case ChainRecDefault:
       return "default";
-    case Types.ChainRecProfile:
+    case ChainRecProfile:
       return $.getProfileName("profile");
-    case Types.ChainRecAsTire:
-      return "as tire";      
-    case Types.ChainRecSetA:
+    case ChainRecAsTire:
+      return "as tire";
+    case ChainRecSetA:
       return "chain A";
-    case Types.ChainRecSetB:
+    case ChainRecSetB:
       return "chain B";
-    case Types.ChainRecSetC:
+    case ChainRecSetC:
       return "chain C";
-    case Types.ChainRecSetD:
-      return "chain D";          
+    case ChainRecSetD:
+      return "chain D";
     default:
       return "default";
   }

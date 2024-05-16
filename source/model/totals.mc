@@ -263,9 +263,9 @@ class Totals {
       saveWeek();
 
       loadTireDistance(false);
-      var tr = $.getTireRecPostfix();
-      setDistanceAsMeters("totalDistanceFrontTyre" + tr, totalDistanceFrontTyre + GetElapsedDistance());
-      setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceBackTyre + GetElapsedDistance());
+      var trp = $.getTireRecPostfix();
+      setDistanceAsMeters("totalDistanceFrontTyre" + trp, totalDistanceFrontTyre + GetElapsedDistance());
+      setDistanceAsMeters("totalDistanceBackTyre" + trp, totalDistanceBackTyre + GetElapsedDistance());
 
       loadChainDistance(false);
       var cr = $.getChainRecPostfix();
@@ -397,24 +397,24 @@ class Totals {
   }
 
   function loadTireDistance(force as Boolean) as Void {
-    var tr = $.getTireRecPostfix();
-    if (!force and tr.equals($.gTireRecPostfix)) {
+    var trp = $.getTireRecPostfix();
+    if (!force and trp.equals($.gTireRecPostfix)) {
       System.println("Tire distance already loaded for: " + $.gTireRecPostfix);
       return;
     }
     // @@ TODO test when connect IQ app started during activity -> save current tr in storage?
-    $.gTireRecPostfix = tr;
-    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre" + tr);
-    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre" + tr);
+    $.gTireRecPostfix = trp;
+    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre" + trp);
+    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre" + trp);
     if (maxDistanceFrontTyre == 0.0f) {
       maxDistanceFrontTyre = 5000000.0f;
-      setDistanceAsMeters("maxDistanceFrontTyre" + tr, maxDistanceFrontTyre);
+      setDistanceAsMeters("maxDistanceFrontTyre" + trp, maxDistanceFrontTyre);
     }
-    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre" + tr);
-    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre" + tr);
+    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre" + trp);
+    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre" + trp);
     if (maxDistanceBackTyre == 0.0f) {
       maxDistanceBackTyre = 5000000.0f;
-      setDistanceAsMeters("maxDistanceBackTyre" + tr, maxDistanceBackTyre);
+      setDistanceAsMeters("maxDistanceBackTyre" + trp, maxDistanceBackTyre);
     }
     
     System.println("Tire distance loaded for: " + $.gTireRecPostfix);
@@ -437,21 +437,21 @@ class Totals {
   }
 
   function triggerFrontBack() as Void {
-    var tr = $.getTireRecPostfix();
+    var trp = $.getTireRecPostfix();
     var switchFB = $.getStorageValue("switch_front_back", false) as Boolean;
 
-    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre" + tr);
-    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre" + tr);
-    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre" + tr);
-    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre" + tr);
-    maxDistanceChain = getDistanceAsMeters("maxDistanceChain" + tr);
+    totalDistanceFrontTyre = getDistanceAsMeters("totalDistanceFrontTyre" + trp);
+    maxDistanceFrontTyre = getDistanceAsMeters("maxDistanceFrontTyre" + trp);
+    totalDistanceBackTyre = getDistanceAsMeters("totalDistanceBackTyre" + trp);
+    maxDistanceBackTyre = getDistanceAsMeters("maxDistanceBackTyre" + trp);
+    maxDistanceChain = getDistanceAsMeters("maxDistanceChain" + trp);
 
     var reset = $.getStorageValue("reset_front", false) as Boolean;
     if (reset) {
       totalDistanceFrontTyre = 0.0f;
       Storage.setValue("reset_front", false);
       if (!switchFB) {
-        setDistanceAsMeters("totalDistanceFrontTyre" + tr, totalDistanceFrontTyre);
+        setDistanceAsMeters("totalDistanceFrontTyre" + trp, totalDistanceFrontTyre);
       }
     }
 
@@ -460,7 +460,7 @@ class Totals {
       totalDistanceBackTyre = 0.0f;
       Storage.setValue("reset_back", false);
       if (!switchFB) {
-        setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceFrontTyre);
+        setDistanceAsMeters("totalDistanceBackTyre" + trp, totalDistanceFrontTyre);
       }
     }
 
@@ -469,8 +469,8 @@ class Totals {
       var tmpBack = totalDistanceBackTyre;
       totalDistanceBackTyre = totalDistanceFrontTyre;
       totalDistanceFrontTyre = tmpBack;
-      setDistanceAsMeters("totalDistanceFrontTyre" + tr, totalDistanceFrontTyre);
-      setDistanceAsMeters("totalDistanceBackTyre" + tr, totalDistanceBackTyre);
+      setDistanceAsMeters("totalDistanceFrontTyre" + trp, totalDistanceFrontTyre);
+      setDistanceAsMeters("totalDistanceBackTyre" + trp, totalDistanceBackTyre);
     }
 
     var cr = $.getChainRecPostfix();
@@ -611,9 +611,9 @@ class Total {
 
 function getTireRecPostfix() as String {
   switch ($.gTireRecording) {
-    case Types.TireRecDefault:
+    case TireRecDefault:
       return "";
-    case Types.TireRecProfile:
+    case TireRecProfile:
       var info = Activity.getProfileInfo();
       if (info == null) {
         return $.gActivityProfileId;
@@ -624,13 +624,13 @@ function getTireRecPostfix() as String {
       }
       $.gActivityProfileId = arr.toString();
       return $.gActivityProfileId;
-    case Types.TireRecSetA:
+    case TireRecSetA:
       return "A";
-    case Types.TireRecSetB:
+    case TireRecSetB:
       return "B";
-    case Types.TireRecSetC:
+    case TireRecSetC:
       return "C";
-    case Types.TireRecSetD:
+    case TireRecSetD:
       return "D";
   }
   return "";
@@ -638,9 +638,9 @@ function getTireRecPostfix() as String {
 
 function getChainRecPostfix() as String {
   switch ($.gChainRecording) {
-    case Types.ChainRecDefault:
+    case ChainRecDefault:
       return "";
-    case Types.ChainRecProfile:
+    case ChainRecProfile:
       var info = Activity.getProfileInfo();
       if (info == null) {
         return $.gActivityProfileId;
@@ -651,15 +651,15 @@ function getChainRecPostfix() as String {
       }
       $.gActivityProfileId = arr.toString();
       return $.gActivityProfileId;
-    case Types.ChainRecAsTire:
+    case ChainRecAsTire:
       return getTireRecPostfix();
-    case Types.ChainRecSetA:
+    case ChainRecSetA:
       return "A";
-    case Types.ChainRecSetB:
+    case ChainRecSetB:
       return "B";
-    case Types.ChainRecSetC:
+    case ChainRecSetC:
       return "C";
-    case Types.ChainRecSetD:
+    case ChainRecSetD:
       return "D";
   }
   return "";

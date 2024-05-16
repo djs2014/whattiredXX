@@ -37,7 +37,7 @@ class whattiredView extends WatchUi.DataField {
   var mBackgroundColor as ColorType = Graphics.COLOR_WHITE;
   var mShowValues as Boolean = true;
   var mShowColors as Boolean = true;
-  var mFocus as Types.EnumFocus = Types.FocusNothing;
+  var mFocus as EnumFocus = FocusNothing;
   var mSmallField as Boolean = false;
   var mWideField as Boolean = false;
   var mTinyField as Boolean = false;
@@ -65,6 +65,7 @@ class whattiredView extends WatchUi.DataField {
   }
 
   function onLayout(dc as Dc) as Void {
+    dc.clearClip();
     mHeight = dc.getHeight();
     mWidth = dc.getWidth();
     mShowFBCCircles = false;
@@ -81,7 +82,7 @@ class whattiredView extends WatchUi.DataField {
       mFontText = Graphics.FONT_SMALL;
       mShowValues = $.gShowValues;
       mShowColors = $.gShowColors;
-      mFocus = Types.FocusNothing;
+      mFocus = FocusNothing;
       mSmallField = false;
       mShowAscDesc = true;
     }
@@ -93,7 +94,7 @@ class whattiredView extends WatchUi.DataField {
 
     var nrOfFields = $.gNrOfDefaultFields;
     // Minus line if small field and focus 1 item
-    if (mSmallField && mFocus != Types.FocusNothing) {
+    if (mSmallField && mFocus != FocusNothing) {
       nrOfFields = nrOfFields - 1;
     }
 
@@ -201,11 +202,11 @@ class whattiredView extends WatchUi.DataField {
     }
   }
 
-  function drawData(dc as Dc, focus as Types.EnumFocus) as Void {
+  function drawData(dc as Dc, focus as EnumFocus) as Void {
     var line = 0;
-    var nothingHasFocus = focus == Types.FocusNothing;
+    var nothingHasFocus = focus == FocusNothing;
     var info = "";
-    if (mTotals.HasOdo() && focus != Types.FocusOdo) {
+    if (mTotals.HasOdo() && focus != FocusOdo) {
       DrawDistanceLine(
         dc,
         line,
@@ -218,7 +219,7 @@ class whattiredView extends WatchUi.DataField {
       );
       line = line + 1;
     }
-    if (mTotals.HasRide() && focus != Types.FocusRide) {
+    if (mTotals.HasRide() && focus != FocusRide) {
       DrawDistanceLine(
         dc,
         line,
@@ -231,7 +232,7 @@ class whattiredView extends WatchUi.DataField {
       );
       line = line + 1;
     }
-    if (mTotals.HasWeek() && focus != Types.FocusWeek) {
+    if (mTotals.HasWeek() && focus != FocusWeek) {
       if (mPaused) {
         info = mTotals.GetCurrentWeek().toString();
       }
@@ -247,7 +248,7 @@ class whattiredView extends WatchUi.DataField {
       );
       line = line + 1;
     }
-    if (mTotals.HasMonth() && focus != Types.FocusMonth) {
+    if (mTotals.HasMonth() && focus != FocusMonth) {
       if (mPaused) {
         info = mTotals.GetCurrentMonth().toString();
       }
@@ -263,7 +264,7 @@ class whattiredView extends WatchUi.DataField {
       );
       line = line + 1;
     }
-    if (mTotals.HasYear() && focus != Types.FocusYear) {
+    if (mTotals.HasYear() && focus != FocusYear) {
       if (mPaused) {
         info = mTotals.GetCurrentYear().toString();
       }
@@ -279,7 +280,7 @@ class whattiredView extends WatchUi.DataField {
       );
       line = line + 1;
     }
-    if (mTotals.HasTrack() && focus != Types.FocusTrack) {
+    if (mTotals.HasTrack() && focus != FocusTrack) {
       DrawDistanceLine(
         dc,
         line,
@@ -320,21 +321,21 @@ class whattiredView extends WatchUi.DataField {
     }
 
     if (mShowFBCCircles) {
-      //} && focus != Types.FocusFront && focus != Types.FocusBack) {
+      //} && focus != FocusFront && focus != FocusBack) {
       DrawDistanceCirclesFrontBackChain(dc, line, mShowValues, mShowColors, nothingHasFocus);
     } else if (mTotals.HasFrontTyre() || mTotals.HasBackTyre() || mTotals.HasChain()) {
       DrawDistanceFrontBackTyreChain(dc, line, mShowValues, mShowColors, nothingHasFocus);
       line = line + 1;
     }
     // else if (
-    //   focus != Types.FocusFront &&
-    //   focus != Types.FocusBack &&
+    //   focus != FocusFront &&
+    //   focus != FocusBack &&
     //   mTotals.HasFrontTyre() &&
     //   mTotals.HasBackTyre()
     // ) {
     //   DrawDistanceFrontBackTyre(dc, line, mShowValues, mShowColors, nothingHasFocus);
     //   line = line + 1;
-    // } else if (focus != Types.FocusFront && mTotals.HasFrontTyre()) {
+    // } else if (focus != FocusFront && mTotals.HasFrontTyre()) {
     //   DrawDistanceLine(
     //     dc,
     //     line,
@@ -347,7 +348,7 @@ class whattiredView extends WatchUi.DataField {
     //     nothingHasFocus
     //   );
     //   line = line + 1;
-    // } else if (focus != Types.FocusBack && mTotals.HasBackTyre()) {
+    // } else if (focus != FocusBack && mTotals.HasBackTyre()) {
     //   DrawDistanceLine(
     //     dc,
     //     line,
@@ -363,7 +364,7 @@ class whattiredView extends WatchUi.DataField {
     // }
 
     // @@ should be in background, alpha color
-    // if (mTotals.IsCourseActive() && focus != Types.FocusCourse) {
+    // if (mTotals.IsCourseActive() && focus != FocusCourse) {
     //   DrawDistanceLine(
     //     dc,
     //     line,
@@ -379,13 +380,13 @@ class whattiredView extends WatchUi.DataField {
     // }
 
     switch (focus) {
-      case Types.FocusOdo:
+      case FocusOdo:
         drawDistanceCircle(dc, "Odo", mTotals.GetTotalDistance(), mTotals.GetMaxDistance(), true, true);
         break;
-      case Types.FocusYear:
+      case FocusYear:
         drawDistanceCircle(dc, "Year", mTotals.GetTotalDistanceYear(), mTotals.GetTotalDistanceLastYear(), true, true);
         break;
-      case Types.FocusMonth:
+      case FocusMonth:
         drawDistanceCircle(
           dc,
           "Month",
@@ -395,14 +396,14 @@ class whattiredView extends WatchUi.DataField {
           true
         );
         break;
-      case Types.FocusWeek:
+      case FocusWeek:
         drawDistanceCircle(dc, "Week", mTotals.GetTotalDistanceWeek(), mTotals.GetTotalDistanceLastWeek(), true, true);
         break;
-      case Types.FocusRide:
+      case FocusRide:
         drawDistanceCircle(dc, "Ride", mTotals.GetTotalDistanceRide(), mTotals.GetTotalDistanceLastRide(), true, true);
 
         break;
-      // case Types.FocusFront:
+      // case FocusFront:
       //   drawDistanceCircle(
       //     dc,
       //     "Front",
@@ -412,7 +413,7 @@ class whattiredView extends WatchUi.DataField {
       //     true
       //   );
       //   break;
-      // case Types.FocusBack:
+      // case FocusBack:
       //   drawDistanceCircle(
       //     dc,
       //     "Back",
@@ -422,7 +423,7 @@ class whattiredView extends WatchUi.DataField {
       //     true
       //   );
       //   break;
-      case Types.FocusTrack:
+      case FocusTrack:
         drawDistanceCircle(
           dc,
           "Track",
@@ -435,7 +436,7 @@ class whattiredView extends WatchUi.DataField {
           drawAscentDescent(dc, mTotals.GetTotalAscentTrack(), mTotals.GetTotalDescentTrack());
         }
         break;
-      case Types.FocusCourse:
+      case FocusCourse:
         if (mTotals.IsCourseActive()) {
           drawDistanceCircle(
             dc,
@@ -824,11 +825,14 @@ class whattiredView extends WatchUi.DataField {
     }
 
     // @@ TODO tire / chain -> calc and cached
-    var labelT = $.getTireRecordingSubLabel("tireRecording");
+    var tr = $.getStorageValue("tireRecording", TireRecProfile) as EnumTireRecording;
+    var labelT = $.getTireRecordingAsString(tr);
     if (labelT.equals("default")) {
       labelT = "";
     }
-    var labelC = $.getChainRecordingSubLabel("chainRecording");
+
+    var cr = $.getStorageValue("chainRecording", ChainRecProfile) as EnumChainRecording;
+    var labelC = $.getChainRecordingAsString(cr);
     if (labelC.equals("default") || labelC.equals("as tire")) {
       labelC = "";
     }

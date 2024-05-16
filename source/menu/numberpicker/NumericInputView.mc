@@ -526,18 +526,6 @@ class NumericInputView extends WatchUi.View {
   }
 }
 
-// Implement min/max + display range (min-max) + check
-class NumericOptions {
-  public var minValue as Number or Float = 0;
-  public var maxValue as Number or Float = 0;
-  public var isFloat as Boolean = false;
-  public var useMinus as Boolean = false;
-  // flags @@TODO
-  // public var negative as Boolean = false;
-
-  public function initialize() {}
-}
-
 // |1~100 or |1.0~99.3 or |-1~30
 function parseLabelToOptions(label as String?) as NumericOptions {
   var options = new NumericOptions();
@@ -573,4 +561,16 @@ function parseLabelToOptions(label as String?) as NumericOptions {
   }
 
   return options;
+}
+
+// Implement min/max + display range (min-max) + check
+class NumericOptions {
+  public var minValue as Number or Float = 0;
+  public var maxValue as Number or Float = 0;
+  public var isFloat as Boolean = false;
+  public var useMinus as Boolean = false;
+  // flags @@TODO
+  // public var negative as Boolean = false;
+
+  public function initialize() {}
 }

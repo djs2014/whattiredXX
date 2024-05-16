@@ -1,3 +1,8 @@
++ build + screenshot current
+ERROR: Internal: RangeError: Got exception `Maximum call stack size exceeded' while processing node $.DataFieldSettingsMenuDelegate.onSelect:FunctionDeclaration from e:/0_development/projects/ConnectIQWorkspace/whattired/source/DataFieldSettingsMenu.mc:27:276
+
+--> call loop
+
 menu
   - reset to default
   

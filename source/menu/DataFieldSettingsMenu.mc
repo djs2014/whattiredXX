@@ -1,3 +1,4 @@
+import Toybox.Application;
 import Toybox.Application.Storage;
 import Toybox.Lang;
 import Toybox.WatchUi;
@@ -13,7 +14,7 @@ class DataFieldSettingsMenu extends WatchUi.Menu2 {
 
 //! Handles menu input and stores the menu data
 class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
-  private var _currentMenuItem as MenuItem?;
+  // private var _currentMenuItem as MenuItem?;
   // private var _view as DataFieldSettingsView;
 
   //! Constructor
@@ -24,113 +25,95 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
 
   //! Handle a menu item selection
   //! @param menuItem The selected menu item
-  public function onSelect(menuItem as MenuItem) as Void {
-    _currentMenuItem = menuItem;
-    var id = menuItem.getId();
-    var distanceItems = [] as Array<String>;
+  public function onSelect(item as MenuItem) as Void {
+    // _currentMenuItem = item;
+    var id = item.getId();
     if (id instanceof String && id.equals("menuDistance")) {
       var distanceMenu = new WatchUi.Menu2({ :title => "Set distance for" });
 
       var mi = new WatchUi.MenuItem("Odo", null, "totalDistance", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Year", null, "totalDistanceYear", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Month", null, "totalDistanceMonth", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Week", null, "totalDistanceWeek", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Track", null, "totalDistanceTrack", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
-      var labelTireRec = $.getTireRecordingSubLabel("tireRecording");
+      var tr = $.getStorageValue("tireRecording", TireRecProfile) as EnumTireRecording;
+      var labelTireRec = $.getTireRecordingAsString(tr);
       if (labelTireRec.equals("default")) {
         labelTireRec = "";
       } else {
         labelTireRec = " for " + labelTireRec;
       }
-      var tr = $.getTireRecPostfix();
-      mi = new WatchUi.MenuItem("Front" + labelTireRec, null, "totalDistanceFrontTyre" + tr, null);
+      var trp = $.getTireRecPostfix();
+      mi = new WatchUi.MenuItem("Front" + labelTireRec, null, "totalDistanceFrontTyre" + trp, null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
-      mi = new WatchUi.MenuItem("Back " + labelTireRec, null, "totalDistanceBackTyre" + tr, null);
+      mi = new WatchUi.MenuItem("Back " + labelTireRec, null, "totalDistanceBackTyre" + trp, null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       var cr = $.getChainRecPostfix();
       mi = new WatchUi.MenuItem("Chain " + labelTireRec, null, "totalDistanceChain" + cr, null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Max Odo", null, "maxDistance", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Last year", null, "totalDistanceLastYear", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Last month", null, "totalDistanceLastMonth", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Last week", null, "totalDistanceLastWeek", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Last track", null, "totalDistanceLastTrack", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       mi = new WatchUi.MenuItem("Last ride", null, "totalDistanceLastRide", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
-      mi = new WatchUi.MenuItem("Max front" + labelTireRec, null, "maxDistanceFrontTyre" + tr, null);
+      mi = new WatchUi.MenuItem("Max front" + labelTireRec, null, "maxDistanceFrontTyre" + trp, null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
-      mi = new WatchUi.MenuItem("Max back" + labelTireRec, null, "maxDistanceBackTyre" + tr, null);
+      mi = new WatchUi.MenuItem("Max back" + labelTireRec, null, "maxDistanceBackTyre" + trp, null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
-      mi = new WatchUi.MenuItem("Max chain" + labelTireRec, null, "maxDistanceChain" + tr, null);
+      mi = new WatchUi.MenuItem("Max chain" + labelTireRec, null, "maxDistanceChain" + trp, null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
       // Not needed, is actual activity ride
       mi = new WatchUi.MenuItem("Elapsed (debug)", null, "debugElapsedDistance", null);
       mi.setSubLabel($.getDistanceMenuSubLabel(mi.getId() as String));
       distanceMenu.addItem(mi);
-      distanceItems.add(mi.getId() as String);
 
-      WatchUi.pushView(distanceMenu, new $.DistanceMenuDelegate(), WatchUi.SLIDE_UP);
+      WatchUi.pushView(distanceMenu, new $.GeneralMenuDelegate(self, distanceMenu), WatchUi.SLIDE_UP);
       return;
     }
     if (id instanceof String && id.equals("resetOptions")) {
@@ -150,7 +133,7 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       boolean = $.getStorageValue("reset_track", false) as Boolean;
       resetMenu.addItem(new WatchUi.ToggleMenuItem("Reset track", null, "reset_track", boolean, null));
 
-      WatchUi.pushView(resetMenu, new $.GeneralMenuDelegate(), WatchUi.SLIDE_UP);
+      WatchUi.pushView(resetMenu, new $.GeneralMenuDelegate(self, resetMenu), WatchUi.SLIDE_UP);
       return;
     }
     if (id instanceof String && id.equals("showOptions")) {
@@ -169,67 +152,61 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       boolean = $.getStorageValue("showDateNumbers", false) as Boolean;
       showMenu.addItem(new WatchUi.ToggleMenuItem("Date numbers", null, "showDateNumbers", boolean, null));
 
-      WatchUi.pushView(showMenu, new $.GeneralMenuDelegate(), WatchUi.SLIDE_UP);
+      WatchUi.pushView(showMenu, new $.GeneralMenuDelegate(self, showMenu), WatchUi.SLIDE_UP);
       return;
     }
+
     if (id instanceof String && id.equals("showFocusSmallField")) {
-      var focusMenu = new WatchUi.Menu2({ :title => "Show focus on" });
-      var current = $.getStorageValue(id as String, Types.FocusNothing) as Types.EnumFocus;
-      focusMenu.addItem(new WatchUi.MenuItem("Nothing", null, Types.FocusNothing, {}));
-      focusMenu.addItem(new WatchUi.MenuItem("Odo", null, Types.FocusOdo, {}));
-      focusMenu.addItem(new WatchUi.MenuItem("Year", null, Types.FocusYear, {}));
-      focusMenu.addItem(new WatchUi.MenuItem("Month", null, Types.FocusMonth, {}));
-      focusMenu.addItem(new WatchUi.MenuItem("Week", null, Types.FocusWeek, {}));
-      focusMenu.addItem(new WatchUi.MenuItem("Ride", null, Types.FocusRide, {}));
-      focusMenu.addItem(new WatchUi.MenuItem("Track", null, Types.FocusTrack, {}));
-      // focusMenu.addItem(new WatchUi.MenuItem("Front", null, Types.FocusFront, {}));
-      // focusMenu.addItem(new WatchUi.MenuItem("Back", null, Types.FocusBack, {}));
-      focusMenu.addItem(new WatchUi.MenuItem("Course", null, Types.FocusCourse, {}));
-      focusMenu.setFocus(current); // 0-index
-      WatchUi.pushView(focusMenu, new $.FocusMenuDelegate(self), WatchUi.SLIDE_UP);
+      var sp = new selectionMenuPicker("Show focus on", id as String);
+
+      for (var i = 0; i < 10; i++) {
+        var ft = i as EnumFocus;
+        if (ft != FocusFront && ft != FocusBack) {
+          sp.add($.getFocusAsString(ft), null, i);
+        }
+      }
+
+      sp.setOnSelected(self, :onSelectedSelection, item);
+      sp.show();
       return;
     }
+
     if (id instanceof String && id.equals("trackRecording")) {
-      var trackMenu = new WatchUi.Menu2({ :title => "Track recording active" });
-      var current = $.getStorageValue(id as String, Types.TrackRecAlways) as Types.EnumTrackRecording;
-      trackMenu.addItem(new WatchUi.MenuItem("Disabled", null, Types.TrackRecDisabled, {}));
-      trackMenu.addItem(new WatchUi.MenuItem("Always on", null, Types.TrackRecAlways, {}));
-      trackMenu.addItem(new WatchUi.MenuItem("When track field visible", null, Types.TrackRecWhenVisible, {}));
-      trackMenu.addItem(new WatchUi.MenuItem("When track field focus", null, Types.TrackRecWhenFocus, {}));
+      var sp = new selectionMenuPicker("Track recording active", id as String);
 
-      trackMenu.setFocus(current); // 0-index
-      WatchUi.pushView(trackMenu, new $.TrackMenuDelegate(self), WatchUi.SLIDE_UP);
+      for (var i = 0; i < 4; i++) {
+        sp.add($.getTrackRecordingAsString(i as EnumTrackRecording), null, i);
+      }
+
+      sp.setOnSelected(self, :onSelectedSelection, item);
+      sp.show();
       return;
     }
+
     if (id instanceof String && id.equals("tireRecording")) {
-      var tireMenu = new WatchUi.Menu2({ :title => "Tire recording f/b" });
-      var current = $.getStorageValue(id as String, Types.TireRecDefault) as Types.EnumTireRecording;
-      tireMenu.addItem(new WatchUi.MenuItem("Default", null, Types.TireRecDefault, {}));
-      tireMenu.addItem(new WatchUi.MenuItem("Profile", null, Types.TireRecProfile, {}));
-      tireMenu.addItem(new WatchUi.MenuItem("Set A", null, Types.TireRecSetA, {}));
-      tireMenu.addItem(new WatchUi.MenuItem("Set B", null, Types.TireRecSetB, {}));
-      tireMenu.addItem(new WatchUi.MenuItem("Set C", null, Types.TireRecSetC, {}));
-      tireMenu.addItem(new WatchUi.MenuItem("Set D", null, Types.TireRecSetD, {}));
+      var sp = new selectionMenuPicker("Tire recording f/b", id as String);
 
-      tireMenu.setFocus(current); // 0-index
-      WatchUi.pushView(tireMenu, new $.TireMenuDelegate(self), WatchUi.SLIDE_UP);
+      for (var i = 0; i < 6; i++) {
+        sp.add($.getTireRecordingAsString(i as EnumTireRecording), null, i);
+      }
+
+      sp.setOnSelected(self, :onSelectedSelection, item);
+      sp.show();
       return;
     }
+
     if (id instanceof String && id.equals("chainRecording")) {
-      var chainMenu = new WatchUi.Menu2({ :title => "Chain recording" });
-      var current = $.getStorageValue(id as String, Types.ChainRecDefault) as Types.EnumChainRecording;
-      chainMenu.addItem(new WatchUi.MenuItem("Default", null, Types.ChainRecDefault, {}));
-      chainMenu.addItem(new WatchUi.MenuItem("Profile", null, Types.ChainRecProfile, {}));
-      chainMenu.addItem(new WatchUi.MenuItem("As tire", null, Types.ChainRecAsTire, {}));
-      chainMenu.addItem(new WatchUi.MenuItem("Set A", null, Types.ChainRecSetA, {}));
-      chainMenu.addItem(new WatchUi.MenuItem("Set B", null, Types.ChainRecSetB, {}));
-      chainMenu.addItem(new WatchUi.MenuItem("Set C", null, Types.ChainRecSetC, {}));
-      chainMenu.addItem(new WatchUi.MenuItem("Set D", null, Types.ChainRecSetD, {}));
+      var sp = new selectionMenuPicker("Chain recording", id as String);
 
-      chainMenu.setFocus(current); // 0-index
-      WatchUi.pushView(chainMenu, new $.ChainMenuDelegate(self), WatchUi.SLIDE_UP);
+      for (var i = 0; i < 7; i++) {
+        sp.add($.getChainRecordingAsString(i as EnumChainRecording), null, i);
+      }
+
+      sp.setOnSelected(self, :onSelectedSelection, item);
+      sp.show();
       return;
     }
+
     if (id instanceof String && id.equals("menuFields")) {
       var fieldsMenu = new WatchUi.Menu2({ :title => "Show fields" });
 
@@ -253,11 +230,11 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
       boolean = $.getStorageValue("showChain", true) as Boolean;
       fieldsMenu.addItem(new WatchUi.ToggleMenuItem("Show chain", null, "showChain", boolean, null));
 
-      WatchUi.pushView(fieldsMenu, new $.GeneralMenuDelegate(), WatchUi.SLIDE_UP);
+      WatchUi.pushView(fieldsMenu, new $.GeneralMenuDelegate(self, fieldsMenu), WatchUi.SLIDE_UP);
       return;
     }
-    if (id instanceof String && menuItem instanceof ToggleMenuItem) {
-      Storage.setValue(id as String, menuItem.isEnabled());
+    if (id instanceof String && item instanceof ToggleMenuItem) {
+      Storage.setValue(id as String, item.isEnabled());
       return;
     }
     // if (WatchUi has :TextPicker) {
@@ -269,56 +246,21 @@ class DataFieldSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
     // }
   }
 
-  public function onAcceptFocus() as Void {
-    // update menu sublabel
-    if (_currentMenuItem != null) {
-      var mi = _currentMenuItem as MenuItem;
-      var id = mi.getId();
-      if (id instanceof String && (id as String).equals("showFocusSmallField")) {
-        mi.setSubLabel($.getFocusMenuSubLabel(mi.getId() as String));
-      }
-    }
-  }
-  public function onAcceptTrackRecording() as Void {
-    // update menu sublabel
-    if (_currentMenuItem != null) {
-      var mi = _currentMenuItem as MenuItem;
-      var id = mi.getId();
-      if (id instanceof String && (id as String).equals("trackRecording")) {
-        mi.setSubLabel($.getTrackRecordingSubLabel(mi.getId() as String));
-      }
-    }
-  }
-  public function onAcceptTireRecording() as Void {
-    // update menu sublabel
-    if (_currentMenuItem != null) {
-      var mi = _currentMenuItem as MenuItem;
-      var id = mi.getId();
-      if (id instanceof String && (id as String).equals("tireRecording")) {
-        mi.setSubLabel($.getTireRecordingSubLabel(mi.getId() as String));
-      }
-    }
-  }
-  public function onAcceptChainRecording() as Void {
-    // update menu sublabel
-    if (_currentMenuItem != null) {
-      var mi = _currentMenuItem as MenuItem;
-      var id = mi.getId();
-      if (id instanceof String && (id as String).equals("chainRecording")) {
-        mi.setSubLabel($.getChainRecordingSubLabel(mi.getId() as String));
-      }
-    }
+  function onSelectedSelection(storageKey as String, value as Application.PropertyValueType) as Void {
+    Storage.setValue(storageKey, value);
   }
 }
 
 //--
 class GeneralMenuDelegate extends WatchUi.Menu2InputDelegate {
+  hidden var _delegate as DataFieldSettingsMenuDelegate;
   hidden var _item as MenuItem?;
   hidden var _currentPrompt as String = "";
   hidden var _debug as Boolean = false;
 
-  function initialize() {
+  function initialize(delegate as DataFieldSettingsMenuDelegate, menu as WatchUi.Menu2) {
     Menu2InputDelegate.initialize();
+    _delegate = delegate;
   }
 
   function onSelect(item as MenuItem) as Void {
@@ -334,12 +276,12 @@ class GeneralMenuDelegate extends WatchUi.Menu2InputDelegate {
     //   sp.show();
     //   return;
     // }
+
     if (id instanceof String && item instanceof ToggleMenuItem) {
       Storage.setValue(id as String, item.isEnabled());
       return;
     }
 
-    // @@ TODO cleanup and refactor
     _currentPrompt = item.getLabel();
     var numericOptions = $.parseLabelToOptions(_currentPrompt);
 
@@ -347,7 +289,6 @@ class GeneralMenuDelegate extends WatchUi.Menu2InputDelegate {
     if (numericOptions.isFloat) {
       currentValue = currentValue.toFloat();
     }
-
     var view = new $.NumericInputView(_debug, _currentPrompt, currentValue);
     view.processOptions(numericOptions);
 
@@ -356,14 +297,6 @@ class GeneralMenuDelegate extends WatchUi.Menu2InputDelegate {
 
     Toybox.WatchUi.pushView(view, new $.NumericInputDelegate(_debug, view), WatchUi.SLIDE_RIGHT);
   }
-
-  // function onSelectedAfterXUnits(value as Object, storageKey as String) as Void {
-  //   var unit = value as AfterXUnits;
-  //   Storage.setValue(storageKey, unit);
-  //   if (_item != null) {
-  //     (_item as MenuItem).setSubLabel($.getStartAfterUnitsText(unit));
-  //   }
-  // }
 
   function onAcceptNumericinput(value as Numeric) as Void {
     try {
@@ -417,7 +350,7 @@ class GeneralMenuDelegate extends WatchUi.Menu2InputDelegate {
     WatchUi.popView(WatchUi.SLIDE_DOWN);
   }
 
-  function onSelectedSelection(value as Object, storageKey as String) as Void {
-    Storage.setValue(storageKey, value as Number);
+  function onSelectedSelection(storageKey as String, value as Application.PropertyValueType) as Void {
+    Storage.setValue(storageKey, value);
   }
 }
