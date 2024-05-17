@@ -66,7 +66,7 @@ class DataFieldSettingsDelegate extends WatchUi.BehaviorDelegate {
     menu.addItem(mi);
 
     mi = new WatchUi.MenuItem("Chain recording", null, "chainRecording", null);
-    value = getStorageValue(mi.getId() as String, ChainRecProfile) as EnumChainRecording;
+    value = getStorageValue(mi.getId() as String, ChainRecAsTire) as EnumChainRecording;
     mi.setSubLabel($.getChainRecordingAsString(value));    
     menu.addItem(mi);
 
