@@ -68,6 +68,12 @@ class whattiredApp extends Application.AppBase {
     try {
       System.println("Load usersettings");
 
+      // var version = getStorageValue("version", "") as String;
+      // if (!version.equals("1.1.0")) {
+      //   Storage.setValue("version", "1.1.0");
+      //   mTotals.convertMetersToKm();
+      // }
+
       $.gTireRecording = $.getStorageValue("tireRecording", $.gTireRecording) as EnumTireRecording;
       $.gChainRecording = $.getStorageValue("chainRecording", $.gChainRecording) as EnumChainRecording;
 
@@ -122,6 +128,7 @@ class whattiredApp extends Application.AppBase {
       ex.printStackTrace();
     }
   }
+
 }
 
 function getApp() as whattiredApp {

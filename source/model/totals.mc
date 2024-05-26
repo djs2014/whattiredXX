@@ -335,14 +335,6 @@ class Totals {
     Storage.setValue("totalDescentTrack", totalDescentTrack + elapsedDescentActivity);
   }
 
-  hidden function setDistanceAsMeters(key as String, distanceMeters as Float) as Void {
-    try {
-      Storage.setValue(key, distanceMeters);
-    } catch (ex) {
-      ex.printStackTrace();
-    }
-  }
-
   // Storage values are in meters, (overrule) properties are in kilometers!
   // Save will happen during pause / stop switch to connect iq widget
   // so load values and correct with elapsed distance.
@@ -493,6 +485,15 @@ class Totals {
       totalDescentTrack = 0;
       saveTrack();
       Storage.setValue("reset_track", false);
+    }
+  }
+
+  hidden function setDistanceAsMeters(key as String, distanceMeters as Float) as Void {
+    try {
+      
+      Storage.setValue(key, distanceMeters);
+    } catch (ex) {
+      ex.printStackTrace();
     }
   }
 
