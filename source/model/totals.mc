@@ -598,9 +598,9 @@ class Totals {
     }
   }
 
-  hidden function setProperty(key as PropertyKeyType, value as PropertyValueType) as Void {
-    Application.Properties.setValue(key, value);
-  }
+  // hidden function setProperty(key as PropertyKeyType, value as PropertyValueType) as Void {
+  //   Application.Properties.setValue(key, value);
+  // }
 }
 
 class Total {
