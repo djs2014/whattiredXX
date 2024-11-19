@@ -1,3 +1,5 @@
+dark bg -> bars gray 
+
 bug in simulator -- @@TODO check on device
 ride 2.33 km
 stop activity 

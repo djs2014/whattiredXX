@@ -35,6 +35,9 @@ class whattiredView extends WatchUi.DataField {
   var mColorValuesPerc100 as ColorType = Graphics.COLOR_WHITE;
   var mColorPerc100 as ColorType = Graphics.COLOR_RED;
   var mBackgroundColor as ColorType = Graphics.COLOR_WHITE;
+  
+  var mBarColor_NightMode as ColorType = Graphics.COLOR_DK_GRAY;
+
   var mShowValues as Boolean = true;
   var mShowColors as Boolean = true;
   var mFocus as EnumFocus = FocusNothing;
@@ -180,13 +183,13 @@ class whattiredView extends WatchUi.DataField {
     if (mNightMode) {
       mColor = Graphics.COLOR_WHITE;
       mColorValues = Graphics.COLOR_WHITE;
-      mColorValuesPerc20 = Graphics.COLOR_LT_GRAY;
-      mColorTextNoFocus = Graphics.COLOR_LT_GRAY;
+      mColorValuesPerc20 = Graphics.COLOR_WHITE;
+      mColorTextNoFocus = Graphics.COLOR_WHITE;      
     } else {
       mColor = Graphics.COLOR_BLACK;
       mColorValues = Graphics.COLOR_BLACK;
       mColorValuesPerc20 = Graphics.COLOR_BLACK;
-      mColorTextNoFocus = Graphics.COLOR_DK_GRAY;
+      mColorTextNoFocus = Graphics.COLOR_DK_GRAY;    
     }
 
     drawData(dc, mFocus);
@@ -497,7 +500,9 @@ class whattiredView extends WatchUi.DataField {
     if (lastDistanceInMeters > 0) {
       perc = percentageOf(distanceInMeters, lastDistanceInMeters);
       if (showColors) {
-        drawPercentageLine(dc, x, y + 1, mWidth - x - 1, perc, mLineHeight - 1, percentageToColor(perc));
+        var pcolor = mBarColor_NightMode;
+        if (!mNightMode) { pcolor = percentageToColor(perc); }
+        drawPercentageLine(dc, x, y + 1, mWidth - x - 1, perc, mLineHeight - 1, pcolor);
       }
     }
     if (showValues) {
@@ -566,7 +571,9 @@ class whattiredView extends WatchUi.DataField {
     if (lastValueInMeters > 0) {
       perc = percentageOf(valueInMeters, lastValueInMeters);
       if (showColors) {
-        drawPercentageLine(dc, x, y + 1, mWidth - x - 1, perc, mLineHeight - 1, percentageToColor(perc));
+        var pcolor = mBarColor_NightMode;
+        if (!mNightMode) { pcolor = percentageToColor(perc); }
+        drawPercentageLine(dc, x, y + 1, mWidth - x - 1, perc, mLineHeight - 1, pcolor);
       }
     }
     if (showValues) {
@@ -635,7 +642,9 @@ class whattiredView extends WatchUi.DataField {
     if (maxMeters_front > 0) {
       perc_front = percentageOf(meters_front, maxMeters_front);
       if (showColors) {
-        drawPercentageLine(dc, x, y + 1, barWidth, perc_front, mLineHeight - 1, percentageToColor(perc_front)); // - x - 1
+        var pcolor_f = mBarColor_NightMode;
+        if (!mNightMode) { pcolor_f = percentageToColor(perc_front); }
+        drawPercentageLine(dc, x, y + 1, barWidth, perc_front, mLineHeight - 1, pcolor_f); // - x - 1
       }
     }
     if (showValues) {
@@ -659,7 +668,9 @@ class whattiredView extends WatchUi.DataField {
     if (maxMeters_chain > 0) {
       perc_chain = percentageOf(meters_chain, maxMeters_chain);
       if (showColors) {
-        drawPercentageLine(dc, x2, y + 1, barWidth, perc_chain, mLineHeight - 1, percentageToColor(perc_chain)); // mWidth - x2 - 1
+        var pcolor_c = mBarColor_NightMode;
+        if (!mNightMode) { pcolor_c = percentageToColor(perc_chain); }
+        drawPercentageLine(dc, x2, y + 1, barWidth, perc_chain, mLineHeight - 1, pcolor_c); // mWidth - x2 - 1
       }
     }
 
@@ -684,7 +695,9 @@ class whattiredView extends WatchUi.DataField {
     if (maxMeters_back > 0) {
       perc_back = percentageOf(meters_back, maxMeters_back);
       if (showColors) {
-        drawPercentageLine(dc, x3, y + 1, barWidth, perc_back, mLineHeight - 1, percentageToColor(perc_back)); // mWidth - x2 - 1
+        var pcolor_b = mBarColor_NightMode;
+        if (!mNightMode) { pcolor_b = percentageToColor(perc_back); }
+        drawPercentageLine(dc, x3, y + 1, barWidth, perc_back, mLineHeight - 1, pcolor_b); // mWidth - x2 - 1
       }
     }
 
